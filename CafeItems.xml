@@ -280,8 +280,8 @@
 <wod id="4095" n="Basic" g="Counter" t="fSpringgreenone" cash="1444" gold="0" friends="0" goldNoFriends="0" releaseDate="1770082667" world="0" events="0" xp="0" level="5" />
 <wod id="4096" n="Basic" g="Counter" t="fHmtwo" cash="2444" gold="0" friends="0" goldNoFriends="0" releaseDate="1770082667" world="0" events="0" xp="0" level="5" />
 <wod id="4097" n="Basic" g="Counter" t="fHmone" cash="2444" gold="0" friends="0" goldNoFriends="0" releaseDate="1770082667" world="0" events="0" xp="0" level="5" />
-<wod id="4098" n="Basic" g="Deco" t="Borderglasslow" walkable="0" rotatetype="0" cash="5000" gold="0" friends="0" goldNoFriends="0" releaseDate="1779656400" world="0" events="0" xp="0" level="5" />
-<wod id="4099" n="Basic" g="Deco" t="Borderglassup" walkable="0" rotatetype="0" cash="5000" gold="0" friends="0" goldNoFriends="0" releaseDate="1779656400" world="0" events="0" xp="0" level="5" />
+<wod id="4098" n="Basic" g="Deco" t="Borderglasslow" walkable="0" rotatetype="2" cash="5000" gold="0" friends="0" goldNoFriends="0" releaseDate="1779656400" world="0" events="0" xp="0" level="5" />
+<wod id="4099" n="Basic" g="Deco" t="Borderglassup" walkable="0" rotatetype="2" cash="5000" gold="0" friends="0" goldNoFriends="0" releaseDate="1779656400" world="0" events="0" xp="0" level="5" />
 <wod id="4100" n="Static" g="Wall" t="SectionedGreenLights" cash="250" gold="0" friends="0" goldNoFriends="0" releaseDate="1779656400" world="0" events="0" xp="0" level="5" />
 <wod id="4101" n="Static" g="Wall" t="SectionedGreen" cash="200" gold="0" friends="0" goldNoFriends="0" releaseDate="1779656400" world="0" events="0" xp="0" level="5" />
 <wod id="4102" n="Static" g="Tile" t="GlassBlackLightsGreen" walkable="1" rotatetype="0" cash="88" gold="0" friends="0" goldNoFriends="0" releaseDate="1779656400" world="0" events="0" xp="0" level="5" />
@@ -309,7 +309,7 @@
 <wod id="4129" n="Basic" g="Deco" t="yellowflowers" walkable="0" rotatetype="2" cash="8000" gold="0" friends="0" goldNoFriends="0" releaseDate="1779656400" world="0" events="0" xp="0" level="5" />
 <wod id="4130" n="Basic" g="Deco" t="yellowflowersmini" walkable="0" rotatetype="2" cash="700" gold="0" friends="0" goldNoFriends="0" releaseDate="1779656400" world="0" events="0" xp="0" level="5" />
 <wod id="4131" n="Basic" g="Deco" t="Pine" walkable="0" rotatetype="2" cash="25000" gold="0" friends="0" goldNoFriends="0" releaseDate="1779656400" world="0" events="0" xp="0" level="5" />
-<wod id="4132" n="Basic" g="Deco" t="Pinesnow" walkable="0" rotatetype="2" cash="25000" gold="0" friends="0" goldNoFriends="0" releaseDate="1779656400" world="0" events="0" xp="0" level="5" />
+<wod id="4132" n="Basic" g="Deco" t="Pinetreesnow" walkable="0" rotatetype="2" cash="25000" gold="0" friends="0" goldNoFriends="0" releaseDate="1779656400" world="0" events="0" xp="0" level="5" />
 <wod id="4133" n="Basic" g="Deco" t="Tree1" walkable="0" rotatetype="2" cash="25000" gold="0" friends="0" goldNoFriends="0" releaseDate="1779656400" world="0" events="0" xp="0" level="5" />
 <wod id="4134" n="Basic" g="Deco" t="Tree2" walkable="0" rotatetype="2" cash="25000" gold="0" friends="0" goldNoFriends="0" releaseDate="1779656400" world="0" events="0" xp="0" level="5" />
 <wod id="4135" n="Basic" g="Deco" t="Treeblossom1" walkable="0" rotatetype="2" cash="25000" gold="0" friends="0" goldNoFriends="0" releaseDate="1779656400" world="0" events="0" xp="0" level="5" />
@@ -328,6 +328,7 @@
 <wod id="4148" n="Basic" g="Table" t="Picnicred" walkable="0" rotatetype="1" cash="1500" gold="0" friends="0" goldNoFriends="0" releaseDate="1779656400" world="0" events="0" xp="0" level="5" />
 <wod id="4149" n="Basic" g="Table" t="Picnicyellow" walkable="0" rotatetype="1" cash="1500" gold="0" friends="0" goldNoFriends="0" releaseDate="1779656400" world="0" events="0" xp="0" level="5" />
 <wod id="4150" n="Basic" g="Chair" t="Picnic" walkable="0" rotatetype="3" cash="1000" gold="0" friends="0" goldNoFriends="0" releaseDate="1779656400" world="0" events="0" xp="0" level="5" />
+
 
 <wod id="1" n="Static" g="Tile" t="Stonemediumgrey" walkable="1" rotatetype="0" cash="20" gold="0" friends="0" goldNoFriends="0" releaseDate="0" world="0" events="0" xp="0" level="0" />
 <wod id="2" n="Static" g="Tile" t="Wooddarkbrown" walkable="1" rotatetype="0" cash="20" gold="0" friends="0" goldNoFriends="0" releaseDate="0" world="0" events="0" xp="0" level="1" />

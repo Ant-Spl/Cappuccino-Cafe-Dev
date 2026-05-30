@@ -1243,12 +1243,14 @@ Available for limited time only!"  />
 
 			<text id="preparestep_pridecupcakes_flour" name="Sift flour" />
 			<text id="preparestep_pridecupcakes_eggs" name="Crack eggs with pride" />
+			<text id="preparestep_pridecupcakes_coconut" name="Shave coconut" />
 			<text id="preparestep_pridecupcakes_sugar" name="Measure sugar" />
 			<text id="preparestep_pridecupcakes_milk" name="Measure milk" />
 
 			<text id="preparestep_ratatouille_tomato" name="Cut tomatoes" />
 			<text id="preparestep_ratatouille_eggplant" name="Slice eggplant" />
 			<text id="preparestep_ratatouille_onion" name="Chop onions" />
+			<text id="preparestep_ratatouille_cream" name="Mix cream" />
 			<text id="preparestep_ratatouille_oil" name="Measure oil" />
 
 			<text id="preparestep_hotcherryricepudding_rice" name="Weigh rice" />
@@ -1673,15 +1675,15 @@ Available for limited time only!"  />
 			<text id="recipe_ducktatters" name="Duck with Pasta Tatters"/>
 			<text id="recipe_langos" name="Lángos"/>
 			<text id="recipe_nasilemak" name="Nasi Lemak"/>
-			<text id="recipe_citrusjuice" name="Citrus Juice"/>
+			<text id="recipe_citrusjuice" name="Lemonade"/>
 			<text id="recipe_carrotcake" name="Carrot Cake"/>
 			<text id="recipe_carrotjuice" name="Carrot Juice"/>
-			<text id="recipe_francesinha" name="Francesinha"/>
+			<text id="recipe_francesinha" name="Francesinha Sandwich"/>
 			<text id="recipe_dorayaki" name="Dorayaki"/>
 			<text id="recipe_tiramisu" name="Tiramisù"/>
 			<text id="recipe_pridecupcakes" name="Pride Cupcakes" />
 			<text id="recipe_ratatouille" name="Ratatouille" />
-			<text id="recipe_hotcherryricepudding" name="Rice Pudding with Hot Cherries" />
+			<text id="recipe_hotcherryricepudding" name="Rice Pudding with Cherries" />
 			<text id="recipe_coconutcake" name="Coconut Cake" />
 			<text id="recipe_beefstew" name="Stew"  />
 			<text id="recipe_blackforestcherrycake" name="Black Forest Cake"  />

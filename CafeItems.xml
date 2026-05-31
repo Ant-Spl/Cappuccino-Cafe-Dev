@@ -692,10 +692,10 @@
 <wod id="2242" n="Basic" g="Dish" t="Carrotcake" events="0" xp="2283" incomePerServing="1" servings="2450" duration="960" level="30" dishcategory="0" requirements="1338+1#1312+1#1342+1#1307+1#1330+1#1408+1" />
 
 <wod id="1227" n="Basic" g="Dish" t="Strawberrycake" events="0" xp="1324" incomePerServing="1" servings="1040" duration="480" level="31" dishcategory="0" requirements="1328+1#1312+1#1308+1#1408+1" />
-<wod id="1257" n="Basic" g="Dish" t="Pridecupcakes" events="0" xp="25" incomePerServing="40" servings="90" duration="8" level="31" dishcategory="0" requirements="1348+1#1342+1#1312+1#1325+1#1408+1" />
+<wod id="1257" n="Basic" g="Dish" t="Pridecupcakes" events="0" xp="25" incomePerServing="42" servings="90" duration="8" level="31" dishcategory="0" requirements="1312+1#1311+1#1348+1#1325+1#1330+1#1408+1" />
 
 <wod id="1245" n="Basic" g="Dish" t="Chickensoup" events="0" xp="2670" incomePerServing="1" servings="2500" duration="1140" level="32" dishcategory="2" requirements="1301+1#1306+1#1318+1#1319+1#1406+1" />
-<wod id="1260" n="Basic" g="Dish" t="Ratatouille" events="0" xp="2023" incomePerServing="1" servings="1600" duration="780" level="32" dishcategory="1" requirements="1310+1#1327+1#1308+1#1318+1#1407+1" />
+<wod id="1260" n="Basic" g="Dish" t="Ratatouille" events="0" xp="2023" incomePerServing="1" servings="1900" duration="780" level="32" dishcategory="1" requirements="1327+1#1310+1#1318+1#1308+1#1317+1#1407+1" />
 
 <wod id="1228" n="Basic" g="Dish" t="Newyorkcheesecake" events="0" xp="1659" incomePerServing="2" servings="1300" duration="600" level="33" dishcategory="0" requirements="1332+1#1331+1#1325+1#1308+1#1408+1" />
 <wod id="1261" n="Basic" g="Dish" t="Hotcherryricepudding" events="0" xp="220" incomePerServing="10" servings="250" duration="70" level="33" dishcategory="0" requirements="1330+1#1324+1#1325+1#1339+1#1409+1" />
@@ -891,7 +891,7 @@
 <wod id="2110" n="Basic" g="Coop" t="10" events="3" maxMember="5" maxLevel="129" chips="3100" xp="197" gold="5" duration="9600" dishes="1230+12#1229+10#1201+100#1203+10" />
 <wod id="2111" n="Basic" g="Coop" t="11" events="0" maxMember="5" maxLevel="129" chips="10512" xp="1281" gold="4" duration="8880" dishes="1224+45#1226+30#1227+50#1228+40" />
 <wod id="2112" n="Basic" g="Coop" t="12" events="0" maxMember="5" maxLevel="129" chips="10050" xp="417" gold="4" duration="7560" dishes="1204+250#1212+44#1231+8#2218+40" />
-<wod id="2113" n="Basic" g="Coop" t="13" events="0" maxMember="5" maxLevel="129" chips="34550" xp="529" gold="4" duration="6120" dishes="1217+50#1225+25#2226+30" />
+<wod id="2113" n="Basic" g="Coop" t="13" events="0" maxMember="5" maxLevel="129" chips="11913" xp="679" gold="4" duration="6120" dishes="1217+50#1225+25#2226+30#2240+50" />
 <wod id="2114" n="Basic" g="Coop" t="14" events="0" maxMember="5" maxLevel="129" chips="17382" xp="1803" gold="5" duration="13480" dishes="1232+65#1234+20#1214+100" />
 <wod id="2115" n="Basic" g="Coop" t="15" events="0" maxMember="5" maxLevel="129" chips="17226" xp="941" gold="5" duration="6000" dishes="1224+50#1233+80" />
 <wod id="2116" n="Basic" g="Coop" t="16" events="0" maxMember="5" maxLevel="129" chips="11738" xp="192" gold="4" duration="6000" dishes="2236+120#2221+90#2222+60#2231+45" />
@@ -907,6 +907,8 @@
 <wod id="2126" n="Basic" g="Coop" t="26" events="0" maxMember="5" maxLevel="129" chips="13955" xp="737" gold="5" duration="8880" dishes="1223+80#1214+90#1209+60#1226+45" />
 <wod id="2127" n="Basic" g="Coop" t="27" events="0" maxMember="5" maxLevel="129" chips="22000" xp="576" gold="5" duration="8880" dishes="2226+50#1225+30#2245+200" />
 <wod id="2128" n="Basic" g="Coop" t="28" events="0" maxMember="5" maxLevel="129" chips="7700" xp="368" gold="4" duration="7560" dishes="2215+60#1203+40#2222+30#1226+20" />
+<wod id="2129" n="Basic" g="Coop" t="29" events="0" maxMember="5" maxLevel="129" chips="16500" xp="1030" gold="5" duration="8880" dishes="1258+50#1259+50" />
+<wod id="2130" n="Basic" g="Coop" t="30" events="0" maxMember="5" maxLevel="129" chips="16588" xp="299" gold="5" duration="7560" dishes="1260+25#1261+30#1256+150" />
 
 <wod id="2201" n="Smoothie" g="Fastfood" t="Tomatojuice" cash="1000" gold="0" friends="0" goldNoFriends="0" releaseDate="0" world="0" events="0" xp="5" level="0" incomePerServing="1" servings="10" color="D83600" ratingBonus="20" />
 <wod id="2202" n="Smoothie" g="Fastfood" t="Greensmoothie" cash="2500" gold="0" friends="0" goldNoFriends="0" releaseDate="0" world="0" events="0" xp="8" level="0" incomePerServing="2" servings="30" color="B1CC28" ratingBonus="40" />

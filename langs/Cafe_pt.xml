@@ -448,37 +448,37 @@ Se você estocá-la, as porções existentes serão perdidas!" />
 		<text id="coop_title_9" name="BUFFET ITALIANO" />
 		<text id="coop_title_16" name="BOM DIA!" />
 		<text id="coop_desc_short_16" name="Vamos acordar bem!" />
-		<text id="coop_desc_long_16" name="Cupcakekittycat8 vai oferecer um grande café da manhã no Mercado. Você pode fornecer parte do que será servido?" />
+		<text id="coop_desc_long_16" name="A Cupcakekittycat8 vai oferecer um grande café da manhã no Mercado. Você pode fornecer parte do que será servido?" />
 		<text id="coop_title_17" name="SOBREMESAS PÓS-ALMOÇO" />
 		<text id="coop_desc_short_17" name="Está com vontade de doces?" />
 		<text id="coop_desc_long_17" name="O chef Gabriel serviu um almoço salgado e os clientes estão desejando doces! Ajude e deixe o dia mais doce!" />
 		<text id="coop_title_18" name="VISITA DO CRÍTICO DE COMIDA!" />
 		<text id="coop_desc_short_18" name="Cozinhe para impressionar!" />
-		<text id="coop_desc_long_18" name="Cupcakekittycat8 convidou um crítico de comida para visitar seu Café e ele tem um paladar refinado! É hora de cozinhar!" />
+		<text id="coop_desc_long_18" name="A Cupcakekittycat8 convidou um crítico de comida para visitar seu Café e ele tem um paladar refinado! É hora de cozinhar!" />
 		<text id="coop_title_19" name="LAN PARTY!" />
 		<text id="coop_desc_short_19" name="Fast food para jogos rápidos!" />
-		<text id="coop_desc_long_19" name="O chef Surfguiger5 decidiu participar de uma LAN party e ficou responsável por levar a comida. Mas os participantes querem muita coisa! Ajude!" />
+		<text id="coop_desc_long_19" name="A chef Surfguiger5 decidiu participar de uma LAN party e ficou responsável por levar a comida. Mas os participantes querem muita coisa! Ajude!" />
 		<text id="coop_title_20" name="DRIVE-THRU TARDE DA NOITE" />
 		<text id="coop_desc_short_20" name="Um jantar rápido para um longo dia!" />
-		<text id="coop_desc_long_20" name="Patawka abriu um drive-thru e está disposta a dividir os lucros com quem ajudar a fornecer comida para ela. Participe!" />
+		<text id="coop_desc_long_20" name="A chef Patawka abriu um drive-thru e está disposta a dividir os lucros com quem ajudar a fornecer comida para ela. Participe!" />
 		<text id="coop_title_21" name="APENAS COMIDA FIT!" />
 		<text id="coop_desc_short_21" name="É hora de comer bem!" />
-		<text id="coop_desc_long_21" name="O chef Surfguiger5 soube da febre dos Omeletes Triplos e está preocupado com o ganho de peso. Cozinhe comida saudável para provar que seu Café também é saudável!" />
+		<text id="coop_desc_long_21" name="A chef Surfguiger5 soube da febre dos Omeletes Triplos e está preocupado com o ganho de peso. Cozinhe comida saudável para provar que seu Café também é saudável!" />
 		<text id="coop_title_22" name="BRUNCH DE HOTEL" />
 		<text id="coop_desc_short_22" name="Quer um lanche rápido?" />
-		<text id="coop_desc_long_22" name="Pediram ao chef Surfguiger5 que fornecesse comida para um brunch no hotel local. No entanto, os fogões quebraram e cabe a você ajudar! Os lucros serão divididos." />
+		<text id="coop_desc_long_22" name="Pediram à chef Surfguiger5 que fornecesse comida para um brunch no hotel local. No entanto, os fogões quebraram e cabe a você ajudar! Os lucros serão divididos." />
 		<text id="coop_title_23" name="JEITINHO BRASILEIRO" />
 		<text id="coop_desc_short_23" name="Aproveite o que o Brasil tem a oferecer!" />
-		<text id="coop_desc_long_23" name="O chef Surfguiger5 quer que todos experimentem a comida brasileira. Vamos cozinhar!" />
+		<text id="coop_desc_long_23" name="A chef Surfguiger5 quer que todos experimentem a comida brasileira. Vamos cozinhar!" />
 		<text id="coop_title_24" name="CONTANDO CARBOIDRATOS" />
 		<text id="coop_desc_short_24" name="Uma recarga de energia!" />
 		<text id="coop_desc_long_24" name="A academia local pediu à chef Artemis que fornecesse pratos ricos em carboidratos para manter os clientes energizados. Ajude para ganhar sua parte também!" />
 		<text id="coop_title_25" name="DEGUSTAÇÃO DE CASAMENTO" />
 		<text id="coop_desc_short_25" name="Um casamento está chegando!" />
-		<text id="coop_desc_long_25" name="Kvmxl disse que a Moça do Café e o Homem-Muffin vão se casar! Disseram que eles pagarão muito bem para qualquer Café que tiver a comida favorita deles. Será que os rumores são verdadeiros?" />
+		<text id="coop_desc_long_25" name="Chef Kvmxl disse que a Moça do Café e o Homem-Muffin vão se casar! Disseram que eles pagarão muito bem para qualquer Café que tiver a comida favorita deles. Será que os rumores são verdadeiros?" />
 		<text id="coop_title_26" name="BUFFET DE JANTAR" />
 		<text id="coop_desc_short_26" name="Comam à vontade!" />
-		<text id="coop_desc_long_26" name="Cupcakekittycat8 quer um jantar com muita comida. Ajude!" />
+		<text id="coop_desc_long_26" name="A Cupcakekittycat8 quer um jantar com muita comida. Ajude!" />
 		<text id="coop_title_27" name="OISH-INCRÍVEL" />
 		<text id="coop_desc_short_27" name="Tão bom!" />
 		<text id="coop_desc_long_27" name="Chef Nao quer servir comida para uma convenção de anime que está acontecendo no Café ao lado. Dê uma mãozinha!" />
@@ -503,9 +503,9 @@ Se você estocá-la, as porções existentes serão perdidas!" />
 		<text id="coop_title_35" name="BANQUETE PARA A FAMÍLIA" />
 		<text id="coop_desc_short_35" name="Todo mundo está aqui!" />
 		<text id="coop_desc_long_35" name="Sua família inteira, os amigos dela, seus amigos e as famílias deles estão TODOS indo visitar seu Café e celebrar seus negócios. Deixe-os orgulhosos!" />
-		<text id="coop_title_36" name="WE NEED LOTS OF EGGS!" />
-		<text id="coop_desc_short_36" name="Did they actually come first?" />
-		<text id="coop_desc_long_36" name="Chef Myleeek is conducting research on who came first: the chicken or the egg? Cook dishes with eggs to provide data!" />
+		<text id="coop_title_36" name="PRECISAMOS DE MUITOS OVOS!" />
+		<text id="coop_desc_short_36" name="Eles realmente vieram primeiro?" />
+		<text id="coop_desc_long_36" name="O Chef Myleeek está estudando quem veio primeiro: o ovo ou a galinha? Cozinhe pratos com ovos para descobrir!" />
 	</coopmission>
 	<dialogs>
 		<text id="dialogwin_achievement_title" name="Conquistas" />

@@ -13,7 +13,7 @@
 		<text id="Basic_Achievement_Firenpc" name="Γαρνιτούρα στα κάρβουνα" />
 		<text id="Basic_Achievement_Instantcount" name="Ανυπόμονο Ορεκτικό" />
 		<text id="Basic_Achievement_Jobclean" name="Ο θορυβώδης αρτοποιός" />
-		<text id="Basic_Achievement_Jobserve" name="Ιπτάμενο καυτό δοχείο" />
+		<text id="Basic_Achievement_JobserSve" name="Ιπτάμενο καυτό δοχείο" />
 		<text id="Basic_Achievement_Masteies" name="Ο βασιλιάς του γρήγορου φαγητού" />
 		<text id="Basic_Achievement_Masteriesgold" name="Χρυσός Βασιλιάς του φαγητού" />
 		<text id="Basic_Achievement_Muffinmancash" name="Το γεναιόδωρο μάφιν" />
@@ -260,12 +260,12 @@
 		<text id="cookstep_combomeal2" name="Frying fries somehow" />
 		<text id="cookstep_zcordonbleu1" name="Preparing chicken" />
 		<text id="cookstep_zcordonbleu2" name="Adding lemon slices" />
-		<text id="cookstep_brazilianpastel1" name="Frying pastels" />
-		<text id="cookstep_brazilianpastel2" name="Almost there" />
+		<text id="cookstep_Βραζιλιάνικαpastel1" name="Frying pastels" />
+		<text id="cookstep_Βραζιλιάνικαpastel2" name="Almost there" />
 		<text id="cookstep_lechonkawali1" name="Preparing pork belly" />
 		<text id="cookstep_lechonkawali2" name="Frying until crispy" />
 		<text id="cookstep_sweetpizza1" name="Spreading chocolate" />
-		<text id="cookstep_sweetpizza2" name="Baking sweet pizza" />
+		<text id="cookstep_sweetpizza2" name="Baking Γλυκιά πίτσα" />
 		<text id="cookstep_shakshuka1" name="Melting tomatoes" />
 		<text id="cookstep_shakshuka2" name="Simmering sauce" />
 		<text id="cookstep_blackforestcherrycake1" name="αναμειγνύοντας συστατικά" />
@@ -488,9 +488,9 @@
 		<text id="coop_title_22" name="HOTEL BRUNCH" />
 		<text id="coop_desc_short_22" name="Want a quick bite?" />
 		<text id="coop_desc_long_22" name="Chef Surfguiger5 was asked by the local hotel to provide food for a brunch. However, the stoves broke and it&apos;s up to you to help! Profits will be shared." />
-		<text id="coop_title_23" name="BRAZILIAN WAY" />
+		<text id="coop_title_23" name="Βραζιλιάνικα WAY" />
 		<text id="coop_desc_short_23" name="Enjoy what Brazil has to offer!" />
-		<text id="coop_desc_long_23" name="Chef Surfguiger5 wants everyone to taste Brazilian food. Cook it!" />
+		<text id="coop_desc_long_23" name="Chef Surfguiger5 wants everyone to taste Βραζιλιάνικα food. Cook it!" />
 		<text id="coop_title_24" name="THE CARB COUNTER" />
 		<text id="coop_desc_short_24" name="An energy refill!" />
 		<text id="coop_desc_long_24" name="The local gym asked chef Artemis to supply dishes rich in carbs to keep the clients energized. Help out to earn your share too!" />
@@ -514,7 +514,7 @@
 		<text id="coop_desc_long_30" name="A mouse was spotted in your Café and it wants fancy food to be served or it will ruin your business! Why does this feel familiar?" />
 		<text id="coop_title_32" name="BRAZIL AND PORTUGAL" />
 		<text id="coop_desc_short_32" name="Shorten the distance with food!" />
-		<text id="coop_desc_long_32" name="An international event is happening but Brazilian and Portugese visitors are homesick. Make traditional food to make them happy!" />
+		<text id="coop_desc_long_32" name="An international event is happening but Βραζιλιάνικα and Portugese visitors are homesick. Make traditional food to make them happy!" />
 		<text id="coop_title_33" name="DEV&apos;S CHOICE!" />
 		<text id="coop_desc_short_33" name="Fuel for more development!" />
 		<text id="coop_desc_long_33" name="Chef Gab needs very large amounts of his favorite food to be cooked to stress test the servers! Help out!" />
@@ -611,7 +611,7 @@
 		<text id="dialogwin_coop_maxuser" name="Μέγιστος αριθμός των συμμετεχόντων: {0}" />
 		<text id="dialogwin_coop_member" name="Μέλος της Συνεργασίας:" />
 		<text id="dialogwin_coop_minlevel" name="Ελάχιστο επίπεδο για να μπεις στη συνεργασία: {0}" />
-		<text id="dialogwin_coop_quit_copy" name="Θέλεις σίγουρα ν&amp;#039;αφήσεις αυτή τη Συνεργασία?" />
+		<text id="dialogwin_coop_quit_copy" name="Θέλεις σίγουρα ν&amp;#039;αφήσεις αυτή τη Συνεργασία;" />
 		<text id="dialogwin_coop_subtitle" name="Πρέπει να μαγειρέψεις τα ακόλουθα:" />
 		<text id="dialogwin_coop_timeInfo" name="Ολοκληρώνεται σε:" />
 		<text id="dialogwin_coop_timeleft" name="Χρόνος που απομένει:" />
@@ -619,9 +619,9 @@
 Γιατί δε ξεκινάς μία!" />
 		<text id="dialogwin_coop_txt_title" name="ΣΥΝΕΡΓΑΣΙΕΣ" />
 		<text id="dialogwin_decoshophelp_copy" name="Αν σύρεις τα έπιπλα και τις διακοσμήσεις μέσα σε αυτό το πλαίσιο καί όχι πάνω στην ταμειακή μηχανή, θα αποθηκευτούν. Μπορείς να τα ξαναχρησιμοποιήσεις με το να τα τραβήξεις πίσω μέσα στο καφέ σου. Αυτό δε θα σου στοιχίσει τίποτα. Ο αριθμός των αντικειμένων είναι ορατός στο κόκκινο αυτοκόλλητο που είναι πάνω του." />
-		<text id="dialogwin_decoshophelp_copy_1" name="Τα έπιπλα και οι διακοσμήσεις έχουν μία αξία πολυτέλειας. Στο σύνολο, αυτό ορίζει την αξία πολυτέλειας του καφέ σου! Πόσο πολυτελές είναι το καφέ σου?" />
-		<text id="dialogwin_decoshophelp_title" name="Αποθήκευση διακοσμήσεων?" />
-		<text id="dialogwin_decoshophelp_title_1" name="Αξία πολυτέλειας?" />
+		<text id="dialogwin_decoshophelp_copy_1" name="Τα έπιπλα και οι διακοσμήσεις έχουν μία αξία πολυτέλειας. Στο σύνολο, αυτό ορίζει την αξία πολυτέλειας του καφέ σου! Πόσο πολυτελές είναι το καφέ σου;" />
+		<text id="dialogwin_decoshophelp_title" name="Αποθήκευση διακοσμήσεων;" />
+		<text id="dialogwin_decoshophelp_title_1" name="Αξία πολυτέλειας;" />
 		<text id="dialogwin_dishmastery_copy_0" name="Κέρδισες ένα αστέρι για {0}!" />
 		<text id="dialogwin_dishmastery_copy_1" name="Μοίρασε κάποια επιπλέον σερβιρίσματα με τους φίλους σου!" />
 		<text id="dialogwin_dishmastery_info" name="Κάθε Μαεστρία που κερδίζεις κάνει τα γεύματά σου καλύτερα!" />
@@ -1143,222 +1143,222 @@
 	<preparestep>
 		<text id="preparestep_bananasplit_banana" name="ξεφλουδίσεις μπανάνα" />
 		<text id="preparestep_bananasplit_chocolate" name="ψιλοκόψεις τη σοκολάτα" />
-		<text id="preparestep_brigadeiro_chocolate" name="Cut chocolate" />
-		<text id="preparestep_brigadeiro_cream" name="Mix cream" />
-		<text id="preparestep_brigadeiro_vanilla" name="Shave vanilla" />
-		<text id="preparestep_coxinha_flour" name="Spread flour" />
-		<text id="preparestep_coxinha_chicken" name="Shred chicken" />
-		<text id="preparestep_coxinha_onion" name="Chop onions" />
-		<text id="preparestep_coxinha_cream" name="Make cream cheese" />
-		<text id="preparestep_coxinha_oil" name="Heat oil" />
-		<text id="preparestep_coxinha_coriander" name="Chop coriander" />
-		<text id="preparestep_pizzasalad_tomato" name="Cut tomatoes" />
-		<text id="preparestep_pizzasalad_onion" name="Cut onions" />
-		<text id="preparestep_pizzasalad_lettuce" name="Wash lettuce" />
-		<text id="preparestep_pizzasalad_cheese" name="Grate cheese" />
-		<text id="preparestep_pizzasalad_flour" name="Sift flour" />
-		<text id="preparestep_tripleomelette_eggs" name="Crack eggs strongly" />
-		<text id="preparestep_tripleomelette_chili" name="Make it spicy" />
-		<text id="preparestep_chocolatewaffles_flour" name="Measure flour" />
-		<text id="preparestep_chocolatewaffles_cream" name="Whip cream" />
-		<text id="preparestep_chocolatewaffles_eggs" name="Crack eggs softly" />
-		<text id="preparestep_chocolatewaffles_chocolate" name="Melt chocolate" />
-		<text id="preparestep_chocolatewaffles_vanilla" name="Add vanilla extract" />
-		<text id="preparestep_spanishomelette_potato" name="Peel potatoes" />
-		<text id="preparestep_spanishomelette_onion" name="Chop onions" />
-		<text id="preparestep_spanishomelette_eggs" name="Crack eggs in Spanish" />
-		<text id="preparestep_spanishomelette_parsley" name="Chop parsley" />
-		<text id="preparestep_sausagepasta_pasta" name="Boil pasta" />
-		<text id="preparestep_sausagepasta_sausages" name="Chop sausages" />
-		<text id="preparestep_sausagepasta_tomato" name="Make tomato sauce" />
-		<text id="preparestep_sausagepasta_coriander" name="Chop coriander" />
-		<text id="preparestep_applepie_cream" name="Whip cream" />
-		<text id="preparestep_applepie_eggs" name="Crack eggs elegantly" />
-		<text id="preparestep_applepie_flour" name="Measure flour" />
-		<text id="preparestep_applepie_apple" name="Think about apple economy" />
-		<text id="preparestep_applepie_cinnamon" name="Add cinnamon" />
-		<text id="preparestep_ramen_pasta" name="Boil pasta" />
-		<text id="preparestep_ramen_eggs" name="Boil eggs" />
-		<text id="preparestep_ramen_bacon" name="Chop bacon" />
-		<text id="preparestep_ramen_chili" name="Make it spicy" />
-		<text id="preparestep_corncake_sweetcorn" name="Make cornflakes" />
-		<text id="preparestep_corncake_butter" name="Melt butter" />
-		<text id="preparestep_corncake_eggs" name="Mix eggs" />
-		<text id="preparestep_corncake_milk" name="Add milk" />
-		<text id="preparestep_corncake_sugar" name="Mix sugar in the dough" />
-		<text id="preparestep_corncake_cinnamon" name="Add cinnamon" />
-		<text id="preparestep_feijoada_beans" name="Boil beans" />
-		<text id="preparestep_feijoada_bacon" name="Chop bacon chunks" />
-		<text id="preparestep_feijoada_sausages" name="Cut sausages" />
-		<text id="preparestep_feijoada_onion" name="Chop onions" />
-		<text id="preparestep_feijoada_garlic" name="Toss garlic in" />
-		<text id="preparestep_feijoada_coriander" name="Add coriander" />
-		<text id="preparestep_pinapjuice_pinapple" name="Chop pineapple" />
-		<text id="preparestep_pinapjuice_vanilla" name="Add vanilla" />
-		<text id="preparestep_orangejuice_orange" name="Slice oranges" />
-		<text id="preparestep_orangejuice_sugar" name="Add sugar" />
-		<text id="preparestep_orangejuice_vanilla" name="Add vanilla" />
-		<text id="preparestep_discodrinks_cream" name="Whip cream" />
-		<text id="preparestep_discodrinks_pinapple" name="Chop pineapple" />
-		<text id="preparestep_discodrinks_apple" name="Slice apples" />
-		<text id="preparestep_discodrinks_sugar" name="Add sugar" />
-		<text id="preparestep_discodrinks_milk" name="Pour milk" />
-		<text id="preparestep_discodrinks_vanilla" name="Add vanilla" />
-		<text id="preparestep_applejuice_apple" name="Slice apples" />
-		<text id="preparestep_applejuice_sugar" name="Add sugar" />
-		<text id="preparestep_applejuice_vanilla" name="Add vanilla" />
-		<text id="preparestep_rjuice_rhubarb" name="Chop rhubarb" />
-		<text id="preparestep_rjuice_sugar" name="Add sugar" />
-		<text id="preparestep_rjuice_vanilla" name="Add vanilla" />
-		<text id="preparestep_cherryjuice_cherries" name="Wash cherries" />
-		<text id="preparestep_cherryjuice_sugar" name="Add sugar" />
-		<text id="preparestep_cherryjuice_vanilla" name="Add vanilla" />
-		<text id="preparestep_strawberryjuice_strawberry" name="Wash strawberries" />
-		<text id="preparestep_strawberryjuice_sugar" name="Add sugar" />
-		<text id="preparestep_strawberryjuice_vanilla" name="Add vanilla" />
-		<text id="preparestep_cappuccino_cookfest" name="Think about next Cookfest" />
-		<text id="preparestep_cappuccino_cinnamon" name="Sprinkle cinnamon" />
-		<text id="preparestep_duckalcitrus_duck" name="Prepare duck" />
-		<text id="preparestep_duckalcitrus_butter" name="Melt butter" />
-		<text id="preparestep_duckalcitrus_onion" name="Chop onions" />
-		<text id="preparestep_duckalcitrus_citrus" name="Squeeze citrus" />
-		<text id="preparestep_ducktatters_duck" name="Shapeshift duck" />
-		<text id="preparestep_ducktatters_potato" name="Chop potatoes" />
-		<text id="preparestep_ducktatters_pasta" name="Boil pasta" />
-		<text id="preparestep_ducktatters_oil" name="Heat oil" />
-		<text id="preparestep_langos_flour" name="Sift flour" />
-		<text id="preparestep_langos_eggs" name="Crack eggs" />
-		<text id="preparestep_langos_cream" name="Whip cream" />
-		<text id="preparestep_langos_garlic" name="Press garlic" />
-		<text id="preparestep_langos_cheese" name="Grate cheese" />
-		<text id="preparestep_nasilemak_rice" name="Wash rice" />
-		<text id="preparestep_nasilemak_eggs" name="Boil eggs" />
-		<text id="preparestep_nasilemak_onion" name="Chop onions" />
-		<text id="preparestep_nasilemak_beans" name="Cook beans" />
-		<text id="preparestep_nasilemak_cucumber" name="Slice cucumbers" />
-		<text id="preparestep_citrusjuice_citrus" name="Squeeze citrus" />
-		<text id="preparestep_citrusjuice_sugar" name="Measure sugar" />
-		<text id="preparestep_carrotcake_carrots" name="Grate carrots" />
-		<text id="preparestep_carrotcake_flour" name="Sift flour" />
-		<text id="preparestep_carrotcake_whitechocolat" name="Chop white chocolate" />
-		<text id="preparestep_carrotcake_chocolate" name="Melt chocolate" />
-		<text id="preparestep_carrotcake_milk" name="Measure milk" />
-		<text id="preparestep_carrotjuice_carrots" name="Peel carrots" />
-		<text id="preparestep_carrotjuice_sugar" name="Measure sugar" />
-		<text id="preparestep_francesinha_cheese" name="Slice cheese" />
-		<text id="preparestep_francesinha_eggs" name="Fry eggs" />
-		<text id="preparestep_francesinha_mincemeat" name="Cook meat" />
-		<text id="preparestep_francesinha_sausages" name="Slice sausages" />
-		<text id="preparestep_francesinha_onion" name="Chop onions" />
-		<text id="preparestep_dorayaki_flour" name="Sift flour" />
-		<text id="preparestep_dorayaki_eggs" name="Crack eggs" />
-		<text id="preparestep_dorayaki_beans" name="Mash beans" />
-		<text id="preparestep_dorayaki_sugar" name="Measure sugar" />
-		<text id="preparestep_tiramisu_chocolate" name="Grate chocolate" />
-		<text id="preparestep_tiramisu_cookies" name="Soak cookies" />
-		<text id="preparestep_tiramisu_quark" name="Whip quark" />
-		<text id="preparestep_tiramisu_eggs" name="Separate eggs" />
-		<text id="preparestep_pridecupcakes_flour" name="Sift flour" />
-		<text id="preparestep_pridecupcakes_eggs" name="Crack eggs with pride" />
+		<text id="preparestep_brigadeiro_chocolate" name="Κοψε την σοκολάτα" />
+		<text id="preparestep_brigadeiro_cream" name="Ανακάτευσε την κρεμα" />
+		<text id="preparestep_brigadeiro_vanilla" name="ξύσε την βανίλια" />
+		<text id="preparestep_coxinha_flour" name="Σκορπιστέ αλεύρι" />
+		<text id="preparestep_coxinha_chicken" name="Ψιλόκοψε το κοτοπουλο" />
+		<text id="preparestep_coxinha_onion" name="Κόβεις κρεμμύδια" />
+		<text id="preparestep_coxinha_cream" name="Δημιούργησε τυρί κρεμα" />
+		<text id="preparestep_coxinha_oil" name="Ζεσταίνεις λαδί" />
+		<text id="preparestep_coxinha_coriander" name="ψιλοκόψεις κόλιανδρο" />
+		<text id="preparestep_pizzasalad_tomato" name="Κόβεις ντομάτες" />
+		<text id="preparestep_pizzasalad_onion" name="Ψιλόκοψε κρεμμύδια" />
+		<text id="preparestep_pizzasalad_lettuce" name="πλύνε το μαρούλι " />
+		<text id="preparestep_pizzasalad_cheese" name="Τρίβεις τυρί" />
+		<text id="preparestep_pizzasalad_flour" name="Κοσκινίζεις το αλεύρι" />
+		<text id="preparestep_tripleomelette_eggs" name="Σπάζεις αυγά strongly" />
+		<text id="preparestep_tripleomelette_chili" name="καν το πικάντικο" />
+		<text id="preparestep_chocolatewaffles_flour" name="Ζύγισε το αλεύρι" />
+		<text id="preparestep_chocolatewaffles_cream" name="Κρέμα σαντιγί" />
+		<text id="preparestep_chocolatewaffles_eggs" name="Σπάζεις αυγά απαλά" />
+		<text id="preparestep_chocolatewaffles_chocolate" name="Λιώνεις σοκολάτα" />
+		<text id="preparestep_chocolatewaffles_vanilla" name="Προσθέστε εκχύλισμα βανίλιας" />
+		<text id="preparestep_spanishomelette_potato" name="Ξεφλουδίζε πατάτες" />
+		<text id="preparestep_spanishomelette_onion" name="Κόβεις κρεμμύδια" />
+		<text id="preparestep_spanishomelette_eggs" name="Σπάζεις αυγά in Spanish" />
+		<text id="preparestep_spanishomelette_parsley" name="ψιλοκόψεις μαϊντανό" />
+		<text id="preparestep_sausagepasta_pasta" name="Βάρσε την παστά" />
+		<text id="preparestep_sausagepasta_sausages" name="Ψιλόκοψε λουκάνικα" />
+		<text id="preparestep_sausagepasta_tomato" name="Δημιουργήσε σάλτσα ντομάτας" />
+		<text id="preparestep_sausagepasta_coriander" name="ψιλοκόψεις κόλιανδρο" />
+		<text id="preparestep_applepie_cream" name="Κρέμα σαντιγί" />
+		<text id="preparestep_applepie_eggs" name="Σπάζεις αυγά κομψά" />
+		<text id="preparestep_applepie_flour" name="Ζύγισε το αλεύρι" />
+		<text id="preparestep_applepie_apple" name="Σκέψου σχετικά με την οικονομία των μήλων" />
+		<text id="preparestep_applepie_cinnamon" name="Προσέθεσε κανέλα" />
+		<text id="preparestep_ramen_pasta" name="Βάρσε την παστά" />
+		<text id="preparestep_ramen_eggs" name="Βραστέ τα αυγά" />
+		<text id="preparestep_ramen_bacon" name="Ψιλόκοψε μπέικον" />
+		<text id="preparestep_ramen_chili" name="καν το πικάντικο" />
+		<text id="preparestep_corncake_sweetcorn" name="φτιαξε cornflakes" />
+		<text id="preparestep_corncake_butter" name="Λιώνεις βουτύρο" />
+		<text id="preparestep_corncake_eggs" name="Ανακάτευσε με τα αυγά" />
+		<text id="preparestep_corncake_milk" name="Προσθέτεις γάλα" />
+		<text id="preparestep_corncake_sugar" name="Ανακάτευσε την ζάχαρη με την ζύμη" />
+		<text id="preparestep_corncake_cinnamon" name="Προσέθεσε κανέλα" />
+		<text id="preparestep_feijoada_beans" name="Βάρσε τα φασολιά" />
+		<text id="preparestep_feijoada_bacon" name="Ψιλόκοψε κομμάτια μπέικον" />
+		<text id="preparestep_feijoada_sausages" name="Ψιλόκοψε τα λουκάνικα" />
+		<text id="preparestep_feijoada_onion" name="Κόβεις κρεμμύδια" />
+		<text id="preparestep_feijoada_garlic" name="Ρίξτε μέσα το σκόρδο" />
+		<text id="preparestep_feijoada_coriander" name="Προσθέστε τον κόλιανδρο" />
+		<text id="preparestep_pinapjuice_pinapple" name="Καθαρίσε τον ανανά" />
+		<text id="preparestep_pinapjuice_vanilla" name="Προσέθεσε βανίλια" />
+		<text id="preparestep_orangejuice_orange" name="Ψιλόκοψε τα πορτοκαλιά" />
+		<text id="preparestep_orangejuice_sugar" name="Προσέθεσε ζάχαρη" />
+		<text id="preparestep_orangejuice_vanilla" name="Προσέθεσε βανίλια" />
+		<text id="preparestep_discodrinks_cream" name="Κρέμα σαντιγί" />
+		<text id="preparestep_discodrinks_pinapple" name="Καθαρίσε τον ανανά" />
+		<text id="preparestep_discodrinks_apple" name="Ψιλόκοψε τα μήλα" />
+		<text id="preparestep_discodrinks_sugar" name="Προσέθεσε ζάχαρη" />
+		<text id="preparestep_discodrinks_milk" name="Προσθέτεις γάλα" />
+		<text id="preparestep_discodrinks_vanilla" name="Προσέθεσε βανίλια" />
+		<text id="preparestep_applejuice_apple" name="Ψιλόκοψε τα μήλα" />
+		<text id="preparestep_applejuice_sugar" name="Προσέθεσε ζάχαρη" />
+		<text id="preparestep_applejuice_vanilla" name="Προσέθεσε βανίλια" />
+		<text id="preparestep_rjuice_rhubarb" name="Καθαρίσε το ραβέντι" />
+		<text id="preparestep_rjuice_sugar" name="Προσέθεσε ζάχαρη" />
+		<text id="preparestep_rjuice_vanilla" name="Προσέθεσε βανίλια" />
+		<text id="preparestep_cherryjuice_cherries" name="Πλύνε τα κεράσια" />
+		<text id="preparestep_cherryjuice_sugar" name="Προσέθεσε ζάχαρη" />
+		<text id="preparestep_cherryjuice_vanilla" name="Προσέθεσε βανίλια" />
+		<text id="preparestep_strawberryjuice_strawberry" name="Πλύνε τις φράουλες" />
+		<text id="preparestep_strawberryjuice_sugar" name="Προσέθεσε ζάχαρη" />
+		<text id="preparestep_strawberryjuice_vanilla" name="Προσέθεσε βανίλια" />
+		<text id="preparestep_cappuccino_cookfest" name="Σκέψου σχετικά με το επόμενο Cookfest" />
+		<text id="preparestep_cappuccino_cinnamon" name="Πασπάλισε κανέλα" />
+		<text id="preparestep_duckalcitrus_duck" name="Προετοίμασε την παπιά" />
+		<text id="preparestep_duckalcitrus_butter" name="Λιώνεις βουτύρο" />
+		<text id="preparestep_duckalcitrus_onion" name="Κόβεις κρεμμύδια" />
+		<text id="preparestep_duckalcitrus_citrus" name="Στρίβε εσπεριδοειδή" />
+		<text id="preparestep_ducktatters_duck" name="Shapeshift παπια" />
+		<text id="preparestep_ducktatters_potato" name="Ψιλοκόβεις τις ντομάτες" />
+		<text id="preparestep_ducktatters_pasta" name="Βάρσε την παστά" />
+		<text id="preparestep_ducktatters_oil" name="Ζεσταίνεις λαδί" />
+		<text id="preparestep_langos_flour" name="Κοσκινίζεις το αλεύρι" />
+		<text id="preparestep_langos_eggs" name="Σπάζεις αυγά" />
+		<text id="preparestep_langos_cream" name="Κρέμα σαντιγί" />
+		<text id="preparestep_langos_garlic" name="Λιώνεις σκόρδο" />
+		<text id="preparestep_langos_cheese" name="Τρίβεις τυρί" />
+		<text id="preparestep_nasilemak_rice" name="πλύνε το ρύζι" />
+		<text id="preparestep_nasilemak_eggs" name="Βραστέ τα αυγά" />
+		<text id="preparestep_nasilemak_onion" name="Κόβεις κρεμμύδια" />
+		<text id="preparestep_nasilemak_beans" name="Μαγείρευσε τα φασολιά" />
+		<text id="preparestep_nasilemak_cucumber" name="Ψιλοκόψεις αγγούρια" />
+		<text id="preparestep_citrusjuice_citrus" name="Στρίβε εσπεριδοειδή" />
+		<text id="preparestep_citrusjuice_sugar" name="Μέτρα την ζάχαρη" />
+		<text id="preparestep_carrotcake_carrots" name="Τρίψτε τα καρότα" />
+		<text id="preparestep_carrotcake_flour" name="Κοσκινίζεις το αλεύρι" />
+		<text id="preparestep_carrotcake_whitechocolat" name="Ψιλοκόψε την άσπρη σοκολάτα" />
+		<text id="preparestep_carrotcake_chocolate" name="Λιώνεις σοκολάτα" />
+		<text id="preparestep_carrotcake_milk" name="Μέτρα το γαλα" />
+		<text id="preparestep_carrotjuice_carrots" name="Ξεφλουδίζεις καρότα" />
+		<text id="preparestep_carrotjuice_sugar" name="Μέτρα την ζάχαρη" />
+		<text id="preparestep_francesinha_cheese" name="Ψιλοκόβεις το τυρί" />
+		<text id="preparestep_francesinha_eggs" name="Τηγανισέ τα αυγά" />
+		<text id="preparestep_francesinha_mincemeat" name="Μαγείρευσε το κρέας" />
+		<text id="preparestep_francesinha_sausages" name="Ψιλοκόψε τα λουκάνικα" />
+		<text id="preparestep_francesinha_onion" name="Κόβεις κρεμμύδια" />
+		<text id="preparestep_dorayaki_flour" name="Κοσκινίζεις το αλεύρι" />
+		<text id="preparestep_dorayaki_eggs" name="Σπάζεις αυγά" />
+		<text id="preparestep_dorayaki_beans" name="Πολτοποιήστε τα φασόλια" />
+		<text id="preparestep_dorayaki_sugar" name="Μέτρα την ζάχαρη" />
+		<text id="preparestep_tiramisu_chocolate" name="Τρίψτε τη σοκολάτα" />
+		<text id="preparestep_tiramisu_cookies" name="Μουλιάσε τα μπισκότα" />
+		<text id="preparestep_tiramisu_quark" name="Ανακατευτείς το κουάρκ" />
+		<text id="preparestep_tiramisu_eggs" name="ξεχώρισε τα αυγά" />
+		<text id="preparestep_pridecupcakes_flour" name="Κοσκινίζεις το αλεύρι" />
+		<text id="preparestep_pridecupcakes_eggs" name="Σπάζεις αυγά with pride" />
 		<text id="preparestep_pridecupcakes_coconut" name="Shave coconut" />
-		<text id="preparestep_pridecupcakes_sugar" name="Measure sugar" />
-		<text id="preparestep_pridecupcakes_milk" name="Measure milk" />
-		<text id="preparestep_ratatouille_tomato" name="Cut tomatoes" />
-		<text id="preparestep_ratatouille_eggplant" name="Slice eggplant" />
-		<text id="preparestep_ratatouille_onion" name="Chop onions" />
-		<text id="preparestep_ratatouille_cream" name="Mix cream" />
-		<text id="preparestep_ratatouille_oil" name="Measure oil" />
-		<text id="preparestep_hotcherryricepudding_rice" name="Weigh rice" />
-		<text id="preparestep_hotcherryricepudding_cherries" name="Pit cherries" />
-		<text id="preparestep_hotcherryricepudding_sugar" name="Measure sugar" />
-		<text id="preparestep_hotcherryricepudding_milk" name="Measure milk" />
-		<text id="preparestep_coconutcake_flour" name="Sift flour" />
-		<text id="preparestep_coconutcake_eggs" name="Crack eggs" />
-		<text id="preparestep_coconutcake_milk" name="Pour milk" />
-		<text id="preparestep_coconutcake_coconut" name="Grate coconut" />
-		<text id="preparestep_coconutcake_sugar" name="Measure sugar" />
-		<text id="preparestep_paodequeijo_eggs" name="Crack eggs" />
-		<text id="preparestep_paodequeijo_cheese" name="Grate cheese" />
-		<text id="preparestep_paodequeijo_flour" name="Sift flour" />
-		<text id="preparestep_paodequeijo_oil" name="Measure oil" />
-		<text id="preparestep_baiaodedois_rice" name="Weigh rice" />
-		<text id="preparestep_baiaodedois_beans" name="Rinse beans" />
-		<text id="preparestep_baiaodedois_cheese" name="Cube cheese" />
-		<text id="preparestep_baiaodedois_bacon" name="Cube bacon" />
-		<text id="preparestep_baiaodedois_onion" name="Chop onion" />
-		<text id="preparestep_bakedalaska_cream" name="Whip cream" />
-		<text id="preparestep_bakedalaska_eggs" name="Separate eggs" />
-		<text id="preparestep_bakedalaska_sugar" name="Measure sugar" />
-		<text id="preparestep_butterchicken_tomato" name="Blend tomatoes" />
-		<text id="preparestep_butterchicken_chicken" name="Cut chicken" />
-		<text id="preparestep_butterchicken_cream" name="Measure cream" />
-		<text id="preparestep_butterchicken_butter" name="Melt butter" />
-		<text id="preparestep_butterchicken_curryspice" name="Add curry" />
-		<text id="preparestep_chickenbiryani_tomato" name="Chop tomatoes" />
-		<text id="preparestep_chickenbiryani_onion" name="Chop onions" />
-		<text id="preparestep_chickenbiryani_rice" name="Cook rice" />
-		<text id="preparestep_chickenbiryani_chicken" name="Sauté chicken" />
-		<text id="preparestep_chickenbiryani_potato" name="Cube potatoes" />
-		<text id="preparestep_cottagepotatoes_cream" name="Mix cream" />
-		<text id="preparestep_cottagepotatoes_onion" name="Chop onions" />
-		<text id="preparestep_cottagepotatoes_quark" name="Whip quark" />
-		<text id="preparestep_cottagepotatoes_butter" name="Add butter" />
-		<text id="preparestep_cottagepotatoes_potato" name="Boil potatoes" />
-		<text id="preparestep_cuzcuzcomovo_sweetcorn" name="Prepare cornmeal" />
-		<text id="preparestep_cuzcuzcomovo_eggs" name="Crack eggs" />
-		<text id="preparestep_cuzcuzcomovo_butter" name="Melt butter" />
-		<text id="preparestep_malaichickennaan_chicken" name="Cut chicken" />
-		<text id="preparestep_malaichickennaan_cream" name="Whip cream" />
-		<text id="preparestep_malaichickennaan_garlic" name="Press garlic" />
-		<text id="preparestep_malaichickennaan_oil" name="Heat oil" />
-		<text id="preparestep_malaichickennaan_flour" name="Sift flour" />
-		<text id="preparestep_veganplate_carrots" name="Peel carrots" />
-		<text id="preparestep_veganplate_peas" name="Cook peas" />
-		<text id="preparestep_veganplate_cucumber" name="Slice cucumber" />
-		<text id="preparestep_veganplate_tomato" name="Cut tomatoes" />
-		<text id="preparestep_veganplate_rice" name="Cook rice" />
-		<text id="preparestep_neapolitancake_whitechocolat" name="Melt white chocolate" />
-		<text id="preparestep_neapolitancake_chocolate" name="Melt chocolate" />
-		<text id="preparestep_neapolitancake_strawberry" name="Mash strawberries" />
-		<text id="preparestep_neapolitancake_flour" name="Sift flour" />
-		<text id="preparestep_neapolitancake_milk" name="Pour milk" />
-		<text id="preparestep_strawberrycheesecake_cream" name="Add Cream" />
-		<text id="preparestep_strawberrycheesecake_milk" name="Add Milk" />
-		<text id="preparestep_strawberrycheesecake_cookies" name="Crumble Cookies" />
-		<text id="preparestep_strawberrycheesecake_quark" name="Add Quark" />
-		<text id="preparestep_strawberrycheesecake_strawberry" name="Add Strawberries" />
-		<text id="preparestep_combomeal_flour" name="Make instant bread" />
-		<text id="preparestep_combomeal_mincemeat" name="Make patties" />
-		<text id="preparestep_combomeal_cheese" name="Slice cheese" />
-		<text id="preparestep_combomeal_potato" name="Cut fries" />
-		<text id="preparestep_combomeal_oil" name="Add lots of oil" />
-		<text id="preparestep_zcordonbleu_chicken" name="Flatten chicken" />
-		<text id="preparestep_zcordonbleu_flour" name="Sift flour" />
-		<text id="preparestep_zcordonbleu_cheese" name="Slice cheese" />
-		<text id="preparestep_zcordonbleu_oil" name="Heat oil" />
-		<text id="preparestep_zcordonbleu_eggs" name="Beat eggs" />
-		<text id="preparestep_brazilianpastel_flour" name="Make pastel dough" />
-		<text id="preparestep_brazilianpastel_cheese" name="Grate cheese" />
-		<text id="preparestep_brazilianpastel_oil" name="Heat oil" />
-		<text id="preparestep_brazilianpastel_sugar" name="Make sugarcane drink" />
-		<text id="preparestep_lechonkawali_bacon" name="Slice bacon" />
-		<text id="preparestep_lechonkawali_cucumber" name="Slice cucumber" />
-		<text id="preparestep_lechonkawali_garlic" name="Crush garlic" />
-		<text id="preparestep_lechonkawali_oil" name="Heat oil" />
-		<text id="preparestep_sweetpizza_flour" name="Prepare pizza dough" />
-		<text id="preparestep_sweetpizza_chocolate" name="Melt chocolate" />
-		<text id="preparestep_sweetpizza_strawberry" name="Slice strawberries" />
-		<text id="preparestep_sweetpizza_cookfest" name="Find fruits" />
-		<text id="preparestep_shakshuka_onion" name="Chop onions" />
-		<text id="preparestep_shakshuka_garlic" name="Crush garlic" />
-		<text id="preparestep_shakshuka_tomato" name="Chop tomatoes" />
-		<text id="preparestep_shakshuka_eggs" name="Crack eggs" />
-		<text id="preparestep_bananasplit_cream" name="χτυπήσεις κρέμα" />
+		<text id="preparestep_pridecupcakes_sugar" name="Μέτρα την ζάχαρη" />
+		<text id="preparestep_pridecupcakes_milk" name="Μέτρα το γαλα" />
+		<text id="preparestep_ratatouille_tomato" name="Κόβεις ντομάτες" />
+		<text id="preparestep_ratatouille_eggplant" name="Ψιλόκοψε την μελιτζάνα " />
+		<text id="preparestep_ratatouille_onion" name="Κόβεις κρεμμύδια" />
+		<text id="preparestep_ratatouille_cream" name="Ανακάτευσε την κρεμα" />
+		<text id="preparestep_ratatouille_oil" name="ζύγιζε το λαδι" />
+		<text id="preparestep_hotcherryricepudding_rice" name="ζύγιζε το ρύζι" />
+		<text id="preparestep_hotcherryricepudding_cherries" name="Βγάλε το κουκούτσι από τα κεράσια" />
+		<text id="preparestep_hotcherryricepudding_sugar" name="Μέτρα την ζάχαρη" />
+		<text id="preparestep_hotcherryricepudding_milk" name="Μέτρα το γαλα" />
+		<text id="preparestep_coconutcake_flour" name="Κοσκινίζεις το αλεύρι" />
+		<text id="preparestep_coconutcake_eggs" name="Σπάζεις αυγά" />
+		<text id="preparestep_coconutcake_milk" name="Προσθέτεις γάλα" />
+		<text id="preparestep_coconutcake_coconut" name="Τρίβεις την καρύδα" />
+		<text id="preparestep_coconutcake_sugar" name="Μέτρα την ζάχαρη" />
+		<text id="preparestep_paodequeijo_eggs" name="Σπάζεις αυγά" />
+		<text id="preparestep_paodequeijo_cheese" name="Τρίβεις τυρί" />
+		<text id="preparestep_paodequeijo_flour" name="Κοσκινίζεις το αλεύρι" />
+		<text id="preparestep_paodequeijo_oil" name="ζύγιζε το λαδι" />
+		<text id="preparestep_baiaodedois_rice" name="ζύγιζε το ρύζι" />
+		<text id="preparestep_baiaodedois_beans" name="Ξεπλύνετε τα φασόλια" />
+		<text id="preparestep_baiaodedois_cheese" name="Κόψε το τυρί σε κυβακια" />
+		<text id="preparestep_baiaodedois_bacon" name="Κόψε το μπέικον σε κυβακια" />
+		<text id="preparestep_baiaodedois_onion" name="Ψιλοκόψε κρεμμύδι" />
+		<text id="preparestep_bakedalaska_cream" name="Κρέμα σαντιγί" />
+		<text id="preparestep_bakedalaska_eggs" name="ξεχώρισε τα αυγά" />
+		<text id="preparestep_bakedalaska_sugar" name="Μέτρα την ζάχαρη" />
+		<text id="preparestep_butterchicken_tomato" name="πολτοποίησε τις ντομάτες" />
+		<text id="preparestep_butterchicken_chicken" name="Κόβεις κοτόπουλο" />
+		<text id="preparestep_butterchicken_cream" name="Μέτρα την κρέμα" />
+		<text id="preparestep_butterchicken_butter" name="Λιώνεις βουτύρο" />
+		<text id="preparestep_butterchicken_curryspice" name="Προσέθεσε καρι" />
+		<text id="preparestep_chickenbiryani_tomato" name="Κόβεις ντομάτες" />
+		<text id="preparestep_chickenbiryani_onion" name="Κόβεις κρεμμύδια" />
+		<text id="preparestep_chickenbiryani_rice" name="Βράζεις ρύζι" />
+		<text id="preparestep_chickenbiryani_chicken" name="σοτάρεις το κοτόπουλο" />
+		<text id="preparestep_chickenbiryani_potato" name="Κόψε πατάτες σε κυβακια" />
+		<text id="preparestep_cottagepotatoes_cream" name="Ανακάτευσε την κρεμα" />
+		<text id="preparestep_cottagepotatoes_onion" name="Κόβεις κρεμμύδια" />
+		<text id="preparestep_cottagepotatoes_quark" name="ανακάτεψε το Κουάρκ" />
+		<text id="preparestep_cottagepotatoes_butter" name="Προσθέτεις βούτυρο" />
+		<text id="preparestep_cottagepotatoes_potato" name="Βράζεις πατάτες" />
+		<text id="preparestep_cuzcuzcomovo_sweetcorn" name="Προετοιμάζεις αλεύρι καλαμποκιού" />
+		<text id="preparestep_cuzcuzcomovo_eggs" name="Σπάζεις αυγά" />
+		<text id="preparestep_cuzcuzcomovo_butter" name="Λιώνεις βουτύρο" />
+		<text id="preparestep_malaichickennaan_chicken" name="Κόβεις κοτόπουλο" />
+		<text id="preparestep_malaichickennaan_cream" name="Κρέμα σαντιγί" />
+		<text id="preparestep_malaichickennaan_garlic" name="Λιώνεις σκόρδο" />
+		<text id="preparestep_malaichickennaan_oil" name="Ζεσταίνεις λαδί" />
+		<text id="preparestep_malaichickennaan_flour" name="Κοσκινίζεις το αλεύρι" />
+		<text id="preparestep_veganplate_carrots" name="Ξεφλουδίζεις καρότα" />
+		<text id="preparestep_veganplate_peas" name="Βράζεις μπιζέλια" />
+		<text id="preparestep_veganplate_cucumber" name="Ψιλοκόψεις αγγούρι" />
+		<text id="preparestep_veganplate_tomato" name="Κόβεις ντομάτες" />
+		<text id="preparestep_veganplate_rice" name="Βράζεις ρύζι" />
+		<text id="preparestep_neapolitancake_whitechocolat" name="Λιώνεις άσπρη σοκολάτα" />
+		<text id="preparestep_neapolitancake_chocolate" name="Λιώνεις σοκολάτα" />
+		<text id="preparestep_neapolitancake_strawberry" name="Λιώνεις φράουλες" />
+		<text id="preparestep_neapolitancake_flour" name="Κοσκινίζεις το αλεύρι" />
+		<text id="preparestep_neapolitancake_milk" name="Προσθέτεις γάλα" />
+		<text id="preparestep_strawberrycheesecake_cream" name="Προσθέτεις κρέμα" />
+		<text id="preparestep_strawberrycheesecake_milk" name="Προσθέτεις γάλα" />
+		<text id="preparestep_strawberrycheesecake_cookies" name="Crumble μπισκότα" />
+		<text id="preparestep_strawberrycheesecake_quark" name="Προσθέτεις κουάρκ" />
+		<text id="preparestep_strawberrycheesecake_strawberry" name="Προσθέτεις φράουλες" />
+		<text id="preparestep_combomeal_flour" name="Φτιάξνεις στιγμιαίο ψωμί" />
+		<text id="preparestep_combomeal_mincemeat" name="Φτιάξε μπιφτέκια" />
+		<text id="preparestep_combomeal_cheese" name="Ψιλοκόβεις το τυρί" />
+		<text id="preparestep_combomeal_potato" name="Κόβεις πατάτες" />
+		<text id="preparestep_combomeal_oil" name="Προσθέτεις μπόλικο λάδι" />
+		<text id="preparestep_zcordonbleu_chicken" name="Ισιώνεις κοτόπουλο" />
+		<text id="preparestep_zcordonbleu_flour" name="Κοσκινίζεις το αλεύρι" />
+		<text id="preparestep_zcordonbleu_cheese" name="Ψιλοκόβεις το τυρί" />
+		<text id="preparestep_zcordonbleu_oil" name="Ζεσταίνεις λαδί" />
+		<text id="preparestep_zcordonbleu_eggs" name="χτυπάς αυγά" />
+		<text id="preparestep_Βραζιλιάνικαpastel_flour" name="φτιάξνεις ζύμη παστελ" />
+		<text id="preparestep_Βραζιλιάνικαpastel_cheese" name="Τρίβεις τυρί" />
+		<text id="preparestep_Βραζιλιάνικαpastel_oil" name="Ζεσταίνεις λαδί" />
+		<text id="preparestep_Βραζιλιάνικαpastel_sugar" name="φτιάξνεις ποτό από ζαχαροκάλαμο" />
+		<text id="preparestep_lechonkawali_bacon" name="Ψιλοκόψεις μπέικον" />
+		<text id="preparestep_lechonkawali_cucumber" name="Ψιλοκόψεις αγγούρι" />
+		<text id="preparestep_lechonkawali_garlic" name="Σπας σκόρδο" />
+		<text id="preparestep_lechonkawali_oil" name="Ζεσταίνεις λαδί" />
+		<text id="preparestep_sweetpizza_flour" name="Προετοιμάζεις ζύμη πίτσας" />
+		<text id="preparestep_sweetpizza_chocolate" name="Λιώνεις σοκολάτα" />
+		<text id="preparestep_sweetpizza_strawberry" name="Ψιλοκόψεις φράουλες" />
+		<text id="preparestep_sweetpizza_cookfest" name="Βρίσκεις φρουτα" />
+		<text id="preparestep_shakshuka_onion" name="Κόβεις κρεμμύδια" />
+		<text id="preparestep_shakshuka_garlic" name="Σπας σκόρδο" />
+		<text id="preparestep_shakshuka_tomato" name="Κόβεις ντομάτες" />
+		<text id="preparestep_shakshuka_eggs" name="Σπάζεις αυγά" />
+		<text id="preparestep_bananasplit_cream" name="Χτυπήσεις την κρέμα" />
 		<text id="preparestep_bananasplit_milk" name="μετρήσεις γάλα" />
 		<text id="preparestep_bananasplit_sugar" name="μετρήσεις ζάχαρη" />
 		<text id="preparestep_blackforestcherrycake_chocolate" name="τεμαχίσεις σοκολάτα" />
 		<text id="preparestep_blackforestcherrycake_cocktailcherry" name="καθαρίσεις κεράσια" />
-		<text id="preparestep_blackforestcherrycake_cream" name="χτυπήσεις κρέμα" />
+		<text id="preparestep_blackforestcherrycake_cream" name="Χτυπήσεις την κρέμα" />
 		<text id="preparestep_blackforestcherrycake_flour" name="κοσκινίσεις αλεύρι" />
 		<text id="preparestep_cheeseburger_cheese" name="κόψεις τυρί" />
 		<text id="preparestep_cheeseburger_flour" name="κοσκινίσεις αλεύρι" />
@@ -1369,7 +1369,7 @@
 		<text id="preparestep_cheesefondue_flour" name="κοσκινίσεις αλεύρι" />
 		<text id="preparestep_cheesefondue_garlic" name="Λιώσε σκόρδο" />
 		<text id="preparestep_cherriecake_cherries" name="μαγειρέψεις κεράσια" />
-		<text id="preparestep_cherriecake_cream" name="χτυπήσεις κρέμα" />
+		<text id="preparestep_cherriecake_cream" name="Χτυπήσεις την κρέμα" />
 		<text id="preparestep_cherriecake_flour" name="κοσκινίσεις αλεύρι" />
 		<text id="preparestep_cherriecake_sugar" name="μετρήσεις ζάχαρη" />
 		<text id="preparestep_cherrycompote_cherries" name="Βγάλε το κουκούτσι από τα κεράσια" />
@@ -1392,10 +1392,10 @@
 		<text id="preparestep_chiliconcarne_onion" name="ψιλοκόψεις κρεμμύδια" />
 		<text id="preparestep_chiliconcarne_tomato" name="κόψεις ντομάτες" />
 		<text id="preparestep_chocmousse_chocolate" name="λιώσεις σοκολάτα" />
-		<text id="preparestep_chocmousse_cream" name="χτυπήσεις κρέμα" />
+		<text id="preparestep_chocmousse_cream" name="Χτυπήσεις την κρέμα" />
 		<text id="preparestep_chocmousse_eggs" name="διαχωρίσεις αυγά" />
 		<text id="preparestep_chocolatecake_chocolate" name="λιώσεις σοκολάτα" />
-		<text id="preparestep_chocolatecake_cream" name="χτυπήσεις κρέμα" />
+		<text id="preparestep_chocolatecake_cream" name="Χτυπήσεις την κρέμα" />
 		<text id="preparestep_chocolatecake_eggs" name="διαχωρίσεις αυγά" />
 		<text id="preparestep_chocolatecake_flour" name="κοσκινίσεις αλεύρι" />
 		<text id="preparestep_chocolatecheesecake_chocolate" name="ψιλοκόψεις τη σοκολάτα" />
@@ -1454,7 +1454,7 @@
 		<text id="preparestep_hamburger_mincemeat" name="Εμπλούτισε τον κιμά" />
 		<text id="preparestep_hamburger_tomato" name="κόψεις ντομάτες" />
 		<text id="preparestep_hotcherrywaffles_cherries" name="Βγάλε το κουκούτσι από τα κεράσια" />
-		<text id="preparestep_hotcherrywaffles_cream" name="χτυπήσεις κρέμα" />
+		<text id="preparestep_hotcherrywaffles_cream" name="Χτυπήσεις την κρέμα" />
 		<text id="preparestep_hotcherrywaffles_eggs" name="διαχωρίσεις αυγά" />
 		<text id="preparestep_hotcherrywaffles_flour" name="κοσκινίσεις αλεύρι" />
 		<text id="preparestep_hotcherrywaffles_milk" name="ζεστάνεις γάλα" />
@@ -1494,7 +1494,7 @@
 		<text id="preparestep_nasigoreng_pinapple" name="κόψεις ανανά" />
 		<text id="preparestep_nasigoreng_rice" name="μαγειρέψεις ρύζι" />
 		<text id="preparestep_newyorkcheesecake_cookies" name="Θρυμμάτισε μπισκότα" />
-		<text id="preparestep_newyorkcheesecake_cream" name="χτυπήσεις κρέμα" />
+		<text id="preparestep_newyorkcheesecake_cream" name="Χτυπήσεις την κρέμα" />
 		<text id="preparestep_newyorkcheesecake_quark" name="Ανακάτεψε το τυρί" />
 		<text id="preparestep_newyorkcheesecake_sugar" name="μετρήσεις ζάχαρη" />
 		<text id="preparestep_noodlesalad_eggs" name="διαχωρίσεις αυγά" />
@@ -1522,7 +1522,7 @@
 		<text id="preparestep_pizza_cheese" name="τρίψεις τυρί" />
 		<text id="preparestep_pizza_flour" name="κοσκινίσεις αλεύρι" />
 		<text id="preparestep_pizza_tomato" name="αναμίξεις ντομάτες" />
-		<text id="preparestep_pizza_sausages" name="Slice sausages" />
+		<text id="preparestep_pizza_sausages" name="Ψιλοκόψε τα λουκάνικα" />
 		<text id="preparestep_porkroastwithcrackling_carrots" name="ξεφλουδίσεις καρότα" />
 		<text id="preparestep_porkroastwithcrackling_garlic" name="Λιώσε σκόρδο" />
 		<text id="preparestep_porkroastwithcrackling_meat" name="κόψεις κρέας" />
@@ -1535,7 +1535,7 @@
 		<text id="preparestep_redberrycompote_strawberry" name="πλύνεις φράουλες" />
 		<text id="preparestep_redberrycompote_sugar" name="καραμελώσεις ζάχαρη" />
 		<text id="preparestep_ricepudding_apple" name="ξεφλουδίσεις μήλα" />
-		<text id="preparestep_ricepudding_cream" name="χτυπήσεις κρέμα" />
+		<text id="preparestep_ricepudding_cream" name="Χτυπήσεις την κρέμα" />
 		<text id="preparestep_ricepudding_milk" name="μετρήσεις γάλα" />
 		<text id="preparestep_ricepudding_rice" name="Ζύγισε ρύζι" />
 		<text id="preparestep_roastchicken_butter" name="λιώσεις βούτυρο" />
@@ -1571,10 +1571,10 @@
 		<text id="preparestep_stew_meat" name="κόψεις κρέας" />
 		<text id="preparestep_stew_oil" name="ζεστάνεις λάδι" />
 		<text id="preparestep_stew_onion" name="ψιλοκόψεις κρεμμύδια" />
-		<text id="preparestep_strawberrycake_cream" name="χτυπήσεις κρέμα" />
+		<text id="preparestep_strawberrycake_cream" name="Χτυπήσεις την κρέμα" />
 		<text id="preparestep_strawberrycake_flour" name="κοσκινίσεις αλεύρι" />
 		<text id="preparestep_strawberrycake_strawberry" name="Ετοίμασε φράουλες" />
-		<text id="preparestep_strawberrymousse_cream" name="χτυπήσεις κρέμα" />
+		<text id="preparestep_strawberrymousse_cream" name="Χτυπήσεις την κρέμα" />
 		<text id="preparestep_strawberrymousse_eggs" name="διαχωρίσεις αυγά" />
 		<text id="preparestep_strawberrymousse_strawberry" name="πλύνεις φράουλες" />
 		<text id="preparestep_strawberrymousse_sugar" name="μετρήσεις ζάχαρη" />
@@ -1598,11 +1598,11 @@
 		<text id="preparestep_tofuburger_lettuce" name="πλύνεις σαλάτα" />
 		<text id="preparestep_tofuburger_tofu" name="αναμίξεις μανιτάρια" />
 		<text id="preparestep_tofuburger_tomato" name="τεμαχίσεις ντομάτες" />
-		<text id="preparestep_tomatosoup_cream" name="χτυπήσεις κρέμα" />
+		<text id="preparestep_tomatosoup_cream" name="Χτυπήσεις την κρέμα" />
 		<text id="preparestep_tomatosoup_onion" name="ψιλοκόψεις κρεμμύδια" />
 		<text id="preparestep_tomatosoup_tomato" name="ξεφλουδίσεις ντομάτες" />
 		<text id="preparestep_trifle_cookies" name="Ζύγισε μπισκότα" />
-		<text id="preparestep_trifle_cream" name="χτυπήσεις κρέμα" />
+		<text id="preparestep_trifle_cream" name="Χτυπήσεις την κρέμα" />
 		<text id="preparestep_trifle_strawberry" name="Ετοίμασε φράουλες" />
 		<text id="preparestep_trifle_sugar" name="μετρήσεις ζάχαρη" />
 		<text id="preparestep_veganstirfry_carrots" name="Τεμάχισε καρότα" />
@@ -1622,50 +1622,50 @@
 		<text id="preparestep_veggielasagne_pasta" name="βράσεις ζυμαρικά" />
 		<text id="preparestep_veggielasagne_tomato" name="αναμίξεις ντομάτες" />
 		<text id="preparestep_whitechoccheesecake_cookies" name="Θρυμμάτισε μπισκότα" />
-		<text id="preparestep_whitechoccheesecake_cream" name="χτυπήσεις κρέμα" />
+		<text id="preparestep_whitechoccheesecake_cream" name="Χτυπήσεις την κρέμα" />
 		<text id="preparestep_whitechoccheesecake_milk" name="ζεστάνεις γάλα" />
 		<text id="preparestep_whitechoccheesecake_quark" name="Ανάμιξε κουάρκ" />
 		<text id="preparestep_whitechoccheesecake_whitechocolat" name="μετρήσεις σοκολάτα" />
-		<text id="preparestep_whitechocmousse_cream" name="χτυπήσεις κρέμα" />
+		<text id="preparestep_whitechocmousse_cream" name="Χτυπήσεις την κρέμα" />
 		<text id="preparestep_whitechocmousse_eggs" name="διαχωρίσεις αυγά" />
 		<text id="preparestep_whitechocmousse_whitechocolat" name="λιώσεις σοκολάτα" />
 	</preparestep>
 	<preparestep_fancy>
-		<text id="preparestep_duckalcitrus_cinnamon" name="Sprinkle cinnamon" />
-		<text id="preparestep_ducktatters_parsley" name="Chop parsley" />
-		<text id="preparestep_langos_parsley" name="Chop parsley" />
-		<text id="preparestep_nasilemak_chili" name="Chop chili" />
-		<text id="preparestep_citrusjuice_vanilla" name="Scrape out vanilla" />
-		<text id="preparestep_carrotcake_vanilla" name="Scrape out vanilla" />
-		<text id="preparestep_carrotjuice_vanilla" name="Scrape out vanilla" />
-		<text id="preparestep_francesinha_chili" name="Chop chili" />
-		<text id="preparestep_dorayaki_vanilla" name="Scrape out vanilla" />
-		<text id="preparestep_tiramisu_vanilla" name="Scrape out vanilla" />
-		<text id="preparestep_pridecupcakes_vanilla" name="Scrape out vanilla" />
-		<text id="preparestep_ratatouille_rosemary" name="Chop rosemary" />
-		<text id="preparestep_hotcherryricepudding_cinnamon" name="Sprinkle cinnamon" />
-		<text id="preparestep_coconutcake_vanilla" name="Scrape out vanilla" />
-		<text id="preparestep_fancy_coconutcake_vanilla" name="Scrape out vanilla" />
-		<text id="preparestep_paodequeijo_rosemary" name="Add rosemary" />
-		<text id="preparestep_baiaodedois_coriander" name="Chop coriander" />
-		<text id="preparestep_bakedalaska_vanilla" name="Add vanilla" />
-		<text id="preparestep_butterchicken_coriander" name="Chop coriander" />
-		<text id="preparestep_chickenbiryani_coriander" name="Add coriander" />
-		<text id="preparestep_cuzcuzcomovo_parsley" name="Chop parsley" />
-		<text id="preparestep_malaichickennaan_coriander" name="Chop coriander" />
-		<text id="preparestep_veganplate_parsley" name="Chop parsley" />
-		<text id="preparestep_neapolitancake_vanilla" name="Scrape out vanilla" />
-		<text id="preparestep_strawberrycheesecake_vanilla" name="Add Vanilla" />
-		<text id="preparestep_combomeal_chili" name="Make spicy sauce packets" />
-		<text id="preparestep_zcordonbleu_parsley" name="Chop parsley" />
-		<text id="preparestep_brazilianpastel_basil" name="Chop basil" />
-		<text id="preparestep_lechonkawali_rosemary" name="Chop rosemary" />
-		<text id="preparestep_sweetpizza_cinnamon" name="Sprinkle cinnamon" />
-		<text id="preparestep_shakshuka_parsley" name="Chop parsley" />
-		<text id="preparestep_cottagepotatoes_parsley" name="Chop parsley" />
+		<text id="preparestep_duckalcitrus_cinnamon" name="Πασπάλισε κανέλα" />
+		<text id="preparestep_ducktatters_parsley" name="ψιλοκόψεις μαϊντανό" />
+		<text id="preparestep_langos_parsley" name="ψιλοκόψεις μαϊντανό" />
+		<text id="preparestep_nasilemak_chili" name="κόψεις τσίλι" />
+		<text id="preparestep_citrusjuice_vanilla" name="ξύσεις βανίλια" />
+		<text id="preparestep_carrotcake_vanilla" name="ξύσεις βανίλια" />
+		<text id="preparestep_carrotjuice_vanilla" name="ξύσεις βανίλια" />
+		<text id="preparestep_francesinha_chili" name="κόψεις τσίλι" />
+		<text id="preparestep_dorayaki_vanilla" name="ξύσεις βανίλια" />
+		<text id="preparestep_tiramisu_vanilla" name="ξύσεις βανίλια" />
+		<text id="preparestep_pridecupcakes_vanilla" name="ξύσεις βανίλια" />
+		<text id="preparestep_ratatouille_rosemary" name="ψιλοκόψεις δενδρολίβανο" />
+		<text id="preparestep_hotcherryricepudding_cinnamon" name="Πασπάλισε κανέλα" />
+		<text id="preparestep_coconutcake_vanilla" name="ξύσεις βανίλια" />
+		<text id="preparestep_fancy_coconutcake_vanilla" name="ξύσεις βανίλια" />
+		<text id="preparestep_paodequeijo_rosemary" name="Πρόσθεσε δενδρολίβανο" />
+		<text id="preparestep_baiaodedois_coriander" name="ψιλοκόψεις κόλιανδρο" />
+		<text id="preparestep_bakedalaska_vanilla" name="Πρόσθεσε βανίλια" />
+		<text id="preparestep_butterchicken_coriander" name="ψιλοκόψεις κόλιανδρο" />
+		<text id="preparestep_chickenbiryani_coriander" name="Πρόσθεσε κόλιανδρο" />
+		<text id="preparestep_cuzcuzcomovo_parsley" name="ψιλοκόψεις μαϊντανό" />
+		<text id="preparestep_malaichickennaan_coriander" name="ψιλοκόψεις κόλιανδρο" />
+		<text id="preparestep_veganplate_parsley" name="ψιλοκόψεις μαϊντανό" />
+		<text id="preparestep_neapolitancake_vanilla" name="ξύσεις βανίλια" />
+		<text id="preparestep_strawberrycheesecake_vanilla" name="Πρόσθεσε βανίλια" />
+		<text id="preparestep_combomeal_chili" name="φτιάξτε πικάντικες συσκευασίες σάλτσας" />
+		<text id="preparestep_zcordonbleu_parsley" name="ψιλοκόψεις μαϊντανό" />
+		<text id="preparestep_Βραζιλιάνικαpastel_basil" name="ψιλοκόψεις βασιλικό" />
+		<text id="preparestep_lechonkawali_rosemary" name="ψιλοκόψεις δενδρολίβανο" />
+		<text id="preparestep_sweetpizza_cinnamon" name="Πασπάλισε κανέλα" />
+		<text id="preparestep_shakshuka_parsley" name="ψιλοκόψεις μαϊντανό" />
+		<text id="preparestep_cottagepotatoes_parsley" name="ψιλοκόψεις μαϊντανό" />
 		<text id="preparestep_bananasplit_vanilla" name="ξύσεις βανίλια" />
 		<text id="preparestep_blackforestcherrycake_vanilla" name="ξύσεις βανίλια" />
-		<text id="preparestep_pizzasalad_chili" name="Chop chili" />
+		<text id="preparestep_pizzasalad_chili" name="κόψεις τσίλι" />
 		<text id="preparestep_cheeseburger_chili" name="κόψεις τσίλι" />
 		<text id="preparestep_cheesedish_parsley" name="ψιλοκόψεις μαϊντανό" />
 		<text id="preparestep_cheesefondue_chili" name="κόψεις τσίλι" />
@@ -1752,7 +1752,7 @@
 		<text id="recipe_spanishomelette" name="Ισπανική Ομελέτα" />
 		<text id="recipe_sausagepasta" name="Μακαρονάδα με Λουκάνικο" />
 		<text id="recipe_applepie" name="Μηλόπιτα" />
-		<text id="recipe_ramen" name="Ramen" />
+		<text id="recipe_ramen" name="Ράμεν" />
 		<text id="recipe_corncake" name="Κέικ Καλαμποκιού" />
 		<text id="recipe_feijoada" name="Φεϊζοάδα" />
 		<text id="recipe_pinapjuice" name="Χυμός Ανανά" />
@@ -1762,7 +1762,7 @@
 		<text id="recipe_rjuice" name="Χυμός Ραβέντι" />
 		<text id="recipe_cherryjuice" name="Χυμός Κεράσι" />
 		<text id="recipe_strawberryjuice" name="χυμός φράουλας" />
-		<text id="recipe_cappuccino" name="Cappuccino" />
+		<text id="recipe_cappuccino" name="Καπουτσίνο" />
 		<text id="recipe_duckalcitrus" name="Duck à l&apos;Citrus" />
 		<text id="recipe_ducktatters" name="Πάπια με Ζυμαρικά" />
 		<text id="recipe_langos" name="Λάνγκος" />
@@ -1773,9 +1773,9 @@
 		<text id="recipe_francesinha" name="Σάντουιτς Φρανσεζίνια" />
 		<text id="recipe_dorayaki" name="Ντοραγιάκι" />
 		<text id="recipe_tiramisu" name="Τιραμισού" />
-		<text id="recipe_pridecupcakes" name="Pride Καπκέικς" />
+		<text id="recipe_pridecupcakes" name="Λοατκι+ Καπκέικς" />
 		<text id="recipe_ratatouille" name="Ρατατούι" />
-		<text id="recipe_hotcherryricepudding" name="ρυζόγαλο&apos; με κερασια" />
+		<text id="recipe_hotcherryricepudding" name="Πουτίγκα&apos; με κερασια" />
 		<text id="recipe_coconutcake" name="Τούρτα καρύδας" />
 		<text id="recipe_paodequeijo" name="Βραζιλιάνικο τυροψωμο" />
 		<text id="recipe_baiaodedois" name="Μπαϊάο" />
@@ -1787,14 +1787,14 @@
 		<text id="recipe_malaichickennaan" name="Πίτα Naan με κοτόπουλο" />
 		<text id="recipe_veganplate" name="Βίγκαν πιάτο" />
 		<text id="recipe_neapolitancake" name="Τούρτα Ναπολιτέν" />
-		<text id="recipe_strawberrycheesecake" name="Φράουλα Cheesecake" />
+		<text id="recipe_strawberrycheesecake" name="Φράουλα τσίζκεϊκ" />
 		<text id="recipe_combomeal" name="Combo Γευμα" />
-		<text id="recipe_zcordonbleu" name="Zagreb Cordon Bleu" />
-		<text id="recipe_brazilianpastel" name="Brazilian Pastel w/ Drink" />
+		<text id="recipe_zcordonbleu" name="Ζάγκρεμπ γκόρντον μπλου" />
+		<text id="recipe_Βραζιλιάνικαpastel" name="Βραζιλιάνικα παστελ με ποτο" />
 		<text id="recipe_lechonkawali" name="Lechon Kawali" />
-		<text id="recipe_sweetpizza" name="Sweet Pizza" />
+		<text id="recipe_sweetpizza" name="Γλυκιά πίτσα" />
 		<text id="recipe_shakshuka" name="Shakshuka" />
-		<text id="recipe_beefstew" name="Βράσε" />
+		<text id="recipe_beefstew" name="Βράστο μοσχάρι" />
 		<text id="recipe_blackforestcherrycake" name="Τούρτα μαύρο δάσος" />
 		<text id="recipe_cheeseburger" name="Τσίσμπεργκερ" />
 		<text id="recipe_cheesedish" name="Πιάτο τυριών" />
@@ -1872,7 +1872,7 @@
 	</recipe>
 	<recipes_fastfood>
 		<text id="recipe_smoothiemaker_greensmoothie" name="Πράσινο ρόφημα" />
-		<text id="recipe_smoothiemaker_defensepotion" name="Defense Potion" />
+		<text id="recipe_smoothiemaker_defensepotion" name="Defense ρόφημα" />
 		<text id="recipe_smoothiemaker_milk" name="Γαλα" />
 		<text id="recipe_smoothiemaker_soymilk" name="Γάλα σόγιας" />
 		<text id="recipe_smoothiemaker_icedcoffee" name="Κρυος Καφες" />
@@ -2182,7 +2182,7 @@
 			<text id="generic_tomorrow" name="Σήμερα" />
 			<text id="generic_tutorial" name="Οδηγός" />
 			<text id="generic_username" name="Όνομα παίχτη" />
-			<text id="generic_xp" name="ΠΕ" />
+			<text id="generic_xp" name="XP" />
 			<text id="generic_yesterday" name="Χθες" />
 		</common>
 		<error>
@@ -2222,7 +2222,7 @@
 			<text id="generic_language_no" name="Νορβηγικά" />
 			<text id="generic_language_pl" name="Πολωνικά" />
 			<text id="generic_language_pt" name="Πορτογαλικά" />
-			<text id="generic_language_pt_BR" name="Brazilian" />
+			<text id="generic_language_pt_BR" name="Βραζιλιάνικα" />
 			<text id="generic_language_ru" name="Ρωσικά" />
 			<text id="generic_language_sv" name="Σουηδικά" />
 			<text id="generic_language_tr" name="Τουρκικά" />
@@ -2280,7 +2280,7 @@
 			<text id="generic_guest_change_password_faild_title" name="Εγγραφείτε πρώτα" />
 		</password>
 		<payment>
-			<text id="generic_discount_payment_title_general" name="More {0} for the money!" />
+			<text id="generic_discount_payment_title_general" name="Περισσότερος {0} για το χρήμα!" />
 			<text id="generic_payment_48hdiscount_button" name="Περισσότερος χρυσός τις πρώτες 48 ώρες" />
 			<text id="generic_payment_48hdiscount_button_general" name="Περισσότερο {0} στις πρώτες 48 ώρες" />
 			<text id="generic_payment_48hdiscount_copy" name="Αγόρασε χρυσό στις πρώτες 48 ώρες και πάρε επιπλέον {0}% για επιλεγμένα πακέτα!" />
@@ -2364,14 +2364,14 @@
 			<text id="generic_report_muted_badword2_copy" name="Δε μπορείς να χρησιμοποιήσεις την υπηρεσία του chat για τις επόμενες {0} λόγω επαναλαμβανόμενης κακής συμπεριφοράς. Αιτιολογία: {1}" />
 			<text id="generic_report_muted_domain1" name="Μη γράφετε διευθύνσεις URL στο chat!" />
 			<text id="generic_report_muted_reported_copy" name="Αρκετοί παίκτες έχουν κάνει παράπονα για σένα. Είσαι αποκλεισμένος από το chat για τις επόμενες {0}. Αιτιολογία: {1}" />
-			<text id="generic_report_player_copy" name="Θέλεις πραγματικά ν&amp;#039;αναφέρεις τον παίκτη {0}?
+			<text id="generic_report_player_copy" name="Θέλεις πραγματικά ν&amp;#039;αναφέρεις τον παίκτη {0};
 Προσοχή! Υπερβολική χρήση αυτής της λειτουργίας θα επιφέρει μπλοκάρισμα του λογαριασμού σου." />
 			<text id="generic_report_player_reason_0" name="Προσβολή" />
 			<text id="generic_report_player_reason_1" name="σεξουαλική παρενόχληση" />
 			<text id="generic_report_player_reason_2" name="φυλετική παρατήρηση" />
 			<text id="generic_report_player_reason_3" name="Απειλή/εκβιασμός" />
 			<text id="generic_report_player_reason_title" name="Αιτία αναφοράς" />
-			<text id="generic_report_player_title" name="Αναφορά παίκτη?" />
+			<text id="generic_report_player_title" name="Αναφορά παίκτη;" />
 			<text id="generic_report_reported_copy" name="Έχεις αναφερθεί στον διαχειριστή από έναν άλλο παίκτη. Αιτιολογία: {0}" />
 		</report>
 		<worlds>

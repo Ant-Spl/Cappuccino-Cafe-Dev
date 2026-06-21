@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="style.css?v=3">
+  <link rel="stylesheet" href="style.css?v=4">
 </head>
 <body>
   <main class="page">
@@ -20,7 +20,7 @@
         <p class="eyebrow">Cappuccino Café</p>
         <h1>DishDex</h1>
         <p class="subtitle">
-          Find the best dishes for your level, XP grinding, profit, and cooking schedule.
+          Access information about all dishes!
         </p>
       </div>
 
@@ -60,15 +60,12 @@
       </div>
 
       <p class="hint">
-        Inputs update instantly in your browser. No one else’s page is affected.
+        Insert your data for personalized recommendations.
       </p>
     </section>
 
     <section class="panel">
-      <h2>Best Regular Dishes</h2>
-      <p class="section-note">
-        Special premium foods are excluded from this section. Holiday dishes follow your Holiday Mode.
-      </p>
+      <h2>Best Dishes (XP)</h2>
 
       <div class="table-wrap">
         <table>
@@ -80,13 +77,55 @@
               <th>Level</th>
               <th>XP</th>
               <th>XP/min</th>
+              <th>Duration</th>
+              <th>Category</th>
+            </tr>
+          </thead>
+          <tbody id="bestXpBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Best Dishes (Profit)</h2>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Image</th>
+              <th>Recommendation</th>
+              <th>Dish</th>
+              <th>Level</th>
               <th>Profit</th>
               <th>Profit/min</th>
               <th>Duration</th>
               <th>Category</th>
             </tr>
           </thead>
-          <tbody id="bestRegularBody"></tbody>
+          <tbody id="bestProfitBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Best dishes (Portions)</h2>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Image</th>
+              <th>Recommendation</th>
+              <th>Dish</th>
+              <th>Level</th>
+              <th>Portions</th>
+              <th>Portions/min</th>
+              <th>Duration</th>
+              <th>Category</th>
+            </tr>
+          </thead>
+          <tbody id="bestPortionsBody"></tbody>
         </table>
       </div>
     </section>
@@ -122,7 +161,7 @@
       <section class="panel">
         <h2>Special Dishes</h2>
         <p class="section-note">
-          Premium/special economy dishes are shown separately.
+          Special dishes are shown separately.
         </p>
 
         <div id="specialDishesBody" class="dish-card-grid"></div>
@@ -166,6 +205,6 @@
     </section>
   </main>
 
-  <script src="script.js?v=3" defer></script>
+  <script src="script.js?v=4" defer></script>
 </body>
 </html>

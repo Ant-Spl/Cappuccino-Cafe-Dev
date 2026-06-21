@@ -1,11 +1,63 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <title>Cappuccino Café DishDex</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #fff8ef;
+      color: #3b2618;
+      padding: 24px;
+    }
+
+    .card {
+      background: white;
+      border: 2px solid #e8c9a8;
+      border-radius: 14px;
+      padding: 18px;
+      max-width: 760px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+    .ok {
+      color: #267a2f;
+      font-weight: bold;
+    }
+
+    .bad {
+      color: #b3261e;
+      font-weight: bold;
+    }
+
+    code {
+      background: #f4e6d4;
+      padding: 2px 5px;
+      border-radius: 4px;
+    }
+
+    pre {
+      background: #f4e6d4;
+      padding: 12px;
+      border-radius: 8px;
+      overflow-x: auto;
+    }
+  </style>
 </head>
 <body>
-  <h1>Cappuccino Café DishDex</h1>
-  <p>If you can see this page, the DishDex folder is ready.</p>
+  <div class="card">
+    <h1>Cappuccino Café DishDex</h1>
+    <p>This page is testing if it can read the Café XML files.</p>
+
+    <h2>Status</h2>
+    <div id="status">Loading...</div>
+
+    <h2>Details</h2>
+    <pre id="details"></pre>
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>
+```

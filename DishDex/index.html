@@ -13,197 +13,296 @@
 
   <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="dark-theme">
   <main class="page">
-    <header class="hero">
-      <div>
-        <p class="eyebrow">Cappuccino Café</p>
-        <h1>DishDex</h1>
-        <p class="subtitle">
-          Access information about all dishes!
-        </p>
-      </div>
+    <section id="welcomeScreen" class="screen welcome-screen">
+      <header class="hero welcome-hero">
+        <div>
+          <p class="eyebrow">Cappuccino Café</p>
+          <h1>DishDex</h1>
+          <p class="subtitle">
+            Access information about all dishes!
+          </p>
+        </div>
 
-      <div class="status-card">
-        <span id="loadStatus">Loading Café data...</span>
-        <small id="dataSummary"></small>
-      </div>
-    </header>
+        <div class="status-card">
+          <span id="loadStatus">Loading Café data...</span>
+          <small id="dataSummary"></small>
+        </div>
+      </header>
 
-    <section class="panel inputs-panel">
-      <h2>MyDex Settings</h2>
+      <section class="panel welcome-panel">
+        <div class="theme-toggle-row">
+          <div>
+            <h2>Choose a mode</h2>
+            <p class="section-note">Select how you want to use DishDex.</p>
+          </div>
 
-      <div class="input-grid">
-        <label>
-          <span>Player Level</span>
-          <input id="playerLevel" type="number" min="0" max="200" value="1">
-        </label>
+          <label class="theme-toggle">
+            <span>Dark Theme</span>
+            <input id="themeToggle" type="checkbox" checked>
+          </label>
+        </div>
 
-        <label>
-          <span>XP Needed</span>
-          <input id="xpNeeded" type="number" min="0" value="1000">
-        </label>
+        <div class="mode-grid">
+          <button id="openMyDex" class="mode-card" type="button">
+            <img src="MyDex.png" alt="" class="mode-icon" onerror="this.style.display='none'">
+            <span class="mode-title">MyDex</span>
+            <span class="mode-description">
+              Access your personal DishDex based on your level, XP and available time.
+            </span>
+          </button>
 
-        <label>
-          <span>Available Stoves</span>
-          <input id="stoveCount" type="number" min="1" value="3">
-        </label>
-
-        <label>
-          <span>Holiday Mode</span>
-          <select id="holidayMode">
-            <option value="Exclude">Exclude</option>
-            <option value="Include">Include</option>
-            <option value="Auto">Auto</option>
-          </select>
-        </label>
-      </div>
-
-      <p class="hint">
-        Insert your data for personalized recommendations.
-      </p>
-    </section>
-
-    <section class="panel">
-      <h2>Best Dishes (XP)</h2>
-
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Image</th>
-              <th>Recommendation</th>
-              <th>Dish</th>
-              <th>Level</th>
-              <th>XP</th>
-              <th>XP/min</th>
-              <th>Duration</th>
-              <th>Category</th>
-            </tr>
-          </thead>
-          <tbody id="bestXpBody"></tbody>
-        </table>
-      </div>
-    </section>
-
-    <section class="panel">
-      <h2>Best Dishes (Profit)</h2>
-
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Image</th>
-              <th>Recommendation</th>
-              <th>Dish</th>
-              <th>Level</th>
-              <th>Profit</th>
-              <th>Profit/min</th>
-              <th>Duration</th>
-              <th>Category</th>
-            </tr>
-          </thead>
-          <tbody id="bestProfitBody"></tbody>
-        </table>
-      </div>
-    </section>
-
-    <section class="panel">
-      <h2>Best dishes (Portions)</h2>
-
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Image</th>
-              <th>Recommendation</th>
-              <th>Dish</th>
-              <th>Level</th>
-              <th>Portions</th>
-              <th>Portions/min</th>
-              <th>Duration</th>
-              <th>Category</th>
-            </tr>
-          </thead>
-          <tbody id="bestPortionsBody"></tbody>
-        </table>
-      </div>
-    </section>
-
-    <section class="panel">
-      <h2>XP Needed Plans</h2>
-      <p class="section-note">
-        Best level up plans to base your needs and availability.
-      </p>
-
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Image</th>
-              <th>Plan</th>
-              <th>Dish</th>
-              <th>XP Each</th>
-              <th>Duration</th>
-              <th>Dishes Needed</th>
-              <th>Batches</th>
-              <th>Total Cook Time</th>
-              <th>Stoves</th>
-              <th>Note</th>
-            </tr>
-          </thead>
-          <tbody id="xpPlansBody"></tbody>
-        </table>
-      </div>
-    </section>
-
-    <section class="split-panels">
-      <section class="panel">
-        <h2>Special Dishes</h2>
-        <p class="section-note">
-          Special dishes are shown separately.
-        </p>
-
-        <div id="specialDishesBody" class="dish-card-grid"></div>
-      </section>
-
-      <section class="panel">
-        <h2>Holiday Dishes</h2>
-        <p class="section-note">
-          Holiday dishes are shown separately. Auto mode uses Christmas and Easter seasons.
-        </p>
-
-        <div id="holidayDishesBody" class="dish-card-grid"></div>
+          <button id="openFullDishDex" class="mode-card" type="button">
+            <img src="DishDex.png" alt="" class="mode-icon" onerror="this.style.display='none'">
+            <span class="mode-title">Full DishDex</span>
+            <span class="mode-description">
+              Access the complete DishDex with all information.
+            </span>
+          </button>
+        </div>
       </section>
     </section>
 
-    <section class="panel">
-      <h2>Available DishDex</h2>
-      <p class="section-note">
-        All dishes available at your current level and settings.
-      </p>
+    <section id="myDexScreen" class="screen hidden">
+      <header class="sub-hero">
+        <button class="back-button" type="button" data-back>← Back</button>
+        <div>
+          <p class="eyebrow">Personal recommendations</p>
+          <h1>MyDex</h1>
+        </div>
+      </header>
 
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Image</th>
-              <th>Dish</th>
-              <th>Level</th>
-              <th>XP</th>
-              <th>XP/min</th>
-              <th>Profit</th>
-              <th>Profit/min</th>
-              <th>Portions</th>
-              <th>Portions/min</th>
-              <th>Duration</th>
-              <th>Category</th>
-              <th>Type</th>
-            </tr>
-          </thead>
-          <tbody id="availableDishBody"></tbody>
-        </table>
-      </div>
+      <section class="panel inputs-panel">
+        <h2>MyDex Settings</h2>
+
+        <div class="input-grid">
+          <label>
+            <span>Player Level</span>
+            <input id="playerLevel" type="number" min="0" max="200" value="1">
+          </label>
+
+          <label>
+            <span>XP Needed</span>
+            <input id="xpNeeded" type="number" min="0" value="1000">
+          </label>
+
+          <label>
+            <span>Available Stoves</span>
+            <input id="stoveCount" type="number" min="1" value="3">
+          </label>
+
+          <label>
+            <span>Holiday Mode</span>
+            <select id="holidayMode">
+              <option value="Exclude">Exclude</option>
+              <option value="Include">Include</option>
+              <option value="Auto">Auto</option>
+            </select>
+          </label>
+        </div>
+
+        <p class="hint">
+          Insert your data for personalized recommendations.
+        </p>
+      </section>
+
+      <section class="panel">
+        <h2>Best Dishes (XP)</h2>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Image</th>
+                <th>Recommendation</th>
+                <th>Dish</th>
+                <th>Level</th>
+                <th>XP</th>
+                <th>XP/min</th>
+                <th>Duration</th>
+                <th>Category</th>
+              </tr>
+            </thead>
+            <tbody id="bestXpBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Best Dishes (Profit)</h2>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Image</th>
+                <th>Recommendation</th>
+                <th>Dish</th>
+                <th>Level</th>
+                <th>Profit</th>
+                <th>Profit/min</th>
+                <th>Duration</th>
+                <th>Category</th>
+              </tr>
+            </thead>
+            <tbody id="bestProfitBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Best dishes (Portions)</h2>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Image</th>
+                <th>Recommendation</th>
+                <th>Dish</th>
+                <th>Level</th>
+                <th>Portions</th>
+                <th>Portions/min</th>
+                <th>Duration</th>
+                <th>Category</th>
+              </tr>
+            </thead>
+            <tbody id="bestPortionsBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>XP Needed Plans</h2>
+        <p class="section-note">
+          Best level up plans to base your needs and availability.
+        </p>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Image</th>
+                <th>Plan</th>
+                <th>Dish</th>
+                <th>XP Each</th>
+                <th>Duration</th>
+                <th>Dishes Needed</th>
+                <th>Batches</th>
+                <th>Total Cook Time</th>
+                <th>Stoves</th>
+                <th>Note</th>
+              </tr>
+            </thead>
+            <tbody id="xpPlansBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="split-panels">
+        <section class="panel">
+          <h2>Special Dishes</h2>
+          <p class="section-note">
+            Special dishes are shown separately.
+          </p>
+
+          <div id="specialDishesBody" class="dish-card-grid"></div>
+        </section>
+
+        <section class="panel">
+          <h2>Holiday Dishes</h2>
+          <p class="section-note">
+            Holiday dishes are shown separately. Auto mode uses Christmas and Easter seasons.
+          </p>
+
+          <div id="holidayDishesBody" class="dish-card-grid"></div>
+        </section>
+      </section>
+    </section>
+
+    <section id="fullDishDexScreen" class="screen hidden">
+      <header class="sub-hero">
+        <button class="back-button" type="button" data-back>← Back</button>
+        <div>
+          <p class="eyebrow">Complete dish list</p>
+          <h1>Full DishDex</h1>
+        </div>
+      </header>
+
+      <section class="panel">
+        <h2>Sort Full DishDex</h2>
+
+        <div class="sort-grid">
+          <label>
+            <span>Sort by</span>
+            <select id="fullSortSelect">
+              <option value="standard">Standard (level lowest to highest)</option>
+
+              <option value="level-asc">Level: low to high</option>
+              <option value="level-desc">Level: high to low</option>
+
+              <option value="name-asc">Alphabetical A-Z</option>
+              <option value="name-desc">Alphabetical Z-A</option>
+
+              <option value="category">Category</option>
+
+              <option value="duration-asc">Time: low to high</option>
+              <option value="duration-desc">Time: high to low</option>
+
+              <option value="profit-asc">Raw Profit: low to high</option>
+              <option value="profit-desc">Raw Profit: high to low</option>
+
+              <option value="xp-asc">Raw XP: low to high</option>
+              <option value="xp-desc">Raw XP: high to low</option>
+
+              <option value="profitPerMin-asc">Profit/min: low to high</option>
+              <option value="profitPerMin-desc">Profit/min: high to low</option>
+
+              <option value="xpPerMin-asc">XP/min: low to high</option>
+              <option value="xpPerMin-desc">XP/min: high to low</option>
+
+              <option value="servings-asc">Portions: low to high</option>
+              <option value="servings-desc">Portions: high to low</option>
+
+              <option value="servingsPerMin-asc">Portions/min: low to high</option>
+              <option value="servingsPerMin-desc">Portions/min: high to low</option>
+            </select>
+          </label>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Available DishDex</h2>
+        <p class="section-note">
+          Complete dish list with XP, profit, portions, time, category and requirements.
+        </p>
+
+        <div class="table-wrap">
+          <table class="full-table">
+            <thead>
+              <tr>
+                <th>Image</th>
+                <th>Dish</th>
+                <th>Level</th>
+                <th>XP</th>
+                <th>XP/min</th>
+                <th>Profit</th>
+                <th>Profit/min</th>
+                <th>Portions</th>
+                <th>Portions/min</th>
+                <th>Duration</th>
+                <th>Cost</th>
+                <th>Revenue</th>
+                <th>Category</th>
+                <th>Requirements</th>
+                <th>Type</th>
+              </tr>
+            </thead>
+            <tbody id="fullDishDexBody"></tbody>
+          </table>
+        </div>
+      </section>
     </section>
   </main>
 

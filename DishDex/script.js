@@ -64,7 +64,7 @@ const I18N = {
     playerLevel: 'Player Level',
     xpNeeded: 'XP Needed',
     availableStoves: 'Available Stoves',
-    holidayMode: 'Holiday Mode',
+    holidayMode: 'Include holiday foods?',
     exclude: 'Exclude',
     include: 'Include',
     auto: 'Auto',
@@ -106,6 +106,7 @@ const I18N = {
     type: 'Type',
     loadingXml: 'Loading Café XML...',
     dataLoaded: 'Café data loaded!',
+    couldNotLoadData: 'Could not load Café data.',
     dishesReady: 'dishes ready',
     noXpRecommendations: 'No XP recommendations available for this level/settings.',
     noProfitRecommendations: 'No profit recommendations available for this level/settings.',
@@ -127,6 +128,13 @@ const I18N = {
     bestLong: 'Best long',
     bestVeryLong: 'Best very long',
     bestDayOff: 'Best day-off',
+    activeWord: 'active',
+    fastWord: 'fast',
+    shortWord: 'short',
+    mediumWord: 'medium',
+    longWord: 'long',
+    veryLongWord: 'very long',
+    dayOffWord: 'day-off',
     metricXpMin: 'XP/min',
     metricProfitMin: 'profit/min',
     metricPortionMin: 'portion/min',
@@ -181,7 +189,7 @@ const I18N = {
     playerLevel: 'Nível do jogador',
     xpNeeded: 'XP necessário',
     availableStoves: 'Fogões disponíveis',
-    holidayMode: 'Modo feriado',
+    holidayMode: 'Incluir comidas de feriado?',
     exclude: 'Excluir',
     include: 'Incluir',
     auto: 'Auto',
@@ -223,6 +231,7 @@ const I18N = {
     type: 'Tipo',
     loadingXml: 'Carregando XML do Café...',
     dataLoaded: 'Dados do Café carregados!',
+    couldNotLoadData: 'Não foi possível carregar os dados do Café.',
     dishesReady: 'pratos prontos',
     noXpRecommendations: 'Nenhuma recomendação de XP disponível para este nível/configuração.',
     noProfitRecommendations: 'Nenhuma recomendação de lucro disponível para este nível/configuração.',
@@ -244,6 +253,13 @@ const I18N = {
     bestLong: 'Melhor longo',
     bestVeryLong: 'Melhor muito longo',
     bestDayOff: 'Melhor folga',
+    activeWord: 'ativo',
+    fastWord: 'rápido',
+    shortWord: 'curto',
+    mediumWord: 'médio',
+    longWord: 'longo',
+    veryLongWord: 'muito longo',
+    dayOffWord: 'de folga',
     metricXpMin: 'XP/min',
     metricProfitMin: 'lucro/min',
     metricPortionMin: 'porção/min',
@@ -253,7 +269,7 @@ const I18N = {
     mediumPlan: 'Plano médio',
     longPlan: 'Plano longo',
     veryLongPlan: 'Plano muito longo',
-    dayOffPlan: 'Plano de folga',
+    dayOffPlan: 'Dia de folga',
     activeNote: 'Melhor XP/min para 10 minutos ou menos.',
     fastNote: 'Melhor XP/min entre 11 minutos e 1 hora.',
     shortNote: 'Melhor XP/min entre 1 h 1 min e 3 h.',
@@ -334,7 +350,7 @@ async function main() {
   } catch (error) {
     console.error(error);
 
-    setStatus('Could not load Café data.', 'bad');
+    setStatus(t('couldNotLoadData'), 'bad');
 
     document.getElementById('dataSummary').textContent =
       String(error.message || error);
@@ -388,7 +404,7 @@ function setupLanguage() {
 
     } catch (error) {
       console.error(error);
-      setStatus('Could not load Café data.', 'bad');
+      setStatus(t('couldNotLoadData'), 'bad');
       document.getElementById('dataSummary').textContent = String(error.message || error);
     }
   });
@@ -472,6 +488,7 @@ function getTimeBuckets() {
     {
       key: 'active',
       recommendationLabel: t('bestActive'),
+      positionLabel: t('activeWord'),
       planLabel: t('activePlan'),
       note: t('activeNote'),
       matches: record => record.duration <= 10
@@ -479,6 +496,7 @@ function getTimeBuckets() {
     {
       key: 'fast',
       recommendationLabel: t('bestFast'),
+      positionLabel: t('fastWord'),
       planLabel: t('fastPlan'),
       note: t('fastNote'),
       matches: record => record.duration >= 11 && record.duration <= 60
@@ -486,6 +504,7 @@ function getTimeBuckets() {
     {
       key: 'short',
       recommendationLabel: t('bestShort'),
+      positionLabel: t('shortWord'),
       planLabel: t('shortPlan'),
       note: t('shortNote'),
       matches: record => record.duration >= 61 && record.duration <= 180
@@ -493,6 +512,7 @@ function getTimeBuckets() {
     {
       key: 'medium',
       recommendationLabel: t('bestMedium'),
+      positionLabel: t('mediumWord'),
       planLabel: t('mediumPlan'),
       note: t('mediumNote'),
       matches: record => record.duration >= 181 && record.duration <= 360
@@ -500,6 +520,7 @@ function getTimeBuckets() {
     {
       key: 'long',
       recommendationLabel: t('bestLong'),
+      positionLabel: t('longWord'),
       planLabel: t('longPlan'),
       note: t('longNote'),
       matches: record => record.duration >= 361 && record.duration <= 720
@@ -507,6 +528,7 @@ function getTimeBuckets() {
     {
       key: 'veryLong',
       recommendationLabel: t('bestVeryLong'),
+      positionLabel: t('veryLongWord'),
       planLabel: t('veryLongPlan'),
       note: t('veryLongNote'),
       matches: record => record.duration >= 721 && record.duration <= 1380
@@ -514,6 +536,7 @@ function getTimeBuckets() {
     {
       key: 'dayOff',
       recommendationLabel: t('bestDayOff'),
+      positionLabel: t('dayOffWord'),
       planLabel: t('dayOffPlan'),
       note: t('dayOffNote'),
       matches: record => record.duration >= 1381
@@ -667,11 +690,19 @@ function renderMyDex() {
 function buildBucketRecommendations(records, metricLabelKey, scoreFunction, sectionKey) {
   return getTimeBuckets().map((bucket, index) => {
     return [
-      `${bucket.recommendationLabel} ${t(metricLabelKey)}`,
+      formatRecommendationLabel(bucket, metricLabelKey),
       findBestDish(records, scoreFunction, bucket.matches),
       `best-${sectionKey}-${index + 1}`
     ];
   });
+}
+
+function formatRecommendationLabel(bucket, metricLabelKey) {
+  if (currentLanguage === 'pt') {
+    return `Melhor ${t(metricLabelKey)} ${bucket.positionLabel}`;
+  }
+
+  return `${bucket.recommendationLabel} ${t(metricLabelKey)}`;
 }
 
 function buildXpPlans(records) {
@@ -690,7 +721,7 @@ function getSettings() {
     playerLevel: clampNumber(Number(document.getElementById('playerLevel').value || 0), 0, 999),
     xpNeeded: Math.max(0, Number(document.getElementById('xpNeeded').value || 0)),
     stoveCount: Math.max(1, Number(document.getElementById('stoveCount').value || 1)),
-    holidayMode: document.getElementById('holidayMode').value || 'Exclude'
+    holidayMode: document.getElementById('holidayMode').value || 'Auto'
   };
 }
 
@@ -1266,13 +1297,6 @@ function formatDuration(totalMinutes) {
 
   const hours = Math.floor(roundedMinutes / 60);
   const minutes = roundedMinutes % 60;
-
-  if (currentLanguage === 'pt') {
-    if (hours === 0) return `${minutes} min`;
-    if (minutes === 0) return `${hours} h`;
-
-    return `${hours} h ${minutes} min`;
-  }
 
   if (hours === 0) return `${minutes} min`;
   if (minutes === 0) return `${hours} h`;

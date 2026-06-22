@@ -693,6 +693,70 @@ td.effects-cell {
   .four-mode-grid { grid-template-columns: repeat(2, minmax(220px, 1fr)); }
 }
 
+
+
+/* Phase 2 v3: restored team editor and cleaner compact preview layout */
+.profile-data-actions {
+  justify-content: flex-start;
+  margin-bottom: 14px;
+}
+
+.coop-team-summary-list.compact-card-grid {
+  display: grid;
+  gap: 8px;
+}
+
+.coop-team-summary-list.team-count-1,
+.coop-team-summary-list.team-count-2,
+.coop-team-summary-list.team-count-3 {
+  grid-template-columns: 1fr;
+}
+
+.coop-team-summary-list.team-count-4,
+.coop-team-summary-list.team-count-5 {
+  grid-template-columns: repeat(2, minmax(190px, 1fr));
+}
+
+.coop-team-summary-item.compact-team-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 10px;
+  min-height: 42px;
+}
+
+.coop-team-summary-item.compact-team-card strong {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.coop-team-summary-item.compact-team-card span {
+  white-space: nowrap;
+}
+
+.coop-team-reward-list.compact-reward-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+.coop-member-reward-item.compact-reward-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 42px;
+}
+
+.coop-member-reward-item.compact-reward-row strong {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.coop-member-reward-item.compact-reward-row .compact-reward-amounts {
+  justify-content: flex-end;
+  white-space: nowrap;
+}
+
 @media (max-width: 900px) {
   .hero,
   .sub-hero { grid-template-columns: 1fr; }
@@ -1566,5 +1630,25 @@ body.dark-theme .full-table .dish-type-tag {
 
   .coop-team-actions {
     justify-content: flex-start;
+  }
+}
+
+
+@media (max-width: 900px) {
+  .coop-team-summary-list.team-count-4,
+  .coop-team-summary-list.team-count-5 {
+    grid-template-columns: 1fr;
+  }
+
+  .coop-team-summary-item.compact-team-card,
+  .coop-member-reward-item.compact-reward-row {
+    grid-template-columns: 1fr;
+    display: grid;
+    justify-items: start;
+  }
+
+  .coop-member-reward-item.compact-reward-row .compact-reward-amounts {
+    justify-content: flex-start;
+    white-space: normal;
   }
 }

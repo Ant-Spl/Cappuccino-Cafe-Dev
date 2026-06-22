@@ -771,18 +771,29 @@ function handleHashNavigation() {
 }
 
 function setupDataActions() {
-  document.getElementById('loadDataButton').addEventListener('click', () => {
-    document.getElementById('dataFileInput').click();
+  const dataFileInput = document.getElementById('dataFileInput');
+  ['loadDataButton', 'profileLoadDataButton'].forEach(id => {
+    const button = document.getElementById(id);
+    if (button) button.addEventListener('click', () => dataFileInput?.click());
   });
 
-  document.getElementById('dataFileInput').addEventListener('change', event => {
-    const file = event.target.files && event.target.files[0];
-    if (file) importUserData(file);
-    event.target.value = '';
+  if (dataFileInput) {
+    dataFileInput.addEventListener('change', event => {
+      const file = event.target.files && event.target.files[0];
+      if (file) importUserData(file);
+      event.target.value = '';
+    });
+  }
+
+  ['downloadDataButton', 'profileDownloadDataButton'].forEach(id => {
+    const button = document.getElementById(id);
+    if (button) button.addEventListener('click', exportUserData);
   });
 
-  document.getElementById('downloadDataButton').addEventListener('click', exportUserData);
-  document.getElementById('deleteDataButton').addEventListener('click', deleteUserData);
+  ['deleteDataButton', 'profileDeleteDataButton'].forEach(id => {
+    const button = document.getElementById(id);
+    if (button) button.addEventListener('click', deleteUserData);
+  });
 
   const coopSearch = document.getElementById('coopSearch');
   if (coopSearch) coopSearch.addEventListener('input', renderCoopPlanner);
@@ -1733,6 +1744,8 @@ function coopTeamPreviewHtml(coop) {
     `;
   }
 
+  const countClass = `team-count-${Math.min(members.length, MAX_COOP_MEMBERS)}`;
+
   const memberRows = members.map(member => `
     <div class="coop-team-summary-item compact-team-card">
       <strong>${escapeHtml(member.name)}</strong>
@@ -1744,7 +1757,7 @@ function coopTeamPreviewHtml(coop) {
   const rewardRows = members.map(member => {
     const reward = getCoopRewardAtLevel(coop, 4, member.level);
     return `
-      <div class="coop-member-reward-item compact-reward-card">
+      <div class="coop-member-reward-item compact-reward-row">
         <strong>${escapeHtml(member.name)}</strong>
         <span class="compact-reward-amounts">${rewardAmountHtml('cash', reward.cash)} ${rewardAmountHtml('xp', reward.xp)} ${rewardAmountHtml('gold', reward.gold)}</span>
       </div>
@@ -1756,11 +1769,11 @@ function coopTeamPreviewHtml(coop) {
       <h4>${escapeHtml(t('selectedTeam'))}: ${escapeHtml(team.name)}</h4>
       <div class="coop-team-compact-grid">
         <div class="coop-team-compact-column">
-          <div class="coop-team-summary-list compact-card-grid">${memberRows}</div>
+          <div class="coop-team-summary-list compact-card-grid ${escapeHtml(countClass)}">${memberRows}</div>
         </div>
         <div class="coop-team-compact-column">
           <h5>${escapeHtml(t('teamRewardsGold'))}</h5>
-          <div class="coop-team-reward-list compact-card-grid">${rewardRows}</div>
+          <div class="coop-team-reward-list compact-reward-list">${rewardRows}</div>
         </div>
       </div>
       <small>${escapeHtml(t('assignmentComingSoon'))}</small>
@@ -2441,6 +2454,11 @@ function setMasteryStatus(message) {
   if (status) status.textContent = message;
 }
 
+function setDataStatus(message) {
+  setMasteryStatus(message);
+  setProfileStatus(message);
+}
+
 function exportUserData() {
   const hasProfile = Boolean((userData.chefName || '').trim());
   const data = hasProfile
@@ -2477,7 +2495,7 @@ function exportUserData() {
   link.click();
   link.remove();
   URL.revokeObjectURL(url);
-  setMasteryStatus(t('dataDownloaded'));
+  setDataStatus(t('dataDownloaded'));
 }
 
 function importUserData(file) {
@@ -2519,14 +2537,14 @@ function importUserData(file) {
       renderMasteries();
       renderMyDex();
       renderFullDishDex();
-      setMasteryStatus(t('dataLoadedMessage'));
+      setDataStatus(t('dataLoadedMessage'));
     } catch (error) {
       console.error(error);
-      setMasteryStatus(t('dataLoadError'));
+      setDataStatus(t('dataLoadError'));
     }
   };
 
-  reader.onerror = () => setMasteryStatus(t('dataLoadError'));
+  reader.onerror = () => setDataStatus(t('dataLoadError'));
   reader.readAsText(file);
 }
 
@@ -2543,7 +2561,7 @@ function deleteUserData() {
   renderMasteries();
   renderMyDex();
   renderFullDishDex();
-  setMasteryStatus(t('dataDeleted'));
+  setDataStatus(t('dataDeleted'));
 }
 
 async function fetchText(path) {

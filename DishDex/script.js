@@ -26,6 +26,8 @@ const PATHS = {
 const STORAGE_KEY = 'dishDexUserDataV1';
 const MASTERY_VIEW_STORAGE_KEY = 'dishDexMasteryViewMode';
 const FULL_USE_MASTERIES_STORAGE_KEY = 'dishDexFullUseMasteries';
+const MAX_COOP_TEAMS = 10;
+const MAX_COOP_MEMBERS = 5;
 const MASTERY_PAGE_SIZE = 4;
 const MASTERY_DAYS_LV1 = 1;
 const MASTERY_DAYS_LV2 = 5;
@@ -107,6 +109,24 @@ const I18N = {
     minimumDishLevel: 'Minimum dish level',
     totalStoveHours: 'Total stove-hours',
     rewardEstimateAtYourLevel: 'XP estimate at your level',
+    coopTeamTitle: 'Co-Op Team',
+    coopTeamNote: 'Register up to five chefs and save up to ten teams.',
+    loadTeam: 'Load team',
+    teamName: 'Team name',
+    newTeam: 'New team',
+    saveTeam: 'Save team',
+    deleteTeam: 'Delete team',
+    useProfileForChef1: 'Use My Profile for Chef 1',
+    chef: 'Chef',
+    chefFallback: 'Chef',
+    teamSaved: 'Team saved locally.',
+    teamDeleted: 'Team deleted.',
+    teamLimitReached: 'You can save up to 10 teams.',
+    confirmDeleteTeam: 'Delete this saved team?',
+    selectedTeam: 'Selected team',
+    teamRewardsGold: 'Team rewards if Gold',
+    noTeamMembers: 'Add at least one chef to this team.',
+    assignmentComingSoon: 'Dish assignment comes in the next phase.',
     bronze: 'Bronze',
     silver: 'Silver',
     gold: 'Gold',
@@ -264,8 +284,8 @@ const I18N = {
     gold: 'Gold',
     portionsLower: 'portion(s)',
     xpUpper: 'XP',
-    confirmDelete: 'Are you sure? This will delete your saved profile and masteries.',
-    dataDeleted: 'Saved profile and masteries deleted.',
+    confirmDelete: 'Are you sure? This will delete your saved profile, masteries and Co-Op teams.',
+    dataDeleted: 'Saved profile, masteries and Co-Op teams deleted.',
     dataLoadedMessage: 'Data loaded successfully.',
     dataLoadError: 'Could not load this data file.',
     dataDownloaded: 'Data file downloaded.',
@@ -318,6 +338,24 @@ const I18N = {
     minimumDishLevel: 'Nível mínimo dos pratos',
     totalStoveHours: 'Horas de fogão totais',
     rewardEstimateAtYourLevel: 'Estimativa de XP no seu nível',
+    coopTeamTitle: 'Equipe de Co-Op',
+    coopTeamNote: 'Registre até cinco chefs e salve até dez equipes.',
+    loadTeam: 'Carregar equipe',
+    teamName: 'Nome da equipe',
+    newTeam: 'Nova equipe',
+    saveTeam: 'Salvar equipe',
+    deleteTeam: 'Apagar equipe',
+    useProfileForChef1: 'Usar Meu Perfil no Chef 1',
+    chef: 'Chef',
+    chefFallback: 'Chef',
+    teamSaved: 'Equipe salva localmente.',
+    teamDeleted: 'Equipe apagada.',
+    teamLimitReached: 'Você pode salvar até 10 equipes.',
+    confirmDeleteTeam: 'Apagar esta equipe salva?',
+    selectedTeam: 'Equipe selecionada',
+    teamRewardsGold: 'Recompensas da equipe com Ouro',
+    noTeamMembers: 'Adicione pelo menos um chef nesta equipe.',
+    assignmentComingSoon: 'A distribuição dos pratos vem na próxima fase.',
     backButton: '← Voltar',
     personalRecommendations: 'Recomendações pessoais',
     myDexSettings: 'Configurações do MyDex',
@@ -472,8 +510,8 @@ const I18N = {
     gold: 'Ouro',
     portionsLower: 'porções',
     xpUpper: 'XP',
-    confirmDelete: 'Tem certeza? Isso apagará seu perfil e suas estrelas salvas.',
-    dataDeleted: 'Perfil e estrelas salvos foram apagados.',
+    confirmDelete: 'Tem certeza? Isso apagará seu perfil, suas estrelas e suas equipes de Co-Op salvas.',
+    dataDeleted: 'Perfil, estrelas e equipes de Co-Op salvos foram apagados.',
     dataLoadedMessage: 'Dados carregados com sucesso.',
     dataLoadError: 'Não foi possível carregar este arquivo de dados.',
     dataDownloaded: 'Arquivo de dados baixado.',
@@ -533,8 +571,10 @@ async function main() {
 
     levelLimitsByLevel = await loadLevelLimits();
     ensureUserDefaults();
+    ensureCoopTeamDefaults();
     syncProfileInputs();
     syncMyDexInputs();
+    renderCoopTeamEditor();
 
     allDishRecords = await loadDishRecords(currentLanguage);
     allCoopRecords = await loadCoopRecords(currentLanguage);
@@ -641,6 +681,7 @@ function setupLanguage() {
       updateDataSummary();
       syncProfileInputs();
       syncMyDexInputs(false);
+      renderCoopTeamEditor();
       renderMyDex();
       renderFullDishDex();
       renderCoopPlanner();
@@ -754,6 +795,8 @@ function setupDataActions() {
       renderCoopPlanPreview(Number(button.getAttribute('data-coop-number')));
     });
   }
+
+  bindCoopTeamControls();
 
   document.getElementById('masterySearch').addEventListener('input', () => {
     masteryCookbookPage = 0;
@@ -1023,6 +1066,7 @@ function handleMyDexInputChange() {
   saveUserData();
   syncProfileInputs(false);
   renderMyDex();
+  renderCoopPlanner();
 }
 
 function handleProfileLevelChange() {
@@ -1034,7 +1078,10 @@ function handleProfileLevelChange() {
   syncMyDexInputs(false);
   setProfileStatus(t('profileSaved'));
   renderMyDex();
+  renderCoopTeamEditor();
+  renderCoopPlanner();
 }
+
 
 function handleProfileInputChange() {
   userData.chefName = document.getElementById('profileChefName').value.trim();
@@ -1044,7 +1091,10 @@ function handleProfileInputChange() {
   syncMyDexInputs(false);
   setProfileStatus(t('profileSaved'));
   renderMyDex();
+  renderCoopTeamEditor();
+  renderCoopPlanner();
 }
+
 
 function renderMyDex() {
   if (!allDishRecords.length) return;
@@ -1397,6 +1447,198 @@ function renderDishCards(containerId, records, fallbackType) {
   }).join('');
 }
 
+function bindCoopTeamControls() {
+  const teamSelect = document.getElementById('coopTeamSelect');
+  const teamName = document.getElementById('coopTeamName');
+  const membersBody = document.getElementById('coopTeamMembersBody');
+  const newButton = document.getElementById('newCoopTeamButton');
+  const saveButton = document.getElementById('saveCoopTeamButton');
+  const deleteButton = document.getElementById('deleteCoopTeamButton');
+  const profileButton = document.getElementById('useProfileForLeaderButton');
+
+  if (teamSelect) {
+    teamSelect.addEventListener('change', () => {
+      userData.selectedCoopTeamId = teamSelect.value;
+      saveUserData();
+      renderCoopTeamEditor();
+      renderCoopPlanner();
+      clearCoopPlanPreview();
+    });
+  }
+
+  if (teamName) {
+    teamName.addEventListener('input', () => {
+      const team = getSelectedCoopTeam();
+      team.name = teamName.value.trim() || team.name;
+      saveUserData();
+      renderCoopTeamSelectOnly();
+      setCoopTeamStatus(t('teamSaved'));
+    });
+  }
+
+  if (membersBody) {
+    membersBody.addEventListener('input', event => {
+      const input = event.target.closest('[data-team-field]');
+      if (!input) return;
+      updateSelectedTeamFromMemberInput(input);
+      setCoopTeamStatus(t('teamSaved'));
+    });
+
+    membersBody.addEventListener('change', event => {
+      const input = event.target.closest('[data-team-field]');
+      if (!input) return;
+      updateSelectedTeamFromMemberInput(input, true);
+      setCoopTeamStatus(t('teamSaved'));
+    });
+  }
+
+  if (newButton) newButton.addEventListener('click', createNewCoopTeam);
+  if (saveButton) saveButton.addEventListener('click', () => {
+    saveSelectedTeamFromInputs();
+    setCoopTeamStatus(t('teamSaved'));
+  });
+  if (deleteButton) deleteButton.addEventListener('click', deleteSelectedCoopTeam);
+  if (profileButton) profileButton.addEventListener('click', fillTeamLeaderFromProfile);
+}
+
+function renderCoopTeamEditor() {
+  const teamSelect = document.getElementById('coopTeamSelect');
+  const teamName = document.getElementById('coopTeamName');
+  const membersBody = document.getElementById('coopTeamMembersBody');
+  const newButton = document.getElementById('newCoopTeamButton');
+  if (!teamSelect || !teamName || !membersBody) return;
+
+  ensureCoopTeamDefaults();
+  const selectedTeam = getSelectedCoopTeam();
+
+  renderCoopTeamSelectOnly();
+  teamName.value = selectedTeam?.name || '';
+  membersBody.innerHTML = selectedTeam.members.map((member, index) => coopTeamMemberRowHtml(member, index)).join('');
+  if (newButton) newButton.disabled = userData.coopTeams.length >= MAX_COOP_TEAMS;
+}
+
+function renderCoopTeamSelectOnly() {
+  const teamSelect = document.getElementById('coopTeamSelect');
+  if (!teamSelect) return;
+  const currentValue = userData.selectedCoopTeamId;
+  teamSelect.innerHTML = (userData.coopTeams || []).map((team, index) => {
+    const name = team.name || (currentLanguage === 'pt' ? `Equipe ${index + 1}` : `Team ${index + 1}`);
+    return `<option value="${escapeHtml(team.id)}">${escapeHtml(name)}</option>`;
+  }).join('');
+  teamSelect.value = currentValue;
+}
+
+function coopTeamMemberRowHtml(member, index) {
+  const slot = index + 1;
+  const levelValue = member.level === '' || member.level === null || member.level === undefined ? '' : number(member.level);
+  const stovesValue = member.stoves === '' || member.stoves === null || member.stoves === undefined ? '' : number(member.stoves);
+
+  return `
+    <tr>
+      <td><strong>${escapeHtml(t('chef'))} ${number(slot)}</strong></td>
+      <td><input data-team-field="name" data-member-index="${index}" type="text" maxlength="40" value="${escapeHtml(member.name || '')}" placeholder="${escapeHtml(`${t('chefFallback')} ${slot}`)}"></td>
+      <td><input data-team-field="level" data-member-index="${index}" type="number" min="0" max="999" value="${escapeHtml(levelValue)}"></td>
+      <td><input data-team-field="stoves" data-member-index="${index}" type="number" min="0" value="${escapeHtml(stovesValue)}"></td>
+    </tr>
+  `;
+}
+
+function updateSelectedTeamFromMemberInput(input, allowAutoStove = false) {
+  const team = getSelectedCoopTeam();
+  const index = Number(input.getAttribute('data-member-index'));
+  const field = input.getAttribute('data-team-field');
+  if (!team || !Number.isFinite(index) || !team.members[index]) return;
+
+  const member = team.members[index];
+  if (field === 'name') {
+    member.name = input.value;
+  } else if (field === 'level') {
+    const level = input.value === '' ? '' : clampNumber(Number(input.value || 0), 0, 999);
+    member.level = level;
+    if (allowAutoStove && level !== '') {
+      member.stoves = getDefaultStovesForLevel(level);
+      const stoveInput = document.querySelector(`[data-team-field="stoves"][data-member-index="${index}"]`);
+      if (stoveInput) stoveInput.value = member.stoves;
+    }
+  } else if (field === 'stoves') {
+    member.stoves = input.value === '' ? '' : Math.max(0, Number(input.value || 0));
+  }
+
+  saveUserData();
+  renderCoopPlanner();
+}
+
+function saveSelectedTeamFromInputs() {
+  const team = getSelectedCoopTeam();
+  if (!team) return;
+  const teamName = document.getElementById('coopTeamName');
+  if (teamName) team.name = teamName.value.trim() || team.name;
+
+  document.querySelectorAll('#coopTeamMembersBody [data-team-field]').forEach(input => {
+    updateSelectedTeamFromMemberInput(input, false);
+  });
+
+  saveUserData();
+  renderCoopTeamSelectOnly();
+  renderCoopPlanner();
+}
+
+function createNewCoopTeam() {
+  ensureCoopTeamDefaults();
+  if (userData.coopTeams.length >= MAX_COOP_TEAMS) {
+    setCoopTeamStatus(t('teamLimitReached'));
+    return;
+  }
+
+  const team = createDefaultCoopTeam();
+  userData.coopTeams.push(team);
+  userData.selectedCoopTeamId = team.id;
+  saveUserData();
+  renderCoopTeamEditor();
+  renderCoopPlanner();
+  clearCoopPlanPreview();
+  setCoopTeamStatus(t('teamSaved'));
+}
+
+function deleteSelectedCoopTeam() {
+  ensureCoopTeamDefaults();
+  if (!window.confirm(t('confirmDeleteTeam'))) return;
+  const selectedId = userData.selectedCoopTeamId;
+  userData.coopTeams = userData.coopTeams.filter(team => team.id !== selectedId);
+  if (!userData.coopTeams.length) userData.coopTeams.push(createDefaultCoopTeam());
+  userData.selectedCoopTeamId = userData.coopTeams[0].id;
+  saveUserData();
+  renderCoopTeamEditor();
+  renderCoopPlanner();
+  clearCoopPlanPreview();
+  setCoopTeamStatus(t('teamDeleted'));
+}
+
+function fillTeamLeaderFromProfile() {
+  const team = getSelectedCoopTeam();
+  if (!team || !team.members[0]) return;
+  const level = clampNumber(Number(userData.level || 1), 0, 999);
+  team.members[0].name = (userData.chefName || '').trim();
+  team.members[0].level = level;
+  team.members[0].stoves = Number(userData.availableStoves || getDefaultStovesForLevel(level));
+  saveUserData();
+  renderCoopTeamEditor();
+  renderCoopPlanner();
+  setCoopTeamStatus(t('teamSaved'));
+}
+
+function setCoopTeamStatus(message) {
+  const status = document.getElementById('coopTeamStatus');
+  if (status) status.textContent = message;
+}
+
+function clearCoopPlanPreview() {
+  const container = document.getElementById('coopPlanPreview');
+  if (!container) return;
+  container.className = 'coop-plan-preview empty-coop-plan';
+  container.textContent = t('noCoopSelected');
+}
+
 function renderCoopPlanner() {
   const body = document.getElementById('coopListBody');
   if (!body) return;
@@ -1422,8 +1664,8 @@ function renderCoopPlanner() {
   body.innerHTML = records.map(coop => coopRowHtml(coop)).join('');
 }
 
-function getCoopRewardAtLevel(coop, multiplier = 4) {
-  const playerLevel = Number(userData.level || 1);
+function getCoopRewardAtLevel(coop, multiplier = 4, levelOverride = null) {
+  const playerLevel = clampNumber(Number(levelOverride ?? userData.level ?? 1), 0, 999);
   return {
     cash: Number(coop.rewardCash || 0) * multiplier,
     xp: Math.trunc(Number(coop.baseXp || 0) * (playerLevel / 3) * multiplier),
@@ -1461,10 +1703,10 @@ function coopRewardTierPillHtml(label, reward, className = '') {
   `;
 }
 
-function coopRewardDetailsHtml(coop) {
-  const goldReward = getCoopRewardAtLevel(coop, 4);
-  const silverReward = getCoopRewardAtLevel(coop, 2);
-  const bronzeReward = getCoopRewardAtLevel(coop, 1);
+function coopRewardDetailsHtml(coop, levelOverride = null) {
+  const goldReward = getCoopRewardAtLevel(coop, 4, levelOverride);
+  const silverReward = getCoopRewardAtLevel(coop, 2, levelOverride);
+  const bronzeReward = getCoopRewardAtLevel(coop, 1, levelOverride);
   return `
     <div class="coop-reward-cell coop-reward-pills">
       ${coopRewardTierPillHtml(t('gold'), goldReward, 'gold-tier')}
@@ -1476,6 +1718,47 @@ function coopRewardDetailsHtml(coop) {
 
 function coopMaxRewardHtml(coop) {
   return coopRewardDetailsHtml(coop);
+}
+
+function coopTeamPreviewHtml(coop) {
+  const team = getSelectedCoopTeam();
+  const members = getValidCoopTeamMembers(team);
+
+  if (!members.length) {
+    return `
+      <section class="coop-team-preview-section">
+        <h4>${escapeHtml(t('selectedTeam'))}</h4>
+        <p>${escapeHtml(t('noTeamMembers'))}</p>
+      </section>
+    `;
+  }
+
+  const memberRows = members.map(member => `
+    <div class="coop-team-summary-item">
+      <strong>${escapeHtml(member.name)}</strong>
+      <span>${escapeHtml(t('level'))} ${number(member.level)} · ${number(member.stoves)} ${escapeHtml(t('stoves'))}</span>
+    </div>
+  `).join('');
+
+  const rewardRows = members.map(member => {
+    const reward = getCoopRewardAtLevel(coop, 4, member.level);
+    return `
+      <div class="coop-member-reward-item">
+        <strong>${escapeHtml(member.name)}</strong>
+        <span>${rewardAmountHtml('cash', reward.cash)} ${rewardAmountHtml('xp', reward.xp)} ${rewardAmountHtml('gold', reward.gold)}</span>
+      </div>
+    `;
+  }).join('');
+
+  return `
+    <section class="coop-team-preview-section">
+      <h4>${escapeHtml(t('selectedTeam'))}: ${escapeHtml(team.name)}</h4>
+      <div class="coop-team-summary-list">${memberRows}</div>
+      <h4>${escapeHtml(t('teamRewardsGold'))}</h4>
+      <div class="coop-team-reward-list">${rewardRows}</div>
+      <small>${escapeHtml(t('assignmentComingSoon'))}</small>
+    </section>
+  `;
 }
 
 function coopRowHtml(coop) {
@@ -1538,6 +1821,7 @@ function renderCoopPlanPreview(coopNumber) {
           <h4>${escapeHtml(t('coopRequirements'))}</h4>
           <div class="coop-requirement-list">${coopRequirementListHtml(coop.requirements)}</div>
         </section>
+        ${coopTeamPreviewHtml(coop)}
       </div>
     </article>
   `;
@@ -1974,8 +2258,52 @@ function normalizeUserData(raw) {
     xpNeeded: Math.max(0, Number(data.xpNeeded ?? 1000)),
     availableStoves: Number(data.availableStoves || 0),
     showIngredients: Boolean(data.showIngredients),
-    masteries: normalizeMasteries(data.masteries)
+    masteries: normalizeMasteries(data.masteries),
+    coopTeams: normalizeCoopTeams(data.coopTeams),
+    selectedCoopTeamId: typeof data.selectedCoopTeamId === 'string' ? data.selectedCoopTeamId : ''
   };
+}
+
+function normalizeCoopTeams(rawTeams) {
+  if (!Array.isArray(rawTeams)) return [];
+  const seen = new Set();
+
+  return rawTeams
+    .map((team, index) => normalizeCoopTeam(team, index + 1))
+    .filter(team => {
+      if (!team.id || seen.has(team.id)) return false;
+      seen.add(team.id);
+      return true;
+    })
+    .slice(0, MAX_COOP_TEAMS);
+}
+
+function normalizeCoopTeam(rawTeam, fallbackNumber = 1) {
+  const team = rawTeam && typeof rawTeam === 'object' ? rawTeam : {};
+  const id = typeof team.id === 'string' && team.id.trim() ? team.id.trim() : createTeamId();
+  const fallbackName = currentLanguage === 'pt' ? `Equipe ${fallbackNumber}` : `Team ${fallbackNumber}`;
+  const name = typeof team.name === 'string' && team.name.trim() ? team.name.trim() : fallbackName;
+  const rawMembers = Array.isArray(team.members) ? team.members : [];
+  const members = Array.from({ length: MAX_COOP_MEMBERS }, (_, index) => normalizeCoopMember(rawMembers[index], index));
+
+  return { id, name, members };
+}
+
+function normalizeCoopMember(rawMember, index = 0) {
+  const member = rawMember && typeof rawMember === 'object' ? rawMember : {};
+  const levelRaw = member.level === '' || member.level === null || member.level === undefined ? '' : clampNumber(Number(member.level), 0, 999);
+  const stovesRaw = member.stoves === '' || member.stoves === null || member.stoves === undefined ? '' : Math.max(0, Number(member.stoves));
+
+  return {
+    name: typeof member.name === 'string' ? member.name : '',
+    level: levelRaw,
+    stoves: stovesRaw,
+    slot: index + 1
+  };
+}
+
+function createTeamId() {
+  return `team_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
 }
 
 function normalizeMasteries(rawMasteries) {
@@ -1998,6 +2326,69 @@ function ensureUserDefaults() {
     userData.availableStoves = getDefaultStovesForLevel(userData.level);
   }
   saveUserData();
+}
+
+function ensureCoopTeamDefaults() {
+  userData.coopTeams = normalizeCoopTeams(userData.coopTeams);
+
+  if (!userData.coopTeams.length) {
+    const team = createDefaultCoopTeam();
+    userData.coopTeams.push(team);
+    userData.selectedCoopTeamId = team.id;
+  }
+
+  if (!userData.selectedCoopTeamId || !userData.coopTeams.some(team => team.id === userData.selectedCoopTeamId)) {
+    userData.selectedCoopTeamId = userData.coopTeams[0]?.id || '';
+  }
+
+  saveUserData();
+}
+
+function createDefaultCoopTeam() {
+  const numberSuffix = getNextCoopTeamNumber();
+  const profileName = (userData.chefName || '').trim();
+  const profileLevel = clampNumber(Number(userData.level || 1), 0, 999);
+  const profileStoves = Number(userData.availableStoves || getDefaultStovesForLevel(profileLevel));
+  const members = Array.from({ length: MAX_COOP_MEMBERS }, (_, index) => ({
+    name: index === 0 ? profileName : '',
+    level: index === 0 ? profileLevel : '',
+    stoves: index === 0 ? profileStoves : '',
+    slot: index + 1
+  }));
+
+  return {
+    id: createTeamId(),
+    name: currentLanguage === 'pt' ? `Equipe ${numberSuffix}` : `Team ${numberSuffix}`,
+    members
+  };
+}
+
+function getNextCoopTeamNumber() {
+  const used = new Set((userData.coopTeams || []).map(team => {
+    const match = String(team.name || '').match(/(\d+)$/);
+    return match ? Number(match[1]) : 0;
+  }));
+  let number = 1;
+  while (used.has(number)) number += 1;
+  return number;
+}
+
+function getSelectedCoopTeam() {
+  ensureCoopTeamDefaults();
+  return userData.coopTeams.find(team => team.id === userData.selectedCoopTeamId) || userData.coopTeams[0];
+}
+
+function getValidCoopTeamMembers(team = getSelectedCoopTeam()) {
+  if (!team || !Array.isArray(team.members)) return [];
+  return team.members
+    .map((member, index) => ({
+      ...member,
+      slot: index + 1,
+      name: String(member.name || '').trim() || `${t('chefFallback')} ${index + 1}`,
+      level: member.level === '' ? 0 : clampNumber(Number(member.level || 0), 0, 999),
+      stoves: member.stoves === '' ? 0 : Math.max(0, Number(member.stoves || 0))
+    }))
+    .filter(member => member.level > 0 && member.stoves > 0);
 }
 
 function saveUserData() {
@@ -2053,13 +2444,17 @@ function exportUserData() {
         xpNeeded: Math.max(0, Number(userData.xpNeeded ?? 1000)),
         availableStoves: Number(userData.availableStoves || getDefaultStovesForLevel(userData.level)),
         showIngredients: Boolean(userData.showIngredients),
-        masteries: userData.masteries || {}
+        masteries: userData.masteries || {},
+        coopTeams: normalizeCoopTeams(userData.coopTeams),
+        selectedCoopTeamId: userData.selectedCoopTeamId || ''
       }
     : {
         version: 1,
         xpNeeded: Math.max(0, Number(userData.xpNeeded ?? 1000)),
         showIngredients: Boolean(userData.showIngredients),
-        masteries: userData.masteries || {}
+        masteries: userData.masteries || {},
+        coopTeams: normalizeCoopTeams(userData.coopTeams),
+        selectedCoopTeamId: userData.selectedCoopTeamId || ''
       };
 
   const filename = hasProfile
@@ -2100,10 +2495,20 @@ function importUserData(file) {
         userData.availableStoves = Number(parsed.availableStoves || getDefaultStovesForLevel(userData.level));
       }
 
+      if ('coopTeams' in parsed) {
+        userData.coopTeams = normalizeCoopTeams(parsed.coopTeams);
+      }
+      if ('selectedCoopTeamId' in parsed) {
+        userData.selectedCoopTeamId = typeof parsed.selectedCoopTeamId === 'string' ? parsed.selectedCoopTeamId : '';
+      }
+
       ensureUserDefaults();
+      ensureCoopTeamDefaults();
       saveUserData();
       syncProfileInputs(false);
       syncMyDexInputs(true);
+      renderCoopTeamEditor();
+      renderCoopPlanner();
       renderMasteries();
       renderMyDex();
       renderFullDishDex();
@@ -2123,8 +2528,11 @@ function deleteUserData() {
   localStorage.removeItem(STORAGE_KEY);
   userData = normalizeUserData({});
   ensureUserDefaults();
+  ensureCoopTeamDefaults();
   syncProfileInputs(false);
   syncMyDexInputs(true);
+  renderCoopTeamEditor();
+  renderCoopPlanner();
   renderMasteries();
   renderMyDex();
   renderFullDishDex();

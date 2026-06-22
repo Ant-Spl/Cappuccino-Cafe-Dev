@@ -25,6 +25,10 @@ const PATHS = {
 const STORAGE_KEY = 'dishDexUserDataV1';
 const MASTERY_VIEW_STORAGE_KEY = 'dishDexMasteryViewMode';
 const MASTERY_PAGE_SIZE = 4;
+const MASTERY_DAYS_LV1 = 1;
+const MASTERY_DAYS_LV2 = 5;
+const MASTERY_DAYS_LV3 = 13;
+const MASTERY_STOVE_COUNT = 4;
 const MASTERY_SERVING_BONUS = 1.05;
 const MASTERY_XP_BONUS = 1.05;
 const MASTERY_TIME_BONUS = 0.70;
@@ -93,6 +97,15 @@ const I18N = {
     bestSummaryRawProfit: 'Best raw profit',
     bestSummaryPortionMin: 'Best portion/min',
     bestSummaryRawPortion: 'Best raw portion',
+    recommendedMasteriesTitle: 'Recommended Masteries',
+    recommendedMasteriesNote: 'Best mastery targets based on your Best of Summary dishes.',
+    currentMastery: 'Current Mastery',
+    recommendedStar: 'Recommended Star',
+    benefit: 'Benefit',
+    requirement: 'Requirement',
+    noRecommendedMasteries: 'No mastery recommendations available for this level/settings.',
+    alreadyMasteredBest: 'You already mastered the best dish for this! Nice!',
+    dishesRequired: 'dishes required',
     bestXpTitle: 'Best Dishes (XP)',
     bestProfitTitle: 'Best Dishes (Profit)',
     bestPortionsTitle: 'Best dishes (Portions)',
@@ -259,6 +272,15 @@ const I18N = {
     bestSummaryRawProfit: 'Melhor lucro bruto',
     bestSummaryPortionMin: 'Melhor porção/min',
     bestSummaryRawPortion: 'Melhor porção bruta',
+    recommendedMasteriesTitle: 'Estrelas Recomendadas',
+    recommendedMasteriesNote: 'Melhores estrelas para buscar com base no Resumo dos Melhores Pratos.',
+    currentMastery: 'Estrelas atuais',
+    recommendedStar: 'Estrela recomendada',
+    benefit: 'Benefício',
+    requirement: 'Requisito',
+    noRecommendedMasteries: 'Nenhuma recomendação de estrela disponível para este nível/configuração.',
+    alreadyMasteredBest: 'Você já dominou o melhor prato para isso! Boa!',
+    dishesRequired: 'pratos necessários',
     bestXpTitle: 'Melhores pratos (XP)',
     bestProfitTitle: 'Melhores pratos (Lucro)',
     bestPortionsTitle: 'Melhores pratos (Porções)',
@@ -834,6 +856,7 @@ function renderMyDex() {
   const holidayDishes = availableDishes.filter(record => record.dishType === 'Holiday');
 
   renderBestSummary(regularCandidates);
+  renderRecommendedMasteries(regularCandidates);
   renderBestXp(buildBucketRecommendations(regularCandidates, 'metricXpMin', record => record.xpPerMin, 'xp'));
   renderBestProfit(buildBucketRecommendations(regularCandidates, 'metricProfitMin', record => record.profitPerMin, 'profit'));
   renderBestPortions(buildBucketRecommendations(regularCandidates, 'metricPortionMin', record => record.servingsPerMin, 'portions'));
@@ -861,6 +884,78 @@ function renderBestSummary(records) {
   }
 
   body.innerHTML = validItems.map(([label, record, rowClass]) => summaryRowHtml(label, record, rowClass)).join('');
+}
+
+
+function renderRecommendedMasteries(records) {
+  const items = [
+    [t('bestSummaryXpMin'), findBestDish(records, record => record.xpPerMin), 3, 'best-xp-1'],
+    [t('bestSummaryRawXp'), findBestDish(records, record => record.xp), 2, 'best-xp-3'],
+    [t('bestSummaryProfitMin'), findBestDish(records, record => record.profitPerMin), 3, 'best-profit-1'],
+    [t('bestSummaryRawProfit'), findBestDish(records, record => record.profit), 1, 'best-profit-3'],
+    [t('bestSummaryPortionMin'), findBestDish(records, record => record.servingsPerMin), 3, 'best-portions-1'],
+    [t('bestSummaryRawPortion'), findBestDish(records, record => record.servings), 1, 'best-portions-3']
+  ];
+
+  const body = document.getElementById('recommendedMasteriesBody');
+  if (!body) return;
+
+  const validItems = items.filter(item => item[1]);
+  if (validItems.length === 0) {
+    body.innerHTML = emptyRow(7, t('noRecommendedMasteries'));
+    return;
+  }
+
+  body.innerHTML = validItems.map(([label, record, targetLevel, rowClass]) => {
+    const currentLevel = getMasteryLevel(record.dishId);
+    const requirement = getMasteryCountByLevel(record.dishId, getBaseDuration(record), targetLevel);
+
+    if (currentLevel >= targetLevel) {
+      return `
+        <tr class="${rowClass}">
+          <td>${imageHtml(record)}</td>
+          <td>${escapeHtml(label)}</td>
+          <td class="dish-name">${escapeHtml(record.dishName)}</td>
+          <td>${masteryStarsReadOnlyHtml(record)}</td>
+          <td>${escapeHtml(starTitle(targetLevel))}</td>
+          <td class="note-cell">${escapeHtml(t('alreadyMasteredBest'))}</td>
+          <td>${number(requirement)} ${escapeHtml(t('dishesRequired'))}</td>
+        </tr>
+      `;
+    }
+
+    return `
+      <tr class="${rowClass}">
+        <td>${imageHtml(record)}</td>
+        <td>${escapeHtml(label)}</td>
+        <td class="dish-name">${escapeHtml(record.dishName)}</td>
+        <td>${masteryStarsReadOnlyHtml(record)}</td>
+        <td>${escapeHtml(starTitle(targetLevel))}</td>
+        <td class="effects-cell">${recommendedMasteryBenefitHtml(record, targetLevel)}</td>
+        <td>${number(requirement)} ${escapeHtml(t('dishesRequired'))}</td>
+      </tr>
+    `;
+  }).join('');
+}
+
+function recommendedMasteryBenefitHtml(record, targetLevel) {
+  const baseServings = getBaseServings(record);
+  const baseXp = getBaseXp(record);
+  const baseDuration = getBaseDuration(record);
+
+  if (targetLevel === 1) {
+    const bronzeBonus = Math.ceil(baseServings * MASTERY_SERVING_BONUS) - baseServings;
+    return `<span class="effect-line effect-bronze">★ ${escapeHtml(t('bronze'))}: +${number(bronzeBonus)} ${escapeHtml(t('portionsLower'))}</span>`;
+  }
+
+  if (targetLevel === 2) {
+    const silverBonus = Math.ceil(baseXp * MASTERY_XP_BONUS) - baseXp;
+    return `<span class="effect-line effect-silver">★ ${escapeHtml(t('silver'))}: +${number(silverBonus)} ${escapeHtml(t('xpUpper'))}</span>`;
+  }
+
+  const finalTime = getMasteredDuration(baseDuration, 3);
+  const savedTime = Math.max(0, baseDuration - finalTime);
+  return `<span class="effect-line effect-gold">★ ${escapeHtml(t('gold'))}: -${escapeHtml(formatDuration(savedTime))}: ${escapeHtml(formatDuration(finalTime))}</span>`;
 }
 
 function summaryRowHtml(label, record, rowClass) {
@@ -1222,6 +1317,23 @@ function starTitle(level) {
   return t('gold');
 }
 
+
+function masteryStarsReadOnlyHtml(record) {
+  const level = getMasteryLevel(record.dishId);
+  return `
+    <div class="mastery-stars readonly-stars" aria-label="${escapeHtml(t('mastery'))}">
+      ${starReadOnlyHtml(1, 'bronze', level)}
+      ${starReadOnlyHtml(2, 'silver', level)}
+      ${starReadOnlyHtml(3, 'gold', level)}
+    </div>
+  `;
+}
+
+function starReadOnlyHtml(starLevel, colorClass, currentLevel) {
+  const filled = currentLevel >= starLevel;
+  return `<span class="star-button readonly ${colorClass} ${filled ? 'filled' : ''}">${filled ? '★' : '☆'}</span>`;
+}
+
 function masteryEffectsHtml(record) {
   const masteryLevel = getMasteryLevel(record.dishId);
   const bronzeBonus = Math.ceil(record.servings * MASTERY_SERVING_BONUS) - record.servings;
@@ -1230,9 +1342,9 @@ function masteryEffectsHtml(record) {
   const savedTime = Math.max(0, record.duration - finalTime);
 
   return `
-    <span class="effect-line effect-bronze">★ <span class="effect-name">${escapeHtml(t('bronze'))}${effectCheckHtml(masteryLevel, 1)}</span>: +${number(bronzeBonus)} ${escapeHtml(t('portionsLower'))}</span>
-    <span class="effect-line effect-silver">★ <span class="effect-name">${escapeHtml(t('silver'))}${effectCheckHtml(masteryLevel, 2)}</span>: +${number(silverBonus)} ${escapeHtml(t('xpUpper'))}</span>
-    <span class="effect-line effect-gold">★ <span class="effect-name">${escapeHtml(t('gold'))}${effectCheckHtml(masteryLevel, 3)}</span>: -${escapeHtml(formatDuration(savedTime))}: ${escapeHtml(formatDuration(finalTime))}</span>
+    <span class="effect-line effect-bronze">★ <span class="effect-name">${escapeHtml(t('bronze'))}${effectCheckHtml(masteryLevel, 1)}</span>: +${number(bronzeBonus)} ${escapeHtml(t('portionsLower'))} <span class="effect-requirement">(${number(getMasteryCountByLevel(record.dishId, record.duration, 1))} ${escapeHtml(t('dishesRequired'))})</span></span>
+    <span class="effect-line effect-silver">★ <span class="effect-name">${escapeHtml(t('silver'))}${effectCheckHtml(masteryLevel, 2)}</span>: +${number(silverBonus)} ${escapeHtml(t('xpUpper'))} <span class="effect-requirement">(${number(getMasteryCountByLevel(record.dishId, record.duration, 2))} ${escapeHtml(t('dishesRequired'))})</span></span>
+    <span class="effect-line effect-gold">★ <span class="effect-name">${escapeHtml(t('gold'))}${effectCheckHtml(masteryLevel, 3)}</span>: -${escapeHtml(formatDuration(savedTime))}: ${escapeHtml(formatDuration(finalTime))} <span class="effect-requirement">(${number(getMasteryCountByLevel(record.dishId, record.duration, 3))} ${escapeHtml(t('dishesRequired'))})</span></span>
   `;
 }
 
@@ -1290,6 +1402,43 @@ function standardDishSort(a, b) {
   return a.dishName.localeCompare(b.dishName);
 }
 
+
+function getBaseServings(record) {
+  return Number(record.baseServings ?? record.servings ?? 0);
+}
+
+function getBaseXp(record) {
+  return Number(record.baseXp ?? record.xp ?? 0);
+}
+
+function getBaseDuration(record) {
+  return Number(record.baseDuration ?? record.duration ?? 0);
+}
+
+function as3RoundPositive(value) {
+  return Math.floor(Number(value || 0) + 0.5);
+}
+
+function getMasteryCountByLevel(dishId, durationMinutes, level) {
+  const numericLevel = Number(level || 0);
+  if (numericLevel < 1 || numericLevel > 3) return 0;
+
+  const numericDishId = Number(dishId || 0);
+  if (numericDishId === 1201) return [0, 120, 600, 1560][numericLevel];
+  if (numericDishId === 1204) return [0, 48, 240, 624][numericLevel];
+
+  const duration = Number(durationMinutes || 0);
+  if (duration <= 0) return 0;
+
+  const durationHours = duration / 60.0;
+  const loc4 = Math.min(24.0, durationHours * Math.ceil(0.5 / durationHours) * 3.0);
+  const factor = (loc4 / durationHours) * MASTERY_STOVE_COUNT;
+
+  if (numericLevel === 1) return as3RoundPositive(factor * MASTERY_DAYS_LV1);
+  if (numericLevel === 2) return as3RoundPositive(factor * MASTERY_DAYS_LV2);
+  return as3RoundPositive(factor * MASTERY_DAYS_LV3);
+}
+
 function applyMasteryToRecord(record) {
   const masteryLevel = getMasteryLevel(record.dishId);
   const servings = masteryLevel >= 1 ? Math.ceil(record.servings * MASTERY_SERVING_BONUS) : record.servings;
@@ -1300,6 +1449,9 @@ function applyMasteryToRecord(record) {
 
   return {
     ...record,
+    baseServings: record.servings,
+    baseXp: record.xp,
+    baseDuration: record.duration,
     masteryLevel,
     servings,
     xp,

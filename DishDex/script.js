@@ -686,6 +686,7 @@ async function main() {
     renderMyDex();
     renderFullDishDex();
     renderCoopPlanner();
+    restoreLastCoopPlanPreview();
     renderMasteries();
     if (!window.location.hash) {
       history.replaceState(null, '', '#home');
@@ -785,6 +786,7 @@ function setupLanguage() {
       renderMyDex();
       renderFullDishDex();
       renderCoopPlanner();
+      restoreLastCoopPlanPreview();
       renderMasteries();
     } catch (error) {
       console.error(error);
@@ -903,7 +905,10 @@ function setupDataActions() {
     coopListBody.addEventListener('click', event => {
       const button = event.target.closest('[data-coop-number]');
       if (!button) return;
-      renderCoopPlanPreview(Number(button.getAttribute('data-coop-number')));
+      const coopNumber = Math.max(0, Math.floor(Number(button.getAttribute('data-coop-number') || 0)));
+      userData.selectedCoopNumber = coopNumber;
+      saveUserData();
+      renderCoopPlanPreview(coopNumber);
     });
   }
 
@@ -2432,6 +2437,24 @@ function renderCoopPlanner() {
   body.innerHTML = records.map(coop => coopRowHtml(coop)).join('');
 }
 
+function restoreLastCoopPlanPreview() {
+  const coopNumber = Math.max(0, Math.floor(Number(userData.selectedCoopNumber || 0)));
+  if (!coopNumber) {
+    clearCoopPlanPreview();
+    return;
+  }
+
+  const exists = allCoopRecords.some(item => Number(item.coopNumber) === coopNumber);
+  if (!exists) {
+    userData.selectedCoopNumber = 0;
+    saveUserData();
+    clearCoopPlanPreview();
+    return;
+  }
+
+  renderCoopPlanPreview(coopNumber, false);
+}
+
 function getCoopRewardAtLevel(coop, multiplier = 4, levelOverride = null) {
   const playerLevel = clampNumber(Number(levelOverride ?? userData.level ?? 1), 0, 999);
   return {
@@ -2567,6 +2590,9 @@ function renderCoopPlanPreview(coopNumber, shouldScroll = true) {
   }
 
   const playerLevel = Number(userData.level || 1);
+
+  userData.selectedCoopNumber = Number(coop.coopNumber || coopNumber);
+  saveUserData();
 
   container.className = 'coop-plan-preview';
   container.setAttribute('data-current-coop-number', String(coopNumber));
@@ -3041,7 +3067,8 @@ function normalizeUserData(raw) {
     showIngredients: Boolean(data.showIngredients),
     masteries: normalizeMasteries(data.masteries),
     coopTeams: normalizeCoopTeams(data.coopTeams),
-    selectedCoopTeamId: typeof data.selectedCoopTeamId === 'string' ? data.selectedCoopTeamId : ''
+    selectedCoopTeamId: typeof data.selectedCoopTeamId === 'string' ? data.selectedCoopTeamId : '',
+    selectedCoopNumber: Math.max(0, Math.floor(Number(data.selectedCoopNumber || 0)))
   };
 }
 
@@ -3454,7 +3481,8 @@ function exportUserData() {
         showIngredients: Boolean(userData.showIngredients),
         masteries: userData.masteries || {},
         coopTeams: normalizeCoopTeams(userData.coopTeams),
-        selectedCoopTeamId: userData.selectedCoopTeamId || ''
+        selectedCoopTeamId: userData.selectedCoopTeamId || '',
+        selectedCoopNumber: Math.max(0, Math.floor(Number(userData.selectedCoopNumber || 0)))
       }
     : {
         version: 1,
@@ -3462,7 +3490,8 @@ function exportUserData() {
         showIngredients: Boolean(userData.showIngredients),
         masteries: userData.masteries || {},
         coopTeams: normalizeCoopTeams(userData.coopTeams),
-        selectedCoopTeamId: userData.selectedCoopTeamId || ''
+        selectedCoopTeamId: userData.selectedCoopTeamId || '',
+        selectedCoopNumber: Math.max(0, Math.floor(Number(userData.selectedCoopNumber || 0)))
       };
 
   const filename = hasProfile
@@ -3509,6 +3538,9 @@ function importUserData(file) {
       if ('selectedCoopTeamId' in parsed) {
         userData.selectedCoopTeamId = typeof parsed.selectedCoopTeamId === 'string' ? parsed.selectedCoopTeamId : '';
       }
+      if ('selectedCoopNumber' in parsed) {
+        userData.selectedCoopNumber = Math.max(0, Math.floor(Number(parsed.selectedCoopNumber || 0)));
+      }
 
       ensureUserDefaults();
       ensureCoopTeamDefaults();
@@ -3517,6 +3549,7 @@ function importUserData(file) {
       syncMyDexInputs(true);
       renderCoopTeamEditor();
       renderCoopPlanner();
+      restoreLastCoopPlanPreview();
       renderMasteries();
       renderMyDex();
       renderFullDishDex();
@@ -3541,6 +3574,7 @@ function deleteUserData() {
   syncMyDexInputs(true);
   renderCoopTeamEditor();
   renderCoopPlanner();
+  restoreLastCoopPlanPreview();
   renderMasteries();
   renderMyDex();
   renderFullDishDex();

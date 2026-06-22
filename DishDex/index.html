@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=20260622-coop-phase1-v4">
+  <link rel="stylesheet" href="style.css?v=20260622-coop-phase1-v2">
 </head>
 <body class="dark-theme">
   <main class="page">
@@ -120,7 +120,7 @@
               <option value="Auto" data-i18n="auto" selected>Auto</option>
             </select>
           </label>
-          <label class="inline-toggle setting-toggle" for="showIngredientsToggle">
+          <label class="inline-toggle setting-toggle">
             <input id="showIngredientsToggle" type="checkbox">
             <span data-i18n="showIngredients">Show ingredients?</span>
           </label>
@@ -138,8 +138,8 @@
                 <th data-i18n="recommendation">Recommendation</th>
                 <th data-i18n="dish">Dish</th>
                 <th data-i18n="level">Level</th>
-                <th><span class="icon-heading"><img src="xp.png" alt="XP" class="header-icon"></span></th>
-                <th><span class="icon-heading"><img src="cash.png" alt="Cash" class="header-icon"></span></th>
+                <th><span class="icon-heading"><img src="xp.png" alt="XP" class="header-icon"><small>/min</small></span></th>
+                <th><span class="icon-heading"><img src="cash.png" alt="Cash" class="header-icon"><small>/min</small></span></th>
                 <th data-i18n="portions">Portions</th>
                 <th data-i18n="duration">Duration</th>
                 <th data-i18n="category">Category</th>
@@ -181,7 +181,7 @@
                 <th data-i18n="recommendation">Recommendation</th>
                 <th data-i18n="dish">Dish</th>
                 <th data-i18n="level">Level</th>
-                <th><span class="icon-heading"><img src="xp.png" alt="XP" class="header-icon"></span></th>
+                <th><span class="icon-heading"><img src="xp.png" alt="XP" class="header-icon"><small>/min</small></span></th>
                 <th data-i18n="duration">Duration</th>
                 <th data-i18n="category">Category</th>
               </tr>
@@ -201,7 +201,7 @@
                 <th data-i18n="recommendation">Recommendation</th>
                 <th data-i18n="dish">Dish</th>
                 <th data-i18n="level">Level</th>
-                <th><span class="icon-heading"><img src="cash.png" alt="Cash" class="header-icon"></span></th>
+                <th><span class="icon-heading"><img src="cash.png" alt="Cash" class="header-icon"><small>/min</small></span></th>
                 <th data-i18n="duration">Duration</th>
                 <th data-i18n="category">Category</th>
               </tr>
@@ -241,7 +241,7 @@
                 <th data-i18n="image">Image</th>
                 <th data-i18n="plan">Plan</th>
                 <th data-i18n="dish">Dish</th>
-                <th><span class="icon-heading"><img src="xp.png" alt="XP" class="header-icon"></span></th>
+                <th data-i18n="xpEach">XP Each</th>
                 <th data-i18n="duration">Duration</th>
                 <th data-i18n="dishesNeeded">Dishes Needed</th>
                 <th data-i18n="batches">Batches</th>
@@ -303,15 +303,14 @@
                 <th data-i18n="image">Image</th>
                 <th data-i18n="dish">Dish</th>
                 <th data-i18n="level">Level</th>
-                <th><span class="icon-heading"><img src="xp.png" alt="XP" class="header-icon"></span></th>
-                <th><span class="icon-heading"><img src="cash.png" alt="Cash" class="header-icon"></span></th>
+                <th><span class="icon-heading"><img src="xp.png" alt="XP" class="header-icon"><small>/min</small></span></th>
+                <th><span class="icon-heading"><img src="cash.png" alt="Cash" class="header-icon"><small>/min</small></span></th>
                 <th data-i18n="portions">Portions</th>
                 <th data-i18n="duration">Duration</th>
-                <th><span class="icon-heading"><img src="cash.png" alt="Cost" class="header-icon"><small data-i18n="cost">Cost</small></span></th>
-                <th><span class="icon-heading"><img src="cash.png" alt="Revenue" class="header-icon"><small data-i18n="revenue">Revenue</small></span></th>
+                <th data-i18n="cost">Cost</th>
+                <th data-i18n="revenue">Revenue</th>
                 <th data-i18n="category">Category</th>
                 <th data-i18n="requirements">Requirements</th>
-                <th data-i18n="type">Type</th>
               </tr>
             </thead>
             <tbody id="fullDishDexBody"></tbody>
@@ -346,7 +345,7 @@
                 <th data-i18n="image">Image</th>
                 <th data-i18n="coopNumber">Co-Op</th>
                 <th data-i18n="duration">Duration</th>
-                <th data-i18n="rewardDetails">Reward Details</th>
+                <th data-i18n="maxRewardsYourLevel">Max Rewards (your level)</th>
                 <th data-i18n="requirements">Requirements</th>
                 <th data-i18n="plan">Plan</th>
               </tr>
@@ -456,6 +455,6 @@
     </section>
   </main>
 
-  <script src="script.js?v=20260622-coop-phase1-v4" defer></script>
+  <script src="script.js?v=20260622-coop-phase1-v5" defer></script>
 </body>
 </html>

@@ -190,6 +190,9 @@ const I18N = {
     special: 'Special',
     holiday: 'Holiday',
     regular: 'Regular',
+    fullTagSpecial: 'Special',
+    fullTagChristmas: 'Christmas',
+    fullTagEaster: 'Easter',
     holidayActive: 'Holiday: Active',
     holidayInactive: 'Holiday: Inactive',
     profitLower: 'profit',
@@ -395,6 +398,9 @@ const I18N = {
     special: 'Especial',
     holiday: 'Feriado',
     regular: 'Normal',
+    fullTagSpecial: 'Especial',
+    fullTagChristmas: 'Natal',
+    fullTagEaster: 'Páscoa',
     holidayActive: 'Feriado: ativo',
     holidayInactive: 'Feriado: inativo',
     profitLower: 'lucro',
@@ -1571,14 +1577,14 @@ function renderFullDishDex() {
   const rows = getSortedFullDishDex(sortMode, getFullUseMasteriesSetting());
 
   if (rows.length === 0) {
-    body.innerHTML = emptyRow(12, t('noDishesAvailable'));
+    body.innerHTML = emptyRow(11, t('noDishesAvailable'));
     return;
   }
 
   body.innerHTML = rows.map(record => `
     <tr class="${categoryClass(record.categoryId)}">
       <td>${imageHtml(record)}</td>
-      <td class="dish-name">${escapeHtml(record.dishName)}</td>
+      <td class="dish-name">${fullDishNameHtml(record)}</td>
       <td>${number(record.level)}</td>
       <td>${metricStackHtml('xp', record.xp, record.xpPerMin)}</td>
       <td>${metricStackHtml('cash', record.profit, record.profitPerMin)}</td>
@@ -1588,7 +1594,6 @@ function renderFullDishDex() {
       <td>${valueWithIconHtml('cash', record.revenue)}</td>
       <td>${escapeHtml(record.categoryName)}</td>
       <td class="requirements-cell">${escapeHtml(record.requirements)}</td>
-      <td>${escapeHtml(dishTypeLabel(record.dishType))}</td>
     </tr>
   `).join('');
 }
@@ -2284,6 +2289,22 @@ function dishTypeLabel(type) {
   if (type === 'Holiday') return t('holiday');
   return t('regular');
 }
+
+function fullDishNameHtml(record) {
+  const baseName = escapeHtml(record.dishName);
+  const tag = fullDishTypeTag(record);
+  if (!tag) return baseName;
+  return `${baseName} <span class="dish-type-tag">(${escapeHtml(tag)})</span>`;
+}
+
+function fullDishTypeTag(record) {
+  const key = String(record?.dishKey || '').toLowerCase();
+  if (SPECIAL_DISH_KEYS.map(item => item.toLowerCase()).includes(key)) return t('fullTagSpecial');
+  if (key === 'christmasturkey') return t('fullTagChristmas');
+  if (key === 'easterdish' || key === 'fruitpudding') return t('fullTagEaster');
+  return '';
+}
+
 
 function shouldIncludeHolidayDish(dishKey, mode) {
   if (mode === 'Include') return true;

@@ -371,12 +371,24 @@ td {
 
 td.dish-name { font-weight: 900; }
 
+.dish-type-tag {
+  color: var(--muted);
+  font-size: 0.88em;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+body.dark-theme .dish-type-tag {
+  color: #f0d0a8;
+}
+
+
 .icon-heading {
-  display: inline-flex;
+  display: inline-grid;
   align-items: center;
-  justify-content: center;
-  gap: 5px;
-  line-height: 1.1;
+  justify-items: center;
+  gap: 1px;
+  line-height: 1.05;
 }
 
 .icon-heading small {

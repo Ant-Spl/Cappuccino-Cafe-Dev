@@ -1957,3 +1957,35 @@ body.dark-theme .assignment-warning {
     justify-content: space-between;
   }
 }
+
+/* Final phase v3: keep workload controls inside chef cards */
+.coop-team-summary-item.compact-team-card {
+  grid-template-columns: minmax(0, 1fr) !important;
+  grid-template-areas:
+    "chef"
+    "meta"
+    "workload" !important;
+  align-items: start !important;
+  justify-items: stretch !important;
+  row-gap: 6px !important;
+  min-height: 74px;
+}
+
+.compact-chef-workload {
+  justify-self: stretch !important;
+  width: 100%;
+}
+
+.compact-chef-workload .mini-select-label,
+.mini-select-label {
+  max-width: none !important;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.compact-chef-workload select,
+.mini-select-label select {
+  flex: 0 0 118px;
+  min-width: 112px;
+  max-width: 126px;
+}

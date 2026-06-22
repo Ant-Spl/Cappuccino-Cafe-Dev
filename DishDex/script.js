@@ -1772,6 +1772,33 @@ function statusClass(status) {
   return ['gold', 'silver', 'bronze', 'impossible'].includes(status) ? `status-${status}` : 'status-not-doable';
 }
 
+
+function estimateMemberCookMinutes(member) {
+  if (!member || Number(member.stoves || 0) <= 0) return Infinity;
+  const durations = [];
+  Array.from(member.assignments?.values?.() || []).forEach(item => {
+    const duration = Number(item.req?.duration || 0);
+    const amount = Number(item.amount || 0);
+    for (let index = 0; index < amount; index += 1) {
+      durations.push(duration);
+    }
+  });
+
+  if (!durations.length) return 0;
+
+  const stoveCount = Math.max(1, Math.floor(Number(member.stoves || 1)));
+  const loads = Array.from({ length: Math.min(stoveCount, durations.length) }, () => 0);
+  durations.sort((a, b) => b - a).forEach(duration => {
+    let lightestIndex = 0;
+    for (let index = 1; index < loads.length; index += 1) {
+      if (loads[index] < loads[lightestIndex]) lightestIndex = index;
+    }
+    loads[lightestIndex] += duration;
+  });
+
+  return Math.max(...loads);
+}
+
 function buildCoopAssignmentPlan(coop, team = getSelectedCoopTeam()) {
   const members = getValidCoopTeamMembers(team).map(member => ({
     ...member,
@@ -1860,8 +1887,12 @@ function buildCoopAssignmentPlan(coop, team = getSelectedCoopTeam()) {
     });
   }
 
+  members.forEach(member => {
+    member.estimatedMinutes = estimateMemberCookMinutes(member);
+  });
+
   const estimatedMinutes = members.length
-    ? Math.max(...members.map(member => member.stoves > 0 ? member.stoveMinutes / member.stoves : Infinity))
+    ? Math.max(...members.map(member => Number.isFinite(member.estimatedMinutes) ? member.estimatedMinutes : Infinity))
     : Infinity;
 
   let status = 'notDoable';
@@ -1954,7 +1985,7 @@ function assignmentPlanHtml(coop, plan) {
           <article class="assignment-card">
             <div class="assignment-card-heading">
               <strong>${escapeHtml(member.name)}</strong>
-              <span>${escapeHtml(t('chefCookTime'))}: ${escapeHtml(formatDuration(member.stoveMinutes / Math.max(1, member.stoves)))}</span>
+              <span>${escapeHtml(t('chefCookTime'))}: ${escapeHtml(formatDuration(member.estimatedMinutes || 0))}</span>
             </div>
             <div class="assignment-pills">${memberAssignmentsHtml(member)}</div>
           </article>
@@ -1972,7 +2003,7 @@ function assignmentMarkdownLine(member) {
   const assignmentText = assignments
     .map(item => `${number(item.amount)}× ${item.req.dishName}`)
     .join(', ');
-  const cookTime = formatDuration(member.stoveMinutes / Math.max(1, member.stoves));
+  const cookTime = formatDuration(member.estimatedMinutes || 0);
   return `- **${member.name}** (${cookTime}): ${assignmentText}`;
 }
 

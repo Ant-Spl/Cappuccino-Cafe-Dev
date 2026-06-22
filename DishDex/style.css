@@ -855,3 +855,25 @@ body.bg-night {
   --time-bg-image: url("Night.jpg");
   --time-bg-position: center center;
 }
+
+
+/* Full DishDex mastery toggle */
+.full-dishdex-options {
+  grid-template-columns: minmax(260px, 420px);
+}
+
+.full-mastery-toggle {
+  width: fit-content;
+  min-width: 260px;
+  border: 2px solid var(--border);
+  border-radius: 14px;
+  background: var(--plain-cell);
+  color: var(--text);
+  padding: 10px 12px;
+  justify-content: space-between;
+}
+
+.full-mastery-toggle span {
+  color: var(--brown-dark);
+  font-weight: 900;
+}

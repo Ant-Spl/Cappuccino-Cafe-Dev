@@ -24,6 +24,7 @@ const PATHS = {
 
 const STORAGE_KEY = 'dishDexUserDataV1';
 const MASTERY_VIEW_STORAGE_KEY = 'dishDexMasteryViewMode';
+const FULL_USE_MASTERIES_STORAGE_KEY = 'dishDexFullUseMasteries';
 const MASTERY_PAGE_SIZE = 4;
 const MASTERY_DAYS_LV1 = 1;
 const MASTERY_DAYS_LV2 = 5;
@@ -99,6 +100,7 @@ const I18N = {
     bestSummaryRawPortion: 'Best raw portion',
     recommendedMasteriesTitle: 'Recommended Masteries',
     recommendedMasteriesNote: 'Best mastery targets based on your Best of Summary dishes.',
+    useRegisteredMasteries: 'Use my registered masteries',
     currentMastery: 'Current Mastery',
     recommendedStar: 'Recommended Star',
     benefit: 'Benefit',
@@ -274,6 +276,7 @@ const I18N = {
     bestSummaryRawPortion: 'Melhor porção bruta',
     recommendedMasteriesTitle: 'Estrelas Recomendadas',
     recommendedMasteriesNote: 'Melhores estrelas para buscar com base no Resumo dos Melhores Pratos.',
+    useRegisteredMasteries: 'Use minhas estrelas registradas',
     currentMastery: 'Estrelas atuais',
     recommendedStar: 'Estrela recomendada',
     benefit: 'Benefício',
@@ -617,6 +620,20 @@ function setupNavigation() {
 
   window.addEventListener('hashchange', handleHashNavigation);
   document.getElementById('fullSortSelect').addEventListener('change', renderFullDishDex);
+
+  const fullUseMasteriesToggle = document.getElementById('fullUseMasteriesToggle');
+  if (fullUseMasteriesToggle) {
+    fullUseMasteriesToggle.checked = getFullUseMasteriesSetting();
+    fullUseMasteriesToggle.addEventListener('change', () => {
+      localStorage.setItem(FULL_USE_MASTERIES_STORAGE_KEY, fullUseMasteriesToggle.checked ? 'true' : 'false');
+      renderFullDishDex();
+    });
+  }
+}
+
+function getFullUseMasteriesSetting() {
+  const saved = localStorage.getItem(FULL_USE_MASTERIES_STORAGE_KEY);
+  return saved === null ? true : saved === 'true';
 }
 
 function navigateToScreen(screenId) {
@@ -1181,7 +1198,7 @@ function renderFullDishDex() {
   if (!allDishRecords.length) return;
   const body = document.getElementById('fullDishDexBody');
   const sortMode = document.getElementById('fullSortSelect').value;
-  const rows = getSortedFullDishDex(sortMode);
+  const rows = getSortedFullDishDex(sortMode, getFullUseMasteriesSetting());
 
   if (rows.length === 0) {
     body.innerHTML = emptyRow(15, t('noDishesAvailable'));
@@ -1397,8 +1414,10 @@ function effectCheckHtml(currentLevel, requiredLevel) {
   return currentLevel >= requiredLevel ? ' <span class="effect-check">✓</span>' : '';
 }
 
-function getSortedFullDishDex(sortMode) {
-  const rows = [...allDishRecords];
+function getSortedFullDishDex(sortMode, useRegisteredMasteries = true) {
+  const rows = useRegisteredMasteries
+    ? allDishRecords.map(applyMasteryToRecord)
+    : [...allDishRecords];
   const numericSort = (key, direction) => {
     rows.sort((a, b) => {
       const diff = Number(a[key] || 0) - Number(b[key] || 0);
@@ -1533,6 +1552,7 @@ function setMasteryLevel(dishId, level) {
   saveUserData();
   renderMasteries();
   renderMyDex();
+  renderFullDishDex();
 }
 
 function imageHtml(record) {
@@ -1696,6 +1716,7 @@ function importUserData(file) {
       syncMyDexInputs(true);
       renderMasteries();
       renderMyDex();
+      renderFullDishDex();
       setMasteryStatus(t('dataLoadedMessage'));
     } catch (error) {
       console.error(error);
@@ -1716,6 +1737,7 @@ function deleteUserData() {
   syncMyDexInputs(true);
   renderMasteries();
   renderMyDex();
+  renderFullDishDex();
   setMasteryStatus(t('dataDeleted'));
 }
 

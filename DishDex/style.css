@@ -901,7 +901,7 @@ body.bg-night {
 
 /* Co-Op Planner */
 .coop-table {
-  min-width: 1180px;
+  min-width: 980px;
 }
 
 .coop-title-cell {
@@ -946,10 +946,29 @@ body.bg-night {
 .coop-reward-cell {
   white-space: nowrap;
   line-height: 1.55;
+  color: var(--text);
+  font-weight: 900;
 }
 
 .coop-requirements-cell {
   min-width: 340px;
+}
+
+.duration-stack {
+  display: grid;
+  gap: 4px;
+  justify-items: center;
+  line-height: 1.2;
+}
+
+.duration-stack strong {
+  color: var(--text);
+  font-weight: 900;
+}
+
+.duration-stack small {
+  color: var(--muted);
+  font-weight: 900;
 }
 
 .requirement-pill {
@@ -1020,7 +1039,7 @@ body.bg-night {
 
 .coop-stat-grid {
   display: grid;
-  grid-template-columns: repeat(6, minmax(120px, 1fr));
+  grid-template-columns: repeat(5, minmax(120px, 1fr));
   gap: 10px;
 }
 
@@ -1110,15 +1129,22 @@ body.bg-night {
   font-weight: 800;
 }
 
+body.dark-theme .coop-table td,
 body.dark-theme .coop-title-cell,
 body.dark-theme .coop-title-cell strong,
-body.dark-theme .coop-title-cell span,
-body.dark-theme .coop-title-cell small,
 body.dark-theme .coop-reward-cell,
-body.dark-theme .coop-requirements-cell {
-  color: #3b2618;
+body.dark-theme .coop-requirements-cell,
+body.dark-theme .duration-stack strong {
+  color: var(--text);
 }
 
+body.dark-theme .coop-title-cell span,
+body.dark-theme .coop-title-cell small,
+body.dark-theme .duration-stack small {
+  color: var(--muted);
+}
+
+body.dark-theme .requirement-pill,
 body.dark-theme .coop-requirement-item strong,
 body.dark-theme .coop-requirement-item span {
   color: #3b2618;

@@ -82,15 +82,16 @@ const I18N = {
     myMasteriesTitle: 'My Masteries',
     myMasteriesDescription: 'Register your dish mastery stars and apply them to MyDex.',
     coopPlannerTitle: 'Co-Op Planner',
-    coopPlannerDescription: 'Browse co-op missions and prepare team plans.',
+    coopPlannerDescription: 'Browse and plan your next Co-Op here.',
     coopPlannerEyebrow: 'Team cooking',
-    coopListTitle: 'Available Co-Ops',
-    coopListNote: 'Browse co-op missions, rewards and required dishes. Team planning will come next.',
+    coopListTitle: 'Co-Op Planner',
+    coopListNote: 'Browse and plan your next Co-Op here!',
     coopSearch: 'Search co-op',
     coopSearchPlaceholder: 'Search co-op...',
     coopNumber: 'Co-Op',
     maxMembers: 'Max members',
     baseRewards: 'Base rewards',
+    maxRewardsYourLevel: 'Max Rewards (your level)',
     cashReward: 'Cash',
     goldReward: 'Gold',
     goldDeadline: 'Gold deadline',
@@ -285,15 +286,16 @@ const I18N = {
     myMasteriesTitle: 'Minhas Estrelas',
     myMasteriesDescription: 'Registre as estrelas dos pratos e aplique os bônus no MyDex.',
     coopPlannerTitle: 'Planejador de Co-Ops',
-    coopPlannerDescription: 'Veja missões de Co-Op e prepare planos de equipe.',
+    coopPlannerDescription: 'Consulte e planeje sua próxima Co-Op aqui.',
     coopPlannerEyebrow: 'Cozinha em equipe',
-    coopListTitle: 'Co-Ops disponíveis',
-    coopListNote: 'Veja missões de Co-Op, recompensas e pratos necessários. O planejamento de equipes vem a seguir.',
+    coopListTitle: 'Co-Op planner',
+    coopListNote: 'Consulte e planeje sua próxima Co-Op aqui!',
     coopSearch: 'Procurar Co-Op',
     coopSearchPlaceholder: 'Procurar Co-Op...',
     coopNumber: 'Co-Op',
     maxMembers: 'Máx. membros',
     baseRewards: 'Recompensas base',
+    maxRewardsYourLevel: 'Recompensas máximas (seu nível)',
     cashReward: 'Cafédólares',
     goldReward: 'Ouro',
     goldDeadline: 'Prazo para Ouro',
@@ -1341,11 +1343,41 @@ function renderCoopPlanner() {
   });
 
   if (!records.length) {
-    body.innerHTML = emptyRow(8, t('noCoopsAvailable'));
+    body.innerHTML = emptyRow(6, t('noCoopsAvailable'));
     return;
   }
 
   body.innerHTML = records.map(coop => coopRowHtml(coop)).join('');
+}
+
+function getCoopRewardAtLevel(coop, multiplier = 4) {
+  const playerLevel = Number(userData.level || 1);
+  return {
+    cash: Number(coop.rewardCash || 0) * multiplier,
+    xp: Math.trunc(Number(coop.baseXp || 0) * (playerLevel / 3) * multiplier),
+    gold: multiplier >= 4 ? Number(coop.rewardGold || 0) : 0,
+    playerLevel
+  };
+}
+
+function coopDurationStackHtml(coop) {
+  return `
+    <div class="duration-stack">
+      <strong>${escapeHtml(coop.durationText)}</strong>
+      <small>${escapeHtml(formatDuration(coop.goldDeadline))} (${escapeHtml(String(t('gold')).toLowerCase())})</small>
+    </div>
+  `;
+}
+
+function coopMaxRewardHtml(coop) {
+  const maxReward = getCoopRewardAtLevel(coop, 4);
+  return `
+    <div class="coop-reward-cell">
+      ${escapeHtml(t('cashReward'))}: ${number(maxReward.cash)}<br>
+      XP: ${number(maxReward.xp)}<br>
+      ${escapeHtml(t('goldReward'))}: ${number(maxReward.gold)}
+    </div>
+  `;
 }
 
 function coopRowHtml(coop) {
@@ -1357,15 +1389,9 @@ function coopRowHtml(coop) {
         <span>Co-Op ${number(coop.coopNumber)}</span>
         ${coop.shortDescription ? `<small>${escapeHtml(coop.shortDescription)}</small>` : ''}
       </td>
-      <td>${escapeHtml(coop.durationText)}</td>
-      <td>${escapeHtml(formatDuration(coop.goldDeadline))}</td>
-      <td class="coop-reward-cell">
-        ${escapeHtml(t('cashReward'))}: ${number(coop.rewardCash)}<br>
-        XP: ${number(coop.baseXp)}<br>
-        ${escapeHtml(t('goldReward'))}: ${number(coop.rewardGold)}
-      </td>
+      <td>${coopDurationStackHtml(coop)}</td>
+      <td>${coopMaxRewardHtml(coop)}</td>
       <td class="requirements-cell coop-requirements-cell">${coopRequirementPillsHtml(coop.requirements)}</td>
-      <td>${number(coop.maxMembers || 0)}</td>
       <td><button type="button" class="plan-button" data-coop-number="${number(coop.coopNumber)}">${escapeHtml(t('planCoop'))}</button></td>
     </tr>
   `;
@@ -1405,12 +1431,11 @@ function renderCoopPlanPreview(coopNumber) {
         <div><strong>${escapeHtml(t('goldDeadline'))}</strong><span>${escapeHtml(formatDuration(coop.goldDeadline))}</span></div>
         <div><strong>${escapeHtml(t('silverDeadline'))}</strong><span>${escapeHtml(formatDuration(coop.silverDeadline))}</span></div>
         <div><strong>${escapeHtml(t('minimumDishLevel'))}</strong><span>${number(coop.minDishLevel)}</span></div>
-        <div><strong>${escapeHtml(t('maxMembers'))}</strong><span>${number(coop.maxMembers || 0)}</span></div>
         <div><strong>${escapeHtml(t('totalStoveHours'))}</strong><span>${escapeHtml(formatDuration(coop.totalStoveMinutes))}</span></div>
       </div>
       <div class="coop-detail-grid">
         <section>
-          <h4>${escapeHtml(t('baseRewards'))}</h4>
+          <h4>${escapeHtml(t('maxRewardsYourLevel'))}</h4>
           <p>${escapeHtml(t('bronze'))}: ${number(coop.rewardCash)} ${escapeHtml(t('cashReward'))}, ${number(bronzeXp)} XP</p>
           <p>${escapeHtml(t('silver'))}: ${number(coop.rewardCash * 2)} ${escapeHtml(t('cashReward'))}, ${number(silverXp)} XP</p>
           <p>${escapeHtml(t('gold'))}: ${number(coop.rewardCash * 4)} ${escapeHtml(t('cashReward'))}, ${number(goldXp)} XP, ${number(coop.rewardGold)} ${escapeHtml(t('goldReward'))}</p>

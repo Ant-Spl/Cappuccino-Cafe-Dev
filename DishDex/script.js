@@ -19,7 +19,8 @@ const PATHS = {
       '../Cafe_pt.xml'
     ]
   },
-  imageBase: '../dishimages/'
+  imageBase: '../dishimages/',
+  coopIconBase: 'coopicons/'
 };
 
 const STORAGE_KEY = 'dishDexUserDataV1';
@@ -80,6 +81,33 @@ const I18N = {
     myProfileDescription: 'Save your chef name, level and default stove count.',
     myMasteriesTitle: 'My Masteries',
     myMasteriesDescription: 'Register your dish mastery stars and apply them to MyDex.',
+    coopPlannerTitle: 'Co-Op Planner',
+    coopPlannerDescription: 'Browse co-op missions and prepare team plans.',
+    coopPlannerEyebrow: 'Team cooking',
+    coopListTitle: 'Available Co-Ops',
+    coopListNote: 'Browse co-op missions, rewards and required dishes. Team planning will come next.',
+    coopSearch: 'Search co-op',
+    coopSearchPlaceholder: 'Search co-op...',
+    coopNumber: 'Co-Op',
+    maxMembers: 'Max members',
+    baseRewards: 'Base rewards',
+    cashReward: 'Cash',
+    goldReward: 'Gold',
+    goldDeadline: 'Gold deadline',
+    silverDeadline: 'Silver deadline',
+    bronzeDeadline: 'Bronze deadline',
+    planCoop: 'Plan!',
+    selectedCoopPlanTitle: 'Selected Co-Op Plan',
+    noCoopSelected: 'Choose a co-op and click Plan!',
+    noCoopsAvailable: 'No co-ops available.',
+    coopShortDescription: 'Description',
+    coopRequirements: 'Required dishes',
+    minimumDishLevel: 'Minimum dish level',
+    totalStoveHours: 'Total stove-hours',
+    rewardEstimateAtYourLevel: 'XP estimate at your level',
+    bronze: 'Bronze',
+    silver: 'Silver',
+    gold: 'Gold',
     backButton: '← Back',
     personalRecommendations: 'Personal recommendations',
     myDexSettings: 'MyDex Settings',
@@ -256,6 +284,30 @@ const I18N = {
     myProfileDescription: 'Salve o nome do chef, nível e quantidade padrão de fogões.',
     myMasteriesTitle: 'Minhas Estrelas',
     myMasteriesDescription: 'Registre as estrelas dos pratos e aplique os bônus no MyDex.',
+    coopPlannerTitle: 'Planejador de Co-Ops',
+    coopPlannerDescription: 'Veja missões de Co-Op e prepare planos de equipe.',
+    coopPlannerEyebrow: 'Cozinha em equipe',
+    coopListTitle: 'Co-Ops disponíveis',
+    coopListNote: 'Veja missões de Co-Op, recompensas e pratos necessários. O planejamento de equipes vem a seguir.',
+    coopSearch: 'Procurar Co-Op',
+    coopSearchPlaceholder: 'Procurar Co-Op...',
+    coopNumber: 'Co-Op',
+    maxMembers: 'Máx. membros',
+    baseRewards: 'Recompensas base',
+    cashReward: 'Cafédólares',
+    goldReward: 'Ouro',
+    goldDeadline: 'Prazo para Ouro',
+    silverDeadline: 'Prazo para Prata',
+    bronzeDeadline: 'Prazo para Bronze',
+    planCoop: 'Planejar!',
+    selectedCoopPlanTitle: 'Plano de Co-Op selecionado',
+    noCoopSelected: 'Escolha uma Co-Op e clique em Planejar!',
+    noCoopsAvailable: 'Nenhuma Co-Op disponível.',
+    coopShortDescription: 'Descrição',
+    coopRequirements: 'Pratos necessários',
+    minimumDishLevel: 'Nível mínimo dos pratos',
+    totalStoveHours: 'Horas de fogão totais',
+    rewardEstimateAtYourLevel: 'Estimativa de XP no seu nível',
     backButton: '← Voltar',
     personalRecommendations: 'Recomendações pessoais',
     myDexSettings: 'Configurações do MyDex',
@@ -444,6 +496,7 @@ const SORT_OPTIONS = [
 ];
 
 let allDishRecords = [];
+let allCoopRecords = [];
 let levelLimitsByLevel = new Map();
 let currentLanguage = 'en';
 let userData = loadUserData();
@@ -468,6 +521,7 @@ async function main() {
     syncMyDexInputs();
 
     allDishRecords = await loadDishRecords(currentLanguage);
+    allCoopRecords = await loadCoopRecords(currentLanguage);
 
     setStatus(t('dataLoaded'), 'ok');
     updateDataSummary();
@@ -475,6 +529,7 @@ async function main() {
     bindInputs();
     renderMyDex();
     renderFullDishDex();
+    renderCoopPlanner();
     renderMasteries();
     if (!window.location.hash) {
       history.replaceState(null, '', '#home');
@@ -565,12 +620,14 @@ function setupLanguage() {
       setStatus(t('loadingXml'), 'ok');
       document.getElementById('dataSummary').textContent = '';
       allDishRecords = await loadDishRecords(currentLanguage);
+      allCoopRecords = await loadCoopRecords(currentLanguage);
       setStatus(t('dataLoaded'), 'ok');
       updateDataSummary();
       syncProfileInputs();
       syncMyDexInputs(false);
       renderMyDex();
       renderFullDishDex();
+      renderCoopPlanner();
       renderMasteries();
     } catch (error) {
       console.error(error);
@@ -589,6 +646,7 @@ const SCREEN_HASHES = {
   welcomeScreen: 'home',
   myDexScreen: 'mydex',
   fullDishDexScreen: 'fulldishdex',
+  coopPlannerScreen: 'coopplanner',
   profileScreen: 'profile',
   masteriesScreen: 'masteries'
 };
@@ -604,6 +662,10 @@ function setupNavigation() {
 
   document.getElementById('openFullDishDex').addEventListener('click', () => {
     navigateToScreen('fullDishDexScreen');
+  });
+
+  document.getElementById('openCoopPlanner').addEventListener('click', () => {
+    navigateToScreen('coopPlannerScreen');
   });
 
   document.getElementById('openProfile').addEventListener('click', () => {
@@ -664,6 +726,19 @@ function setupDataActions() {
 
   document.getElementById('downloadDataButton').addEventListener('click', exportUserData);
   document.getElementById('deleteDataButton').addEventListener('click', deleteUserData);
+
+  const coopSearch = document.getElementById('coopSearch');
+  if (coopSearch) coopSearch.addEventListener('input', renderCoopPlanner);
+
+  const coopListBody = document.getElementById('coopListBody');
+  if (coopListBody) {
+    coopListBody.addEventListener('click', event => {
+      const button = event.target.closest('[data-coop-number]');
+      if (!button) return;
+      renderCoopPlanPreview(Number(button.getAttribute('data-coop-number')));
+    });
+  }
+
   document.getElementById('masterySearch').addEventListener('input', () => {
     masteryCookbookPage = 0;
     renderMasteries();
@@ -722,6 +797,8 @@ function applyUiLanguage() {
 function syncSearchPlaceholder() {
   const search = document.getElementById('masterySearch');
   if (search) search.placeholder = t('searchDishPlaceholder');
+  const coopSearch = document.getElementById('coopSearch');
+  if (coopSearch) coopSearch.placeholder = t('coopSearchPlaceholder');
 }
 
 function populateSortSelect() {
@@ -741,7 +818,7 @@ function t(key) {
 }
 
 function updateDataSummary() {
-  document.getElementById('dataSummary').textContent = `${allDishRecords.length} ${t('dishesReady')}`;
+  document.getElementById('dataSummary').textContent = `${allDishRecords.length} ${t('dishesReady')} · ${allCoopRecords.length} Co-Ops`;
 }
 
 function showScreen(screenId) {
@@ -853,6 +930,57 @@ async function loadDishRecords(languageCode) {
 
   records.sort(standardDishSort);
   return records;
+}
+
+async function loadCoopRecords(languageCode) {
+  const cafeItemsText = await fetchText(PATHS.cafeItems);
+  const cafeItemsXml = parseLooseXml(cafeItemsText, 'CafeItems.xml');
+  const languageResult = await fetchFirstWorkingLanguageFile(PATHS.languageFiles[languageCode]);
+  const cafeLanguageXml = parseNormalOrLooseXml(languageResult.text, 'Cafe language XML');
+  const textNodes = Array.from(cafeLanguageXml.getElementsByTagName('text'));
+  const coopTextByNumber = buildCoopTextMap(textNodes);
+  const dishById = new Map(allDishRecords.map(record => [String(record.dishId), record]));
+
+  return Array.from(cafeItemsXml.getElementsByTagName('wod'))
+    .filter(node => getAttr(node, 'g') === 'Coop')
+    .map((node, sourceIndex) => {
+      const wodId = getAttr(node, 'id');
+      const coopNumber = Number(getAttr(node, 't') || 0);
+      const duration = Number(getAttr(node, 'duration') || 0);
+      const requirementText = getAttr(node, 'dishes');
+      const requirements = parseCoopRequirements(requirementText, dishById);
+      const text = coopTextByNumber[String(coopNumber)] || {};
+      const levels = requirements
+        .map(req => Number(req.dish?.level || 0))
+        .filter(level => Number.isFinite(level) && level > 0);
+      const totalStoveMinutes = requirements.reduce((sum, req) => {
+        return sum + Number(req.amount || 0) * Number(req.dish?.duration || 0);
+      }, 0);
+
+      return {
+        wodId,
+        coopNumber,
+        sourceIndex,
+        title: text.title || `Co-Op ${coopNumber}`,
+        shortDescription: text.shortDescription || '',
+        longDescription: text.longDescription || '',
+        maxMembers: Number(getAttr(node, 'maxMember') || 0),
+        rewardCash: Number(getAttr(node, 'chips') || 0),
+        baseXp: Number(getAttr(node, 'xp') || 0),
+        rewardGold: Number(getAttr(node, 'gold') || 0),
+        duration,
+        durationText: formatDuration(duration),
+        goldDeadline: Math.floor(duration * 0.5),
+        silverDeadline: Math.floor(duration * 0.75),
+        requirements,
+        requirementText,
+        minDishLevel: levels.length ? Math.min(...levels) : 0,
+        totalStoveMinutes,
+        iconUrl: `${PATHS.coopIconBase}${coopNumber}.png`
+      };
+    })
+    .filter(coop => coop.coopNumber > 0 && coop.coopNumber !== 29)
+    .sort((a, b) => a.coopNumber - b.coopNumber);
 }
 
 function getCategoryName(categoryId) {
@@ -1193,6 +1321,135 @@ function renderDishCards(containerId, records, fallbackType) {
       </article>
     `;
   }).join('');
+}
+
+function renderCoopPlanner() {
+  const body = document.getElementById('coopListBody');
+  if (!body) return;
+
+  const search = normalizeSearch(document.getElementById('coopSearch')?.value || '');
+  const records = allCoopRecords.filter(coop => {
+    if (!search) return true;
+    const haystack = [
+      coop.coopNumber,
+      coop.title,
+      coop.shortDescription,
+      coop.longDescription,
+      coop.requirements.map(req => req.dishName).join(' ')
+    ].join(' ');
+    return normalizeSearch(haystack).includes(search);
+  });
+
+  if (!records.length) {
+    body.innerHTML = emptyRow(8, t('noCoopsAvailable'));
+    return;
+  }
+
+  body.innerHTML = records.map(coop => coopRowHtml(coop)).join('');
+}
+
+function coopRowHtml(coop) {
+  return `
+    <tr>
+      <td>${coopIconHtml(coop)}</td>
+      <td class="coop-title-cell">
+        <strong>${escapeHtml(coop.title)}</strong>
+        <span>Co-Op ${number(coop.coopNumber)}</span>
+        ${coop.shortDescription ? `<small>${escapeHtml(coop.shortDescription)}</small>` : ''}
+      </td>
+      <td>${escapeHtml(coop.durationText)}</td>
+      <td>${escapeHtml(formatDuration(coop.goldDeadline))}</td>
+      <td class="coop-reward-cell">
+        ${escapeHtml(t('cashReward'))}: ${number(coop.rewardCash)}<br>
+        XP: ${number(coop.baseXp)}<br>
+        ${escapeHtml(t('goldReward'))}: ${number(coop.rewardGold)}
+      </td>
+      <td class="requirements-cell coop-requirements-cell">${coopRequirementPillsHtml(coop.requirements)}</td>
+      <td>${number(coop.maxMembers || 0)}</td>
+      <td><button type="button" class="plan-button" data-coop-number="${number(coop.coopNumber)}">${escapeHtml(t('planCoop'))}</button></td>
+    </tr>
+  `;
+}
+
+function renderCoopPlanPreview(coopNumber) {
+  const container = document.getElementById('coopPlanPreview');
+  if (!container) return;
+
+  const coop = allCoopRecords.find(item => Number(item.coopNumber) === Number(coopNumber));
+  if (!coop) {
+    container.className = 'coop-plan-preview empty-coop-plan';
+    container.setAttribute('data-i18n', 'noCoopSelected');
+    container.textContent = t('noCoopSelected');
+    return;
+  }
+
+  const playerLevel = Number(userData.level || 1);
+  const bronzeXp = Math.trunc(coop.baseXp * (playerLevel / 3));
+  const silverXp = Math.trunc(coop.baseXp * (playerLevel / 3) * 2);
+  const goldXp = Math.trunc(coop.baseXp * (playerLevel / 3) * 4);
+
+  container.className = 'coop-plan-preview';
+  container.removeAttribute('data-i18n');
+  container.innerHTML = `
+    <article class="coop-plan-card">
+      <div class="coop-plan-heading">
+        ${coopIconHtml(coop, 'large')}
+        <div>
+          <p class="eyebrow">Co-Op ${number(coop.coopNumber)}</p>
+          <h3>${escapeHtml(coop.title)}</h3>
+          ${coop.longDescription ? `<p>${escapeHtml(coop.longDescription)}</p>` : ''}
+        </div>
+      </div>
+      <div class="coop-stat-grid">
+        <div><strong>${escapeHtml(t('duration'))}</strong><span>${escapeHtml(coop.durationText)}</span></div>
+        <div><strong>${escapeHtml(t('goldDeadline'))}</strong><span>${escapeHtml(formatDuration(coop.goldDeadline))}</span></div>
+        <div><strong>${escapeHtml(t('silverDeadline'))}</strong><span>${escapeHtml(formatDuration(coop.silverDeadline))}</span></div>
+        <div><strong>${escapeHtml(t('minimumDishLevel'))}</strong><span>${number(coop.minDishLevel)}</span></div>
+        <div><strong>${escapeHtml(t('maxMembers'))}</strong><span>${number(coop.maxMembers || 0)}</span></div>
+        <div><strong>${escapeHtml(t('totalStoveHours'))}</strong><span>${escapeHtml(formatDuration(coop.totalStoveMinutes))}</span></div>
+      </div>
+      <div class="coop-detail-grid">
+        <section>
+          <h4>${escapeHtml(t('baseRewards'))}</h4>
+          <p>${escapeHtml(t('bronze'))}: ${number(coop.rewardCash)} ${escapeHtml(t('cashReward'))}, ${number(bronzeXp)} XP</p>
+          <p>${escapeHtml(t('silver'))}: ${number(coop.rewardCash * 2)} ${escapeHtml(t('cashReward'))}, ${number(silverXp)} XP</p>
+          <p>${escapeHtml(t('gold'))}: ${number(coop.rewardCash * 4)} ${escapeHtml(t('cashReward'))}, ${number(goldXp)} XP, ${number(coop.rewardGold)} ${escapeHtml(t('goldReward'))}</p>
+          <small>${escapeHtml(t('rewardEstimateAtYourLevel'))}: ${number(playerLevel)}</small>
+        </section>
+        <section>
+          <h4>${escapeHtml(t('coopRequirements'))}</h4>
+          <div class="coop-requirement-list">${coopRequirementListHtml(coop.requirements)}</div>
+        </section>
+      </div>
+    </article>
+  `;
+
+  container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function coopIconHtml(coop, size = 'normal') {
+  const className = size === 'large' ? 'coop-icon coop-icon-large' : 'coop-icon';
+  return `<img src="${escapeHtml(coop.iconUrl)}" alt="${escapeHtml(coop.title)}" class="${className}" onerror="this.outerHTML='&lt;span class=&quot;missing-img coop-missing-icon&quot;&gt;Co-Op&lt;/span&gt;'">`;
+}
+
+function coopRequirementPillsHtml(requirements) {
+  if (!requirements.length) return '—';
+  return requirements.map(req => {
+    return `<span class="requirement-pill">${number(req.amount)}× ${escapeHtml(req.dishName)}</span>`;
+  }).join(' ');
+}
+
+function coopRequirementListHtml(requirements) {
+  if (!requirements.length) return '<p>—</p>';
+  return requirements.map(req => `
+    <div class="coop-requirement-item">
+      ${req.dish ? imageHtml(req.dish) : '<span class="missing-img">?</span>'}
+      <div>
+        <strong>${number(req.amount)}× ${escapeHtml(req.dishName)}</strong>
+        <span>${escapeHtml(t('level'))} ${number(req.dish?.level || 0)} · ${escapeHtml(req.dish?.durationText || '')}</span>
+      </div>
+    </div>
+  `).join('');
 }
 
 function renderFullDishDex() {
@@ -1819,6 +2076,36 @@ function buildRecipeNameMap(textNodes) {
   return map;
 }
 
+function buildCoopTextMap(textNodes) {
+  const map = {};
+  textNodes.forEach(node => {
+    const id = getAttr(node, 'id');
+    const name = getAttr(node, 'name');
+    if (!id || !name) return;
+
+    let match = id.match(/^coop_title_(\d+)$/i);
+    if (match) {
+      map[match[1]] = map[match[1]] || {};
+      map[match[1]].title = decodeEntities(name);
+      return;
+    }
+
+    match = id.match(/^coop_desc_short_(\d+)$/i);
+    if (match) {
+      map[match[1]] = map[match[1]] || {};
+      map[match[1]].shortDescription = decodeEntities(name);
+      return;
+    }
+
+    match = id.match(/^coop_desc_long_(\d+)$/i);
+    if (match) {
+      map[match[1]] = map[match[1]] || {};
+      map[match[1]].longDescription = decodeEntities(name);
+    }
+  });
+  return map;
+}
+
 function buildIngredientNameMap(textNodes) {
   const map = {};
   textNodes.forEach(node => {
@@ -1830,6 +2117,20 @@ function buildIngredientNameMap(textNodes) {
     map[lowerId.replace(/^ingredient_/, '')] = decodeEntities(name);
   });
   return map;
+}
+
+function parseCoopRequirements(requirements, dishById) {
+  if (!requirements) return [];
+  return requirements.split('#').map(part => {
+    const [dishId, amount] = part.split('+');
+    const dish = dishById.get(String(dishId));
+    return {
+      dishId: String(dishId || ''),
+      amount: Number(amount || 0),
+      dish,
+      dishName: dish ? dish.dishName : `Dish ${dishId}`
+    };
+  }).filter(req => req.dishId && Number.isFinite(req.amount) && req.amount > 0);
 }
 
 function calculateRequirementCost(requirements, costById) {

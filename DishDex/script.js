@@ -47,6 +47,7 @@ const MASTERY_TIME_BONUS = 0.70;
 const MIN_COOKING_TIME = 0.5;
 let activeCoopGoldMasteryMemberIndex = null;
 let coopGoldMasterySearchTerm = '';
+let activeCoopManualAssignmentMemberSlot = null;
 
 const SPECIAL_DISH_KEYS = [
   'Duckalorange',
@@ -150,6 +151,13 @@ const I18N = {
     workloadManual: 'Manual',
     manualDishes: 'Manual dishes',
     manualDishesShort: 'dishes',
+    editManualDishes: 'Edit dishes',
+    manualAssignmentTitle: 'Manual assignment',
+    manualAssignmentNote: 'Choose exactly which required dishes this chef should cook. The planner assigns the remaining dishes after this.',
+    manualAssignmentSaved: 'Manual assignment saved.',
+    manualAssignmentSummaryEmpty: 'No manual dishes set',
+    manualAssignmentUnavailable: 'Choose a Co-Op first to edit manual dishes.',
+    cannotCookDish: 'Cannot cook',
     useMyMasteriesForChef1: 'Use my gold masteries for Chef 1',
     goldMasteries: 'Gold masteries',
     editGoldMasteries: 'Edit gold masteries',
@@ -412,6 +420,13 @@ const I18N = {
     workloadManual: 'Manual',
     manualDishes: 'Pratos manuais',
     manualDishesShort: 'pratos',
+    editManualDishes: 'Editar pratos',
+    manualAssignmentTitle: 'Distribuição manual',
+    manualAssignmentNote: 'Escolha exatamente quais pratos necessários este chef deve cozinhar. O planejador distribui o restante depois disso.',
+    manualAssignmentSaved: 'Distribuição manual salva.',
+    manualAssignmentSummaryEmpty: 'Nenhum prato manual definido',
+    manualAssignmentUnavailable: 'Escolha uma Co-Op primeiro para editar os pratos manuais.',
+    cannotCookDish: 'Não pode cozinhar',
     useMyMasteriesForChef1: 'Usar minhas estrelas douradas no Chef 1',
     goldMasteries: 'Estrelas douradas',
     editGoldMasteries: 'Editar estrelas douradas',
@@ -901,13 +916,9 @@ function setupDataActions() {
         return;
       }
 
-      const manualInput = event.target.closest('[data-plan-manual-count]');
-      if (manualInput) updateCoopMemberManualCount(manualInput);
     });
 
     coopPlanPreview.addEventListener('input', event => {
-      const manualInput = event.target.closest('[data-plan-manual-count]');
-      if (manualInput) updateCoopMemberManualCount(manualInput);
     });
 
     coopPlanPreview.addEventListener('click', event => {
@@ -1584,12 +1595,14 @@ function bindCoopTeamControls() {
   const profileButton = document.getElementById('useProfileForLeaderButton');
   const useMyMasteriesToggle = document.getElementById('useMyMasteriesChef1Toggle');
   const goldMasteryEditor = document.getElementById('coopGoldMasteryEditor');
+  const manualAssignmentEditor = document.getElementById('coopManualAssignmentEditor');
 
   if (teamSelect) {
     teamSelect.addEventListener('change', () => {
       userData.selectedCoopTeamId = teamSelect.value;
       saveUserData();
       activeCoopGoldMasteryMemberIndex = null;
+      activeCoopManualAssignmentMemberSlot = null;
       renderCoopTeamEditor();
       renderCoopPlanner();
       clearCoopPlanPreview();
@@ -1687,6 +1700,23 @@ function bindCoopTeamControls() {
       }
     });
   }
+
+
+  if (manualAssignmentEditor) {
+    manualAssignmentEditor.addEventListener('input', event => {
+      const input = event.target.closest('[data-manual-assignment-dish-id]');
+      if (!input) return;
+      updateManualAssignmentDish(input);
+    });
+
+    manualAssignmentEditor.addEventListener('click', event => {
+      const closeButton = event.target.closest('[data-close-manual-assignment-editor]');
+      if (closeButton) {
+        activeCoopManualAssignmentMemberSlot = null;
+        renderCoopManualAssignmentEditor();
+      }
+    });
+  }
 }
 
 function renderCoopTeamEditor() {
@@ -1705,6 +1735,7 @@ function renderCoopTeamEditor() {
   if (useMyMasteriesToggle) useMyMasteriesToggle.checked = Boolean(selectedTeam.useMyMasteriesForChef1);
   membersBody.innerHTML = selectedTeam.members.map((member, index) => coopTeamMemberRowHtml(member, index)).join('');
   renderCoopGoldMasteryEditor();
+  renderCoopManualAssignmentEditor();
   if (newButton) newButton.disabled = userData.coopTeams.length >= MAX_COOP_TEAMS;
 }
 
@@ -1748,6 +1779,7 @@ function clearCoopTeamMember(index) {
     stoves: '',
     workload: 'equal',
     manualCount: '',
+    manualAssignments: {},
     goldMasteries: {}
   };
 
@@ -1869,10 +1901,20 @@ function coopWorkloadLabel(value) {
   return t(keyByValue[normalized] || 'workloadEqual');
 }
 
+function manualAssignmentSummary(member) {
+  const assignments = normalizeManualAssignments(member?.manualAssignments);
+  const parts = Object.entries(assignments)
+    .filter(([, amount]) => Number(amount) > 0)
+    .map(([dishId, amount]) => {
+      const dish = allDishRecords.find(record => String(record.dishId) === String(dishId));
+      return `${number(amount)}× ${dish ? dish.dishName : dishId}`;
+    });
+  return parts.length ? parts.join(', ') : t('manualAssignmentSummaryEmpty');
+}
+
 function workloadSelectHtml(member) {
   const current = normalizeCoopWorkload(member.workload);
   const options = ['minimum', 'low', 'equal', 'high', 'veryHigh', 'manual'];
-  const manualCount = member.manualCount === '' || member.manualCount === null || member.manualCount === undefined ? '' : number(member.manualCount);
   return `
     <div class="workload-control-stack">
       <label class="mini-select-label">
@@ -1882,10 +1924,10 @@ function workloadSelectHtml(member) {
         </select>
       </label>
       ${current === 'manual' ? `
-        <label class="manual-workload-label">
-          <span>${escapeHtml(t('manualDishesShort'))}</span>
-          <input data-plan-manual-count data-member-slot="${number(member.slot)}" type="number" min="0" step="1" value="${escapeHtml(manualCount)}">
-        </label>
+        <div class="manual-workload-actions">
+          <button type="button" class="manual-assignment-button" data-open-manual-assignment data-member-slot="${number(member.slot)}">${escapeHtml(t('editManualDishes'))}</button>
+          <small>${escapeHtml(manualAssignmentSummary(member))}</small>
+        </div>
       ` : ''}
     </div>
   `;
@@ -1903,12 +1945,16 @@ function updateCoopMemberWorkload(select) {
   if (!team || !Number.isFinite(slot) || !team.members[slot - 1]) return;
   const member = team.members[slot - 1];
   member.workload = normalizeCoopWorkload(select.value);
-  if (member.workload !== 'manual') member.manualCount = '';
-  if (member.workload === 'manual' && (member.manualCount === '' || member.manualCount === undefined || member.manualCount === null)) {
-    member.manualCount = 1;
+  if (member.workload !== 'manual') {
+    member.manualCount = '';
+    member.manualAssignments = {};
+  } else {
+    if (!member.manualAssignments || typeof member.manualAssignments !== 'object') member.manualAssignments = {};
+    activeCoopManualAssignmentMemberSlot = slot;
   }
   saveUserData();
   refreshCurrentCoopPlanPreview();
+  renderCoopManualAssignmentEditor();
 }
 
 function updateCoopMemberManualCount(input) {
@@ -1927,11 +1973,15 @@ function resetCoopWorkloads() {
     if (member) {
       member.workload = 'equal';
       member.manualCount = '';
+      member.manualAssignments = {};
     }
   });
   saveUserData();
+  activeCoopManualAssignmentMemberSlot = null;
+  renderCoopManualAssignmentEditor();
   refreshCurrentCoopPlanPreview();
 }
+
 
 function getStatusMultiplier(status) {
   if (status === 'gold') return 4;
@@ -1984,9 +2034,8 @@ function buildCoopAssignmentPlan(coop, team = getSelectedCoopTeam()) {
   const members = getValidCoopTeamMembers(team).map(member => ({
     ...member,
     weight: COOP_WORKLOAD_WEIGHTS[normalizeCoopWorkload(member.workload)] || 1,
-    manualLimit: normalizeCoopWorkload(member.workload) === 'manual'
-      ? Math.max(0, Math.floor(Number(member.manualCount || 0)))
-      : null,
+    manualLimit: null,
+    manualAssignments: normalizeManualAssignments(member.manualAssignments),
     useMyMasteries: member.slot === 1 && useMyMasteriesForChef1,
     assignments: new Map(),
     assignedCount: 0,
@@ -2027,16 +2076,18 @@ function buildCoopAssignmentPlan(coop, team = getSelectedCoopTeam()) {
     const manualWarnings = [];
 
     members
-      .filter(member => normalizeCoopWorkload(member.workload) === 'manual' && member.manualLimit > 0)
+      .filter(member => normalizeCoopWorkload(member.workload) === 'manual')
       .forEach(member => {
-        let assigned = 0;
-        while (assigned < member.manualLimit) {
-          const req = getShortestEligibleRequirement(member, requirements);
-          if (!req) break;
-          assignCoopDishUnit(member, req);
-          assigned += 1;
-        }
-        if (assigned < member.manualLimit) manualWarnings.push(member.name);
+        Object.entries(normalizeManualAssignments(member.manualAssignments)).forEach(([dishId, requestedAmount]) => {
+          let assigned = 0;
+          const req = requirements.find(item => String(item.dishId) === String(dishId));
+          const target = Math.max(0, Math.floor(Number(requestedAmount || 0)));
+          while (assigned < target && req && req.remaining > 0 && member.level >= req.level && member.stoves > 0) {
+            assignCoopDishUnit(member, req);
+            assigned += 1;
+          }
+          if (assigned < target) manualWarnings.push(member.name);
+        });
       });
 
     members
@@ -2121,7 +2172,7 @@ function canAssignRequirementToMember(member, req) {
   if (member.stoves <= 0) return false;
   const workload = normalizeCoopWorkload(member.workload);
   if (workload === 'minimum' && member.assignedCount > 0) return false;
-  if (workload === 'manual') return Number(member.manualLimit || 0) > member.assignedCount;
+  if (workload === 'manual') return false;
   return true;
 }
 
@@ -2996,6 +3047,7 @@ function normalizeCoopMember(rawMember, index = 0) {
     ? ''
     : Math.max(0, Math.floor(Number(member.manualCount || 0)));
   const goldMasteries = normalizeCoopGoldMasteries(member.goldMasteries);
+  const manualAssignments = normalizeManualAssignments(member.manualAssignments);
 
   return {
     name: typeof member.name === 'string' ? member.name : '',
@@ -3003,6 +3055,7 @@ function normalizeCoopMember(rawMember, index = 0) {
     stoves: stovesRaw,
     workload,
     manualCount,
+    manualAssignments,
     goldMasteries,
     slot: index + 1
   };
@@ -3017,6 +3070,16 @@ function normalizeCoopGoldMasteries(rawMasteries) {
   if (!rawMasteries || typeof rawMasteries !== 'object') return out;
   Object.entries(rawMasteries).forEach(([dishId, value]) => {
     if (value) out[String(dishId)] = true;
+  });
+  return out;
+}
+
+function normalizeManualAssignments(rawAssignments) {
+  const out = {};
+  if (!rawAssignments || typeof rawAssignments !== 'object') return out;
+  Object.entries(rawAssignments).forEach(([dishId, value]) => {
+    const amount = Math.max(0, Math.floor(Number(value || 0)));
+    if (amount > 0) out[String(dishId)] = amount;
   });
   return out;
 }
@@ -3092,6 +3155,113 @@ function toggleCoopGoldMastery(index, dishId) {
   setCoopTeamStatus(t('teamSaved'));
 }
 
+function openManualAssignmentEditor(slot) {
+  const team = getSelectedCoopTeam();
+  if (!team || !Number.isFinite(slot) || !team.members[slot - 1]) return;
+  team.members[slot - 1].workload = 'manual';
+  if (!team.members[slot - 1].manualAssignments || typeof team.members[slot - 1].manualAssignments !== 'object') {
+    team.members[slot - 1].manualAssignments = {};
+  }
+  activeCoopManualAssignmentMemberSlot = slot;
+  saveUserData();
+  refreshCurrentCoopPlanPreview();
+  renderCoopManualAssignmentEditor();
+}
+
+function getCurrentPreviewCoop() {
+  const preview = document.getElementById('coopPlanPreview');
+  const coopNumber = Number(preview?.getAttribute('data-current-coop-number') || 0);
+  return allCoopRecords.find(item => Number(item.coopNumber) === Number(coopNumber)) || null;
+}
+
+function renderCoopManualAssignmentEditor() {
+  const editor = document.getElementById('coopManualAssignmentEditor');
+  if (!editor) return;
+  const team = getSelectedCoopTeam();
+  const slot = Number(activeCoopManualAssignmentMemberSlot);
+  const coop = getCurrentPreviewCoop();
+
+  if (!team || !Number.isFinite(slot) || !team.members[slot - 1]) {
+    editor.classList.add('hidden');
+    editor.innerHTML = '';
+    return;
+  }
+
+  const member = team.members[slot - 1];
+  const memberName = String(member.name || '').trim() || `${t('chefFallback')} ${slot}`;
+  const assignments = normalizeManualAssignments(member.manualAssignments);
+
+  if (!coop) {
+    editor.classList.remove('hidden');
+    editor.innerHTML = `
+      <div class="manual-assignment-card">
+        <div class="gold-mastery-editor-heading">
+          <div>
+            <h3>${escapeHtml(t('manualAssignmentTitle'))}: ${escapeHtml(memberName)}</h3>
+            <p>${escapeHtml(t('manualAssignmentUnavailable'))}</p>
+          </div>
+          <button type="button" class="close-editor-button" data-close-manual-assignment-editor>×</button>
+        </div>
+      </div>
+    `;
+    return;
+  }
+
+  const rows = (coop.requirements || []).map(req => {
+    const dishId = String(req.dishId || req.dish?.dishId || '');
+    const amount = Math.min(Number(req.amount || 0), Number(assignments[dishId] || 0));
+    const canCook = Number(member.level || 0) >= Number(req.dish?.level || req.level || 0) && Number(member.stoves || 0) > 0;
+    return `
+      <div class="manual-assignment-row ${canCook ? '' : 'disabled'}">
+        <div class="manual-assignment-dish-info">
+          ${req.dish ? imageHtml(req.dish) : '<span class="missing-img">?</span>'}
+          <div>
+            <strong>${escapeHtml(req.dishName)}</strong>
+            <span>${number(req.amount)} ${escapeHtml(t('dishesRequired'))} · ${escapeHtml(t('level'))} ${number(req.dish?.level || req.level || 0)}${canCook ? '' : ` · ${escapeHtml(t('cannotCookDish'))}`}</span>
+          </div>
+        </div>
+        <input data-manual-assignment-dish-id="${escapeHtml(dishId)}" data-manual-assignment-member-slot="${number(slot)}" type="number" min="0" max="${number(req.amount)}" step="1" value="${number(amount)}" ${canCook ? '' : 'disabled'}>
+      </div>
+    `;
+  }).join('') || `<p class="hint">${escapeHtml(t('noDishesAvailable'))}</p>`;
+
+  editor.classList.remove('hidden');
+  editor.innerHTML = `
+    <div class="manual-assignment-card">
+      <div class="gold-mastery-editor-heading">
+        <div>
+          <h3>${escapeHtml(t('manualAssignmentTitle'))}: ${escapeHtml(memberName)}</h3>
+          <p>${escapeHtml(t('manualAssignmentNote'))}</p>
+        </div>
+        <button type="button" class="close-editor-button" data-close-manual-assignment-editor>×</button>
+      </div>
+      <div class="manual-assignment-list">${rows}</div>
+    </div>
+  `;
+}
+
+function updateManualAssignmentDish(input) {
+  const team = getSelectedCoopTeam();
+  const slot = Number(input.getAttribute('data-manual-assignment-member-slot'));
+  const dishId = String(input.getAttribute('data-manual-assignment-dish-id') || '');
+  const coop = getCurrentPreviewCoop();
+  if (!team || !Number.isFinite(slot) || !team.members[slot - 1] || !dishId || !coop) return;
+
+  const req = (coop.requirements || []).find(item => String(item.dishId || item.dish?.dishId || '') === dishId);
+  const max = Math.max(0, Math.floor(Number(req?.amount || input.max || 0)));
+  const value = Math.min(max, Math.max(0, Math.floor(Number(input.value || 0))));
+  input.value = value;
+
+  const member = team.members[slot - 1];
+  member.workload = 'manual';
+  if (!member.manualAssignments || typeof member.manualAssignments !== 'object') member.manualAssignments = {};
+  if (value > 0) member.manualAssignments[dishId] = value;
+  else delete member.manualAssignments[dishId];
+  saveUserData();
+  refreshCurrentCoopPlanPreview();
+  setCoopTeamStatus(t('manualAssignmentSaved'));
+}
+
 function normalizeMasteries(rawMasteries) {
   const out = {};
   if (!rawMasteries || typeof rawMasteries !== 'object') return out;
@@ -3141,6 +3311,7 @@ function createDefaultCoopTeam() {
     stoves: index === 0 ? profileStoves : '',
     workload: 'equal',
     manualCount: '',
+    manualAssignments: {},
     goldMasteries: {},
     slot: index + 1
   }));
@@ -3179,6 +3350,7 @@ function getValidCoopTeamMembers(team = getSelectedCoopTeam()) {
       stoves: member.stoves === '' ? 0 : Math.max(0, Number(member.stoves || 0)),
       workload: normalizeCoopWorkload(member.workload),
       manualCount: member.manualCount === '' ? '' : Math.max(0, Math.floor(Number(member.manualCount || 0))),
+      manualAssignments: normalizeManualAssignments(member.manualAssignments),
       goldMasteries: normalizeCoopGoldMasteries(member.goldMasteries)
     }))
     .filter(member => member.level > 0 && member.stoves > 0);

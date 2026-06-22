@@ -2269,3 +2269,140 @@ body.dark-theme .gold-mastery-button,
 body.dark-theme .manual-workload-label {
   color: var(--text);
 }
+
+
+/* Co-Op Planner v7 modal and contrast fixes */
+.gold-mastery-editor,
+.manual-assignment-editor {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(20, 12, 7, 0.72);
+}
+
+.gold-mastery-editor.hidden,
+.manual-assignment-editor.hidden {
+  display: none !important;
+}
+
+.gold-mastery-editor-card,
+.manual-assignment-card {
+  width: min(920px, 96vw);
+  max-height: 86vh;
+  overflow: auto;
+  margin: 0;
+  background: var(--card);
+  color: var(--text);
+  border-color: var(--border);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+}
+
+body.dark-theme .gold-mastery-dish-button.active,
+.gold-mastery-dish-button.active {
+  background: #fff4be;
+  color: #3b2618;
+  border-color: #d6a600;
+}
+
+body.dark-theme .gold-mastery-dish-button.active span,
+.gold-mastery-dish-button.active span {
+  color: #8a6900;
+}
+
+.manual-workload-actions {
+  display: grid;
+  gap: 6px;
+}
+
+.manual-assignment-button {
+  width: 100%;
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  background: var(--plain-cell);
+  color: var(--text);
+  padding: 8px 10px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.manual-workload-actions small {
+  color: var(--muted);
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.manual-assignment-list {
+  display: grid;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.manual-assignment-row {
+  display: grid;
+  grid-template-columns: 1fr 90px;
+  gap: 12px;
+  align-items: center;
+  border: 2px solid var(--border);
+  border-radius: 16px;
+  background: var(--plain-cell);
+  color: var(--row-text, var(--text));
+  padding: 10px;
+}
+
+.manual-assignment-row.disabled {
+  opacity: 0.58;
+}
+
+.manual-assignment-dish-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.manual-assignment-dish-info img,
+.manual-assignment-dish-info .dish-img,
+.manual-assignment-dish-info .missing-img {
+  width: 46px;
+  height: 46px;
+  flex: 0 0 auto;
+}
+
+.manual-assignment-dish-info strong,
+.manual-assignment-dish-info span {
+  display: block;
+  color: inherit;
+}
+
+.manual-assignment-dish-info span {
+  color: var(--muted);
+  font-weight: 800;
+}
+
+.manual-assignment-row input {
+  width: 100%;
+  text-align: center;
+}
+
+body.dark-theme .manual-assignment-row {
+  background: #2b211b;
+  color: #fff4e8;
+}
+
+body:not(.dark-theme) .manual-assignment-row {
+  background: #fffaf4;
+  color: #3b2618;
+}
+
+.welcome-hero .title-block {
+  background: rgba(43, 27, 15, 0.48);
+}
+
+@media (max-width: 720px) {
+  .manual-assignment-row {
+    grid-template-columns: 1fr;
+  }
+}

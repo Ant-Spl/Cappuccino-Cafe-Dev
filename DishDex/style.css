@@ -1989,3 +1989,61 @@ body.dark-theme .assignment-warning {
   min-width: 112px;
   max-width: 126px;
 }
+
+/* Co-Op team row actions */
+.coop-member-action-cell {
+  text-align: center;
+  width: 72px;
+}
+
+.clear-chef-button {
+  width: 42px;
+  height: 42px;
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  background: var(--plain-cell);
+  color: var(--text);
+  font: inherit;
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow);
+}
+
+.clear-chef-button:hover {
+  filter: brightness(0.96);
+  transform: translateY(-1px);
+}
+
+.coop-member-table th:last-child,
+.coop-member-table td:last-child {
+  min-width: 72px;
+  width: 72px;
+}
+
+/* Stronger contrast for the predicted status card in dark mode */
+body.dark-theme .plan-status-card,
+body.dark-theme .plan-status-card span,
+body.dark-theme .plan-status-card small,
+body.dark-theme .plan-status-card strong {
+  color: #fff4e8;
+}
+
+body.dark-theme .plan-status-card.status-gold {
+  background: rgba(214, 166, 0, 0.20);
+}
+
+body.dark-theme .plan-status-card.status-silver {
+  background: rgba(159, 166, 173, 0.22);
+}
+
+body.dark-theme .plan-status-card.status-bronze {
+  background: rgba(205, 127, 50, 0.18);
+}
+
+body.dark-theme .plan-status-card.status-impossible,
+body.dark-theme .plan-status-card.status-not-doable {
+  background: rgba(196, 107, 93, 0.20);
+}

@@ -211,6 +211,8 @@ const I18N = {
     batches: 'Batches',
     totalCookTime: 'Total Cook Time',
     stoves: 'Stoves',
+    actions: 'Actions',
+    clearChef: 'Clear chef',
     note: 'Note',
     specialDishes: 'Special Dishes',
     specialDishesNote: 'Special dishes are shown separately.',
@@ -462,6 +464,8 @@ const I18N = {
     batches: 'Rodadas',
     totalCookTime: 'Tempo total',
     stoves: 'Fogões',
+    actions: 'Ações',
+    clearChef: 'Limpar chef',
     note: 'Nota',
     specialDishes: 'Pratos especiais',
     specialDishesNote: 'Pratos especiais são exibidos separadamente.',
@@ -1570,6 +1574,12 @@ function bindCoopTeamControls() {
       updateSelectedTeamFromMemberInput(input, true);
       setCoopTeamStatus(t('teamSaved'));
     });
+
+    membersBody.addEventListener('click', event => {
+      const button = event.target.closest('[data-clear-member-index]');
+      if (!button) return;
+      clearCoopTeamMember(Number(button.getAttribute('data-clear-member-index')));
+    });
   }
 
   if (newButton) newButton.addEventListener('click', createNewCoopTeam);
@@ -1619,8 +1629,27 @@ function coopTeamMemberRowHtml(member, index) {
       <td><input data-team-field="name" data-member-index="${index}" type="text" maxlength="40" value="${escapeHtml(member.name || '')}" placeholder="${escapeHtml(`${t('chefFallback')} ${slot}`)}"></td>
       <td><input data-team-field="level" data-member-index="${index}" type="number" min="0" max="999" value="${escapeHtml(levelValue)}"></td>
       <td><input data-team-field="stoves" data-member-index="${index}" type="number" min="0" value="${escapeHtml(stovesValue)}"></td>
+      <td class="coop-member-action-cell"><button type="button" class="clear-chef-button" data-clear-member-index="${index}" title="${escapeHtml(t('clearChef'))}" aria-label="${escapeHtml(t('clearChef'))}">🗑️</button></td>
     </tr>
   `;
+}
+
+function clearCoopTeamMember(index) {
+  const team = getSelectedCoopTeam();
+  if (!team || !Number.isFinite(index) || !team.members[index]) return;
+
+  team.members[index] = {
+    name: '',
+    level: '',
+    stoves: '',
+    workload: 'equal'
+  };
+
+  saveUserData();
+  renderCoopTeamEditor();
+  renderCoopPlanner();
+  clearCoopPlanPreview();
+  setCoopTeamStatus(t('teamSaved'));
 }
 
 function updateSelectedTeamFromMemberInput(input, allowAutoStove = false) {

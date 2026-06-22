@@ -2520,3 +2520,36 @@ body.dark-theme .assignment-card .assignment-pills .requirement-pill .mastery-st
 body:not(.dark-theme) .assignment-card .assignment-pills .requirement-pill .mastery-star {
   color: #8a6900 !important;
 }
+
+/* Final phase v12: fix assignment-card name wrapping in PT/long labels */
+.assignment-card-heading {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 4px;
+  align-items: start;
+}
+
+.assignment-card-heading strong {
+  display: block;
+  min-width: 0;
+  overflow-wrap: break-word;
+  word-break: normal;
+  hyphens: auto;
+  line-height: 1.2;
+}
+
+.assignment-card-heading span {
+  display: block;
+  white-space: normal;
+  line-height: 1.2;
+}
+
+.assignment-card {
+  min-width: 0;
+}
+
+@media (min-width: 980px) {
+  .assignment-list {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+}

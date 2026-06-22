@@ -340,7 +340,7 @@ table {
   border-radius: 14px;
 }
 
-.full-table { min-width: 1480px; }
+.full-table { min-width: 1260px; }
 .mastery-table { min-width: 1050px; }
 
 th,
@@ -370,6 +370,123 @@ td {
 }
 
 td.dish-name { font-weight: 900; }
+
+.icon-heading {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  line-height: 1.1;
+}
+
+.icon-heading small {
+  font-size: 0.78rem;
+  font-weight: 900;
+}
+
+.header-icon,
+.stat-icon {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  vertical-align: middle;
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.18));
+}
+
+.tiny-stat-icon {
+  width: 15px;
+  height: 15px;
+}
+
+.value-with-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  white-space: nowrap;
+}
+
+.metric-stack {
+  display: grid;
+  gap: 3px;
+  justify-items: center;
+  line-height: 1.15;
+  white-space: nowrap;
+}
+
+.metric-stack > span,
+.metric-stack > small {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.metric-stack small {
+  color: #6f5530;
+  font-weight: 900;
+  font-size: 0.82rem;
+}
+
+.inline-toggle.setting-toggle {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  border: 2px solid var(--border);
+  border-radius: 14px;
+  background: var(--plain-cell);
+  color: var(--text);
+  padding: 10px 12px;
+  cursor: pointer;
+}
+
+.inline-toggle.setting-toggle input {
+  width: 22px;
+  height: 22px;
+  margin: 0;
+  padding: 0;
+  accent-color: var(--brown);
+}
+
+.inline-toggle.setting-toggle span {
+  color: var(--brown-dark);
+  font-weight: 900;
+}
+
+.ingredient-detail-row td {
+  text-align: left;
+  background: rgba(255, 248, 230, 0.94) !important;
+  color: #3b2618 !important;
+  font-weight: 800;
+}
+
+.ingredient-detail-content {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  align-items: center;
+}
+
+.ingredient-cost {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.dish-card-ingredients {
+  font-size: 0.92rem;
+}
+
+body.dark-theme .metric-stack small {
+  color: #6f5530;
+}
+
+body.dark-theme .ingredient-detail-row td,
+body.dark-theme .ingredient-detail-row .value-with-icon {
+  color: #3b2618 !important;
+}
 
 td.note-cell,
 td.requirements-cell,

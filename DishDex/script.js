@@ -117,6 +117,9 @@ const I18N = {
     xpNeeded: 'XP Needed',
     availableStoves: 'Available Stoves',
     holidayMode: 'Include holiday foods?',
+    showIngredients: 'Show ingredients?',
+    ingredientDetails: 'Ingredients',
+    ingredientCost: 'Ingredient cost',
     exclude: 'Exclude',
     include: 'Include',
     auto: 'Auto',
@@ -319,6 +322,9 @@ const I18N = {
     xpNeeded: 'XP necessário',
     availableStoves: 'Fogões disponíveis',
     holidayMode: 'Incluir comidas de feriado?',
+    showIngredients: 'Mostrar ingredientes?',
+    ingredientDetails: 'Ingredientes',
+    ingredientCost: 'Custo dos ingredientes',
     exclude: 'Excluir',
     include: 'Incluir',
     auto: 'Auto',
@@ -992,7 +998,7 @@ function getCategoryName(categoryId) {
 }
 
 function bindInputs() {
-  ['playerLevel', 'xpNeeded', 'stoveCount', 'holidayMode'].forEach(id => {
+  ['playerLevel', 'xpNeeded', 'stoveCount', 'holidayMode', 'showIngredientsToggle'].forEach(id => {
     const element = document.getElementById(id);
     element.addEventListener('input', handleMyDexInputChange);
     element.addEventListener('change', handleMyDexInputChange);
@@ -1007,6 +1013,7 @@ function handleMyDexInputChange() {
   userData.level = clampNumber(Number(document.getElementById('playerLevel').value || 1), 0, 999);
   userData.xpNeeded = Math.max(0, Number(document.getElementById('xpNeeded').value || 0));
   userData.availableStoves = Math.max(1, Number(document.getElementById('stoveCount').value || 1));
+  userData.showIngredients = Boolean(document.getElementById('showIngredientsToggle')?.checked);
   saveUserData();
   syncProfileInputs(false);
   renderMyDex();
@@ -1074,7 +1081,7 @@ function renderBestSummary(records) {
   const validItems = items.filter(item => item[1]);
 
   if (validItems.length === 0) {
-    body.innerHTML = emptyRow(12, t('noDishesAvailable'));
+    body.innerHTML = emptyRow(9, t('noDishesAvailable'));
     return;
   }
 
@@ -1153,6 +1160,59 @@ function recommendedMasteryBenefitHtml(record, targetLevel) {
   return `<span class="effect-line effect-gold">★ ${escapeHtml(t('gold'))}: -${escapeHtml(formatDuration(savedTime))}: ${escapeHtml(formatDuration(finalTime))}</span>`;
 }
 
+
+function assetIconHtml(type, className = 'stat-icon') {
+  const icons = {
+    cash: { src: 'cash.png', alt: t('cashReward') },
+    xp: { src: 'xp.png', alt: 'XP' },
+    gold: { src: 'gold.png', alt: t('goldReward') }
+  };
+  const icon = icons[type];
+  if (!icon) return '';
+  return `<img src="${escapeHtml(icon.src)}" alt="${escapeHtml(icon.alt)}" class="${escapeHtml(className)}" onerror="this.style.display='none'">`;
+}
+
+function valueWithIconHtml(type, value) {
+  return `<span class="value-with-icon">${number(value)} ${assetIconHtml(type)}</span>`;
+}
+
+function decimalWithIconHtml(type, value) {
+  return `<span class="value-with-icon">${decimal(value)} ${assetIconHtml(type)}</span>`;
+}
+
+function metricStackHtml(type, value, perMin) {
+  return `
+    <div class="metric-stack">
+      <span>${number(value)} ${assetIconHtml(type)}</span>
+      <small>${decimal(perMin)} ${assetIconHtml(type, 'stat-icon tiny-stat-icon')}/min</small>
+    </div>
+  `;
+}
+
+function portionMetricStackHtml(value, perMin) {
+  return `
+    <div class="metric-stack">
+      <span>${number(value)}</span>
+      <small>${decimal(perMin)}/min</small>
+    </div>
+  `;
+}
+
+function ingredientDetailsRowHtml(record, colspan, rowClass = '') {
+  if (!getSettings().showIngredients || !record) return '';
+  return `
+    <tr class="ingredient-detail-row ${escapeHtml(rowClass)}">
+      <td colspan="${number(colspan)}">
+        <div class="ingredient-detail-content">
+          <strong>${escapeHtml(t('ingredientDetails'))}:</strong>
+          <span>${escapeHtml(record.requirements || '—')}</span>
+          <span class="ingredient-cost"><strong>${escapeHtml(t('ingredientCost'))}:</strong> ${valueWithIconHtml('cash', record.ingredientCost)}</span>
+        </div>
+      </td>
+    </tr>
+  `;
+}
+
 function summaryRowHtml(label, record, rowClass) {
   return `
     <tr class="${rowClass}">
@@ -1160,15 +1220,13 @@ function summaryRowHtml(label, record, rowClass) {
       <td>${escapeHtml(label)}</td>
       <td class="dish-name">${escapeHtml(record.dishName)}</td>
       <td>${number(record.level)}</td>
-      <td>${number(record.xp)}</td>
-      <td>${decimal(record.xpPerMin)}</td>
-      <td>${number(record.profit)}</td>
-      <td>${decimal(record.profitPerMin)}</td>
-      <td>${number(record.servings)}</td>
-      <td>${decimal(record.servingsPerMin)}</td>
+      <td>${metricStackHtml('xp', record.xp, record.xpPerMin)}</td>
+      <td>${metricStackHtml('cash', record.profit, record.profitPerMin)}</td>
+      <td>${portionMetricStackHtml(record.servings, record.servingsPerMin)}</td>
       <td>${escapeHtml(record.durationText)}</td>
       <td>${escapeHtml(record.categoryName)}</td>
     </tr>
+    ${ingredientDetailsRowHtml(record, 9, rowClass)}
   `;
 }
 
@@ -1198,7 +1256,8 @@ function getSettings() {
     playerLevel: clampNumber(Number(document.getElementById('playerLevel').value || 0), 0, 999),
     xpNeeded: Math.max(0, Number(document.getElementById('xpNeeded').value || 0)),
     stoveCount: Math.max(1, Number(document.getElementById('stoveCount').value || 1)),
-    holidayMode: document.getElementById('holidayMode').value || 'Auto'
+    holidayMode: document.getElementById('holidayMode').value || 'Auto',
+    showIngredients: Boolean(document.getElementById('showIngredientsToggle')?.checked)
   };
 }
 
@@ -1206,7 +1265,7 @@ function renderBestXp(items) {
   const body = document.getElementById('bestXpBody');
   const validItems = items.filter(item => item[1]);
   if (validItems.length === 0) {
-    body.innerHTML = emptyRow(8, t('noXpRecommendations'));
+    body.innerHTML = emptyRow(7, t('noXpRecommendations'));
     return;
   }
   body.innerHTML = validItems.map(([label, record, rowClass]) => `
@@ -1215,11 +1274,11 @@ function renderBestXp(items) {
       <td>${escapeHtml(label)}</td>
       <td class="dish-name">${escapeHtml(record.dishName)}</td>
       <td>${number(record.level)}</td>
-      <td>${number(record.xp)}</td>
-      <td>${decimal(record.xpPerMin)}</td>
+      <td>${metricStackHtml('xp', record.xp, record.xpPerMin)}</td>
       <td>${escapeHtml(record.durationText)}</td>
       <td>${escapeHtml(record.categoryName)}</td>
     </tr>
+    ${ingredientDetailsRowHtml(record, 7, rowClass)}
   `).join('');
 }
 
@@ -1227,7 +1286,7 @@ function renderBestProfit(items) {
   const body = document.getElementById('bestProfitBody');
   const validItems = items.filter(item => item[1]);
   if (validItems.length === 0) {
-    body.innerHTML = emptyRow(8, t('noProfitRecommendations'));
+    body.innerHTML = emptyRow(7, t('noProfitRecommendations'));
     return;
   }
   body.innerHTML = validItems.map(([label, record, rowClass]) => `
@@ -1236,11 +1295,11 @@ function renderBestProfit(items) {
       <td>${escapeHtml(label)}</td>
       <td class="dish-name">${escapeHtml(record.dishName)}</td>
       <td>${number(record.level)}</td>
-      <td>${number(record.profit)}</td>
-      <td>${decimal(record.profitPerMin)}</td>
+      <td>${metricStackHtml('cash', record.profit, record.profitPerMin)}</td>
       <td>${escapeHtml(record.durationText)}</td>
       <td>${escapeHtml(record.categoryName)}</td>
     </tr>
+    ${ingredientDetailsRowHtml(record, 7, rowClass)}
   `).join('');
 }
 
@@ -1248,7 +1307,7 @@ function renderBestPortions(items) {
   const body = document.getElementById('bestPortionsBody');
   const validItems = items.filter(item => item[1]);
   if (validItems.length === 0) {
-    body.innerHTML = emptyRow(8, t('noPortionRecommendations'));
+    body.innerHTML = emptyRow(7, t('noPortionRecommendations'));
     return;
   }
   body.innerHTML = validItems.map(([label, record, rowClass]) => `
@@ -1257,11 +1316,11 @@ function renderBestPortions(items) {
       <td>${escapeHtml(label)}</td>
       <td class="dish-name">${escapeHtml(record.dishName)}</td>
       <td>${number(record.level)}</td>
-      <td>${number(record.servings)}</td>
-      <td>${decimal(record.servingsPerMin)}</td>
+      <td>${portionMetricStackHtml(record.servings, record.servingsPerMin)}</td>
       <td>${escapeHtml(record.durationText)}</td>
       <td>${escapeHtml(record.categoryName)}</td>
     </tr>
+    ${ingredientDetailsRowHtml(record, 7, rowClass)}
   `).join('');
 }
 
@@ -1290,7 +1349,7 @@ function renderPlans(settings, planItems) {
         <td>${imageHtml(record)}</td>
         <td>${escapeHtml(planName)}</td>
         <td class="dish-name">${escapeHtml(record.dishName)}</td>
-        <td>${number(record.xp)}</td>
+        <td>${valueWithIconHtml('xp', record.xp)}</td>
         <td>${escapeHtml(record.durationText)}</td>
         <td>${number(dishesNeeded)}</td>
         <td>${number(batchesNeeded)}</td>
@@ -1298,6 +1357,7 @@ function renderPlans(settings, planItems) {
         <td>${number(settings.stoveCount)}</td>
         <td class="note-cell">${escapeHtml(note)}</td>
       </tr>
+      ${ingredientDetailsRowHtml(record, 10, rowClass)}
     `;
   }).join('');
 }
@@ -1314,13 +1374,17 @@ function renderDishCards(containerId, records, fallbackType) {
     if (fallbackType === 'Holiday') {
       typeLabel = isHolidayDishActive(record.dishKey, new Date()) ? t('holidayActive') : t('holidayInactive');
     }
+    const ingredientLine = getSettings().showIngredients
+      ? `<p class="dish-card-ingredients"><strong>${escapeHtml(t('ingredientDetails'))}:</strong> ${escapeHtml(record.requirements || '—')} · <strong>${escapeHtml(t('ingredientCost'))}:</strong> ${valueWithIconHtml('cash', record.ingredientCost)}</p>`
+      : '';
     return `
       <article class="dish-card">
         <div>${imageHtml(record)}</div>
         <div>
           <h3>${escapeHtml(record.dishName)}</h3>
-          <p>${escapeHtml(typeLabel)} · ${t('level')} ${number(record.level)} · ${number(record.xp)} XP · ${escapeHtml(record.durationText)}</p>
-          <p>${number(record.profit)} ${t('profitLower')} · ${decimal(record.xpPerMin)} XP/min</p>
+          <p>${escapeHtml(typeLabel)} · ${t('level')} ${number(record.level)} · ${valueWithIconHtml('xp', record.xp)} · ${escapeHtml(record.durationText)}</p>
+          <p>${valueWithIconHtml('cash', record.profit)} · ${decimalWithIconHtml('xp', record.xpPerMin)}/min</p>
+          ${ingredientLine}
         </div>
       </article>
     `;
@@ -1372,14 +1436,7 @@ function coopDurationStackHtml(coop) {
 }
 
 function rewardIconHtml(type) {
-  const icons = {
-    cash: { src: 'cash.png', alt: t('cashReward') },
-    xp: { src: 'xp.png', alt: 'XP' },
-    gold: { src: 'gold.png', alt: t('goldReward') }
-  };
-  const icon = icons[type];
-  if (!icon) return '';
-  return `<img src="${escapeHtml(icon.src)}" alt="${escapeHtml(icon.alt)}" class="reward-icon" onerror="this.style.display='none'">`;
+  return assetIconHtml(type, 'reward-icon');
 }
 
 function rewardAmountHtml(type, value) {
@@ -1514,7 +1571,7 @@ function renderFullDishDex() {
   const rows = getSortedFullDishDex(sortMode, getFullUseMasteriesSetting());
 
   if (rows.length === 0) {
-    body.innerHTML = emptyRow(15, t('noDishesAvailable'));
+    body.innerHTML = emptyRow(12, t('noDishesAvailable'));
     return;
   }
 
@@ -1523,15 +1580,12 @@ function renderFullDishDex() {
       <td>${imageHtml(record)}</td>
       <td class="dish-name">${escapeHtml(record.dishName)}</td>
       <td>${number(record.level)}</td>
-      <td>${number(record.xp)}</td>
-      <td>${decimal(record.xpPerMin)}</td>
-      <td>${number(record.profit)}</td>
-      <td>${decimal(record.profitPerMin)}</td>
-      <td>${number(record.servings)}</td>
-      <td>${decimal(record.servingsPerMin)}</td>
+      <td>${metricStackHtml('xp', record.xp, record.xpPerMin)}</td>
+      <td>${metricStackHtml('cash', record.profit, record.profitPerMin)}</td>
+      <td>${portionMetricStackHtml(record.servings, record.servingsPerMin)}</td>
       <td>${escapeHtml(record.durationText)}</td>
-      <td>${number(record.ingredientCost)}</td>
-      <td>${number(record.revenue)}</td>
+      <td>${valueWithIconHtml('cash', record.ingredientCost)}</td>
+      <td>${valueWithIconHtml('cash', record.revenue)}</td>
       <td>${escapeHtml(record.categoryName)}</td>
       <td class="requirements-cell">${escapeHtml(record.requirements)}</td>
       <td>${escapeHtml(dishTypeLabel(record.dishType))}</td>
@@ -1914,6 +1968,7 @@ function normalizeUserData(raw) {
     level: clampNumber(Number(data.level || 1), 0, 999),
     xpNeeded: Math.max(0, Number(data.xpNeeded ?? 1000)),
     availableStoves: Number(data.availableStoves || 0),
+    showIngredients: Boolean(data.showIngredients),
     masteries: normalizeMasteries(data.masteries)
   };
 }
@@ -1969,6 +2024,8 @@ function syncMyDexInputs(updateStoves = true) {
   if (updateStoves) {
     document.getElementById('stoveCount').value = Number(userData.availableStoves || getDefaultStovesForLevel(userData.level));
   }
+  const showIngredientsToggle = document.getElementById('showIngredientsToggle');
+  if (showIngredientsToggle) showIngredientsToggle.checked = Boolean(userData.showIngredients);
 }
 
 function setProfileStatus(message) {
@@ -1990,11 +2047,13 @@ function exportUserData() {
         level: Number(userData.level || 1),
         xpNeeded: Math.max(0, Number(userData.xpNeeded ?? 1000)),
         availableStoves: Number(userData.availableStoves || getDefaultStovesForLevel(userData.level)),
+        showIngredients: Boolean(userData.showIngredients),
         masteries: userData.masteries || {}
       }
     : {
         version: 1,
         xpNeeded: Math.max(0, Number(userData.xpNeeded ?? 1000)),
+        showIngredients: Boolean(userData.showIngredients),
         masteries: userData.masteries || {}
       };
 
@@ -2025,6 +2084,9 @@ function importUserData(file) {
       userData.masteries = normalizeMasteries(parsed.masteries);
       if ('xpNeeded' in parsed) {
         userData.xpNeeded = Math.max(0, Number(parsed.xpNeeded || 0));
+      }
+      if ('showIngredients' in parsed) {
+        userData.showIngredients = Boolean(parsed.showIngredients);
       }
 
       if ('chefName' in parsed || 'level' in parsed || 'availableStoves' in parsed) {

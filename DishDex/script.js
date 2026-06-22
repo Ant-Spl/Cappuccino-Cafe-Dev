@@ -213,6 +213,7 @@ const I18N = {
     stoves: 'Stoves',
     actions: 'Actions',
     clearChef: 'Clear chef',
+    resetWorkloads: 'Reset workloads',
     note: 'Note',
     specialDishes: 'Special Dishes',
     specialDishesNote: 'Special dishes are shown separately.',
@@ -466,6 +467,7 @@ const I18N = {
     stoves: 'Fogões',
     actions: 'Ações',
     clearChef: 'Limpar chef',
+    resetWorkloads: 'Resetar cargas',
     note: 'Nota',
     specialDishes: 'Pratos especiais',
     specialDishesNote: 'Pratos especiais são exibidos separadamente.',
@@ -874,6 +876,12 @@ function setupDataActions() {
     });
 
     coopPlanPreview.addEventListener('click', event => {
+      const resetButton = event.target.closest('[data-reset-workloads]');
+      if (resetButton) {
+        resetCoopWorkloads();
+        return;
+      }
+
       const button = event.target.closest('[data-copy-assignment]');
       if (!button) return;
       copyCurrentCoopAssignment(button);
@@ -1782,6 +1790,18 @@ function updateCoopMemberWorkload(select) {
   if (coopNumber) renderCoopPlanPreview(coopNumber, false);
 }
 
+function resetCoopWorkloads() {
+  const team = getSelectedCoopTeam();
+  if (!team || !Array.isArray(team.members)) return;
+  team.members.forEach(member => {
+    if (member) member.workload = 'equal';
+  });
+  saveUserData();
+  const preview = document.getElementById('coopPlanPreview');
+  const coopNumber = Number(preview?.getAttribute('data-current-coop-number') || 0);
+  if (coopNumber) renderCoopPlanPreview(coopNumber, false);
+}
+
 function getStatusMultiplier(status) {
   if (status === 'gold') return 4;
   if (status === 'silver') return 2;
@@ -2219,8 +2239,11 @@ function coopTeamPreviewHtml(coop) {
     <section class="coop-team-preview-section coop-team-compact-section">
       <h4>${escapeHtml(t('selectedTeam'))}: ${escapeHtml(team.name)}</h4>
       <div class="coop-team-compact-grid final-plan-grid">
-        <div class="coop-team-compact-column">
+        <div class="coop-team-compact-column selected-team-column">
           <div class="coop-team-summary-list compact-card-grid ${escapeHtml(countClass)}">${memberRows}</div>
+          <div class="reset-workloads-row">
+            <button type="button" class="reset-workloads-button" data-reset-workloads>${escapeHtml(t('resetWorkloads'))}</button>
+          </div>
         </div>
         <div class="coop-team-compact-column plan-summary-column">
           <div class="plan-status-card ${escapeHtml(statusClass(plan.status))}">
@@ -2308,7 +2331,11 @@ function renderCoopPlanPreview(coopNumber, shouldScroll = true) {
 
 function coopIconHtml(coop, size = 'normal') {
   const className = size === 'large' ? 'coop-icon coop-icon-large' : 'coop-icon';
-  return `<img src="${escapeHtml(coop.iconUrl)}" alt="${escapeHtml(coop.title)}" class="${className}" onerror="this.outerHTML='&lt;span class=&quot;missing-img coop-missing-icon&quot;&gt;Co-Op&lt;/span&gt;'">`;
+  const coopNumber = Number(coop.coopNumber || 0);
+  const primarySrc = `${PATHS.coopIconBase}${coopNumber}.png`;
+  const fallbackSrc = `../coopicons/${coopNumber}.png`;
+  const fallbackMarkup = '&lt;span class=&quot;missing-img coop-missing-icon&quot;&gt;Co-Op&lt;/span&gt;';
+  return `<img src="${escapeHtml(primarySrc)}" data-fallback-src="${escapeHtml(fallbackSrc)}" alt="${escapeHtml(coop.title)}" class="${className}" onerror="if(!this.dataset.triedFallback && this.dataset.fallbackSrc){this.dataset.triedFallback='1';this.src=this.dataset.fallbackSrc;}else{this.outerHTML='${fallbackMarkup}';}">`;
 }
 
 function coopRequirementPillsHtml(requirements) {

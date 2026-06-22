@@ -944,10 +944,62 @@ body.bg-night {
 }
 
 .coop-reward-cell {
-  white-space: nowrap;
-  line-height: 1.55;
   color: var(--text);
   font-weight: 900;
+}
+
+.coop-reward-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  min-width: 260px;
+}
+
+.coop-reward-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 8px;
+  border: 1px solid #c89f71;
+  border-radius: 999px;
+  background: rgba(255, 248, 230, 0.9);
+  color: #3b2618;
+  font-size: 0.84rem;
+  line-height: 1.15;
+  white-space: nowrap;
+}
+
+.coop-reward-pill strong {
+  color: #3b2618;
+  font-weight: 900;
+}
+
+.reward-amount {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  color: #3b2618;
+  font-weight: 900;
+}
+
+.reward-icon {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+  vertical-align: middle;
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.18));
+}
+
+.gold-tier {
+  background: rgba(255, 243, 190, 0.95);
+}
+
+.silver-tier {
+  background: rgba(241, 244, 247, 0.95);
+}
+
+.bronze-tier {
+  background: rgba(255, 232, 205, 0.95);
 }
 
 .coop-requirements-cell {
@@ -1092,6 +1144,19 @@ body.bg-night {
   font-weight: 800;
 }
 
+.coop-detail-grid .coop-reward-pills {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+
+.coop-detail-grid .coop-reward-pill {
+  justify-content: flex-start;
+  border-radius: 12px;
+  padding: 8px 10px;
+  font-size: 0.94rem;
+}
+
 .coop-detail-grid small {
   display: block;
   margin-top: 10px;
@@ -1146,7 +1211,10 @@ body.dark-theme .duration-stack small {
 
 body.dark-theme .requirement-pill,
 body.dark-theme .coop-requirement-item strong,
-body.dark-theme .coop-requirement-item span {
+body.dark-theme .coop-requirement-item span,
+body.dark-theme .coop-reward-pill,
+body.dark-theme .coop-reward-pill strong,
+body.dark-theme .reward-amount {
   color: #3b2618;
 }
 

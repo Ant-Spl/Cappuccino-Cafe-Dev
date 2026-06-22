@@ -92,6 +92,7 @@ const I18N = {
     maxMembers: 'Max members',
     baseRewards: 'Base rewards',
     maxRewardsYourLevel: 'Max Rewards (your level)',
+    rewardDetails: 'Reward Details',
     cashReward: 'Cash',
     goldReward: 'Gold',
     goldDeadline: 'Gold deadline',
@@ -296,6 +297,7 @@ const I18N = {
     maxMembers: 'Máx. membros',
     baseRewards: 'Recompensas base',
     maxRewardsYourLevel: 'Recompensas máximas (seu nível)',
+    rewardDetails: 'Detalhes da recompensa',
     cashReward: 'Cafédólares',
     goldReward: 'Ouro',
     goldDeadline: 'Prazo para Ouro',
@@ -1369,15 +1371,48 @@ function coopDurationStackHtml(coop) {
   `;
 }
 
-function coopMaxRewardHtml(coop) {
-  const maxReward = getCoopRewardAtLevel(coop, 4);
+function rewardIconHtml(type) {
+  const icons = {
+    cash: { src: 'cash.png', alt: t('cashReward') },
+    xp: { src: 'xp.png', alt: 'XP' },
+    gold: { src: 'gold.png', alt: t('goldReward') }
+  };
+  const icon = icons[type];
+  if (!icon) return '';
+  return `<img src="${escapeHtml(icon.src)}" alt="${escapeHtml(icon.alt)}" class="reward-icon" onerror="this.style.display='none'">`;
+}
+
+function rewardAmountHtml(type, value) {
+  return `<span class="reward-amount reward-${escapeHtml(type)}">${rewardIconHtml(type)}<span>${number(value)}</span></span>`;
+}
+
+function coopRewardTierPillHtml(label, reward, className = '') {
+  const goldPart = reward.gold > 0 ? rewardAmountHtml('gold', reward.gold) : '';
   return `
-    <div class="coop-reward-cell">
-      ${escapeHtml(t('cashReward'))}: ${number(maxReward.cash)}<br>
-      XP: ${number(maxReward.xp)}<br>
-      ${escapeHtml(t('goldReward'))}: ${number(maxReward.gold)}
+    <div class="coop-reward-pill ${escapeHtml(className)}">
+      <strong>${escapeHtml(label)}</strong>
+      <span>${rewardAmountHtml('cash', reward.cash)}</span>
+      <span>${rewardAmountHtml('xp', reward.xp)}</span>
+      ${goldPart ? `<span>${goldPart}</span>` : ''}
     </div>
   `;
+}
+
+function coopRewardDetailsHtml(coop) {
+  const goldReward = getCoopRewardAtLevel(coop, 4);
+  const silverReward = getCoopRewardAtLevel(coop, 2);
+  const bronzeReward = getCoopRewardAtLevel(coop, 1);
+  return `
+    <div class="coop-reward-cell coop-reward-pills">
+      ${coopRewardTierPillHtml(t('gold'), goldReward, 'gold-tier')}
+      ${coopRewardTierPillHtml(t('silver'), silverReward, 'silver-tier')}
+      ${coopRewardTierPillHtml(t('bronze'), bronzeReward, 'bronze-tier')}
+    </div>
+  `;
+}
+
+function coopMaxRewardHtml(coop) {
+  return coopRewardDetailsHtml(coop);
 }
 
 function coopRowHtml(coop) {
@@ -1410,9 +1445,6 @@ function renderCoopPlanPreview(coopNumber) {
   }
 
   const playerLevel = Number(userData.level || 1);
-  const bronzeXp = Math.trunc(coop.baseXp * (playerLevel / 3));
-  const silverXp = Math.trunc(coop.baseXp * (playerLevel / 3) * 2);
-  const goldXp = Math.trunc(coop.baseXp * (playerLevel / 3) * 4);
 
   container.className = 'coop-plan-preview';
   container.removeAttribute('data-i18n');
@@ -1435,10 +1467,8 @@ function renderCoopPlanPreview(coopNumber) {
       </div>
       <div class="coop-detail-grid">
         <section>
-          <h4>${escapeHtml(t('maxRewardsYourLevel'))}</h4>
-          <p>${escapeHtml(t('bronze'))}: ${number(coop.rewardCash)} ${escapeHtml(t('cashReward'))}, ${number(bronzeXp)} XP</p>
-          <p>${escapeHtml(t('silver'))}: ${number(coop.rewardCash * 2)} ${escapeHtml(t('cashReward'))}, ${number(silverXp)} XP</p>
-          <p>${escapeHtml(t('gold'))}: ${number(coop.rewardCash * 4)} ${escapeHtml(t('cashReward'))}, ${number(goldXp)} XP, ${number(coop.rewardGold)} ${escapeHtml(t('goldReward'))}</p>
+          <h4>${escapeHtml(t('rewardDetails'))}</h4>
+          ${coopRewardDetailsHtml(coop)}
           <small>${escapeHtml(t('rewardEstimateAtYourLevel'))}: ${number(playerLevel)}</small>
         </section>
         <section>

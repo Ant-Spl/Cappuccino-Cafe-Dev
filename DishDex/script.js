@@ -135,6 +135,9 @@ const I18N = {
     noTeamMembers: 'Add at least one chef to this team.',
     assignmentComingSoon: 'Dish assignment comes in the next phase.',
     assignmentPlanTitle: 'Dish assignment plan',
+    copyAssignment: 'Copy assignment',
+    assignmentCopied: 'Assignment copied!',
+    assignmentCopyFailed: 'Could not copy assignment.',
     workload: 'Workload',
     workloadMinimum: 'Minimum',
     workloadLow: 'Low',
@@ -382,6 +385,31 @@ const I18N = {
     teamRewardsGold: 'Recompensas da equipe com Ouro',
     noTeamMembers: 'Adicione pelo menos um chef nesta equipe.',
     assignmentComingSoon: 'A distribuição dos pratos vem na próxima fase.',
+    assignmentPlanTitle: 'Distribuição dos pratos',
+    workload: 'Carga',
+    workloadMinimum: 'Mínima',
+    workloadLow: 'Baixa',
+    workloadEqual: 'Igual',
+    workloadHigh: 'Alta',
+    workloadVeryHigh: 'Muito alta',
+    estimatedWithTeam: 'Estimado com esta equipe',
+    predictedStatus: 'Status previsto',
+    assignedDishes: 'Pratos atribuídos',
+    noAssignedDishes: 'Nenhum prato atribuído',
+    noEligibleChef: 'Nenhum chef elegível pode cozinhar um ou mais pratos necessários.',
+    impossibleMissingUnlock: 'Impossível: falta desbloquear prato',
+    notDoable: 'Não viável',
+    predictedRewards: 'Recompensas no status previsto',
+    noRewardNoContribution: 'Sem recompensa sem contribuição',
+    contributionWarning: 'Cada chef precisa cozinhar pelo menos um prato necessário para receber recompensas.',
+    unassignedDishes: 'Pratos não atribuídos',
+    chefCookTime: 'Tempo de preparo',
+    bronze: 'Bronze',
+    silver: 'Prata',
+    gold: 'Ouro',
+    copyAssignment: 'Copiar distribuição',
+    assignmentCopied: 'Distribuição copiada!',
+    assignmentCopyFailed: 'Não foi possível copiar a distribuição.',
     backButton: '← Voltar',
     personalRecommendations: 'Recomendações pessoais',
     myDexSettings: 'Configurações do MyDex',
@@ -839,6 +867,12 @@ function setupDataActions() {
       const select = event.target.closest('[data-plan-workload]');
       if (!select) return;
       updateCoopMemberWorkload(select);
+    });
+
+    coopPlanPreview.addEventListener('click', event => {
+      const button = event.target.closest('[data-copy-assignment]');
+      if (!button) return;
+      copyCurrentCoopAssignment(button);
     });
   }
 
@@ -1911,7 +1945,10 @@ function predictedRewardsHtml(coop, plan) {
 function assignmentPlanHtml(coop, plan) {
   return `
     <section class="coop-assignment-section">
-      <h4>${escapeHtml(t('assignmentPlanTitle'))}</h4>
+      <div class="assignment-heading-row">
+        <h4>${escapeHtml(t('assignmentPlanTitle'))}</h4>
+        <button type="button" class="copy-assignment-button" data-copy-assignment>${escapeHtml(t('copyAssignment'))}</button>
+      </div>
       <div class="assignment-list">
         ${plan.members.map(member => `
           <article class="assignment-card">
@@ -1927,6 +1964,83 @@ function assignmentPlanHtml(coop, plan) {
       ${planWarningsHtml(plan)}
     </section>
   `;
+}
+
+function assignmentMarkdownLine(member) {
+  const assignments = Array.from(member.assignments.values());
+  if (!assignments.length) return `- **${member.name}**: ${t('noAssignedDishes')}`;
+  const assignmentText = assignments
+    .map(item => `${number(item.amount)}× ${item.req.dishName}`)
+    .join(', ');
+  const cookTime = formatDuration(member.stoveMinutes / Math.max(1, member.stoves));
+  return `- **${member.name}** (${cookTime}): ${assignmentText}`;
+}
+
+function buildCoopAssignmentMarkdown(coop, plan) {
+  const lines = [
+    `## ${coop.title} — Co-Op ${number(coop.coopNumber)}`,
+    `Estimated with this team: ${Number.isFinite(plan.estimatedMinutes) ? formatDuration(plan.estimatedMinutes) : '—'}`,
+    `Predicted status: ${statusLabel(plan.status)}`,
+    '',
+    `### ${t('assignmentPlanTitle')}`,
+    ...plan.members.map(member => assignmentMarkdownLine(member))
+  ];
+
+  if (plan.unassigned.length) {
+    lines.push('', `**${t('unassignedDishes')}:**`);
+    plan.unassigned.forEach(item => {
+      lines.push(`- ${number(item.amount)}× ${item.dishName}`);
+    });
+  }
+
+  const uniqueWarnings = [...new Set(plan.warnings || [])];
+  if (uniqueWarnings.length) {
+    lines.push('', '**Warnings:**');
+    uniqueWarnings.forEach(warning => lines.push(`- ${warning}`));
+  }
+
+  return lines.join('\n');
+}
+
+async function copyTextToClipboard(text) {
+  if (navigator.clipboard && window.isSecureContext) {
+    await navigator.clipboard.writeText(text);
+    return;
+  }
+
+  const textarea = document.createElement('textarea');
+  textarea.value = text;
+  textarea.setAttribute('readonly', '');
+  textarea.style.position = 'fixed';
+  textarea.style.left = '-9999px';
+  document.body.appendChild(textarea);
+  textarea.select();
+  const ok = document.execCommand('copy');
+  document.body.removeChild(textarea);
+  if (!ok) throw new Error('copy failed');
+}
+
+async function copyCurrentCoopAssignment(button) {
+  const preview = document.getElementById('coopPlanPreview');
+  const coopNumber = Number(preview?.getAttribute('data-current-coop-number') || 0);
+  const coop = allCoopRecords.find(item => Number(item.coopNumber) === coopNumber);
+  if (!coop) return;
+
+  const plan = buildCoopAssignmentPlan(coop, getSelectedCoopTeam());
+  const originalText = button.textContent;
+
+  try {
+    await copyTextToClipboard(buildCoopAssignmentMarkdown(coop, plan));
+    button.textContent = t('assignmentCopied');
+    button.classList.add('copied');
+  } catch (error) {
+    button.textContent = t('assignmentCopyFailed');
+  }
+
+  setTimeout(() => {
+    button.textContent = originalText || t('copyAssignment');
+    button.classList.remove('copied');
+  }, 1800);
 }
 
 function clearCoopPlanPreview() {
@@ -2035,10 +2149,9 @@ function coopTeamPreviewHtml(coop) {
 
   const memberRows = plan.members.map(member => `
     <div class="coop-team-summary-item compact-team-card">
-      <strong>${escapeHtml(member.name)}</strong>
-      <span>${escapeHtml(t('level'))} ${number(member.level)}</span>
-      <span>${number(member.stoves)} ${escapeHtml(t('stoves'))}</span>
-      ${workloadSelectHtml(member)}
+      <strong class="compact-chef-name">${escapeHtml(member.name)}</strong>
+      <span class="compact-chef-meta">${escapeHtml(t('level'))} ${number(member.level)} · ${number(member.stoves)} ${escapeHtml(t('stoves'))}</span>
+      <div class="compact-chef-workload">${workloadSelectHtml(member)}</div>
     </div>
   `).join('');
 

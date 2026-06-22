@@ -1836,3 +1836,124 @@ body.dark-theme .assignment-warning {
     justify-content: space-between;
   }
 }
+
+
+/* Final phase v2: stable team preview layout + copy assignment button */
+.final-plan-grid {
+  grid-template-columns: minmax(420px, 1fr) minmax(360px, 0.9fr);
+  gap: 14px;
+}
+
+.coop-team-summary-list.compact-card-grid.team-count-1,
+.coop-team-summary-list.compact-card-grid.team-count-2,
+.coop-team-summary-list.compact-card-grid.team-count-3 {
+  grid-template-columns: 1fr;
+}
+
+.coop-team-summary-list.compact-card-grid.team-count-4,
+.coop-team-summary-list.compact-card-grid.team-count-5 {
+  grid-template-columns: repeat(2, minmax(220px, 1fr));
+}
+
+.coop-team-summary-list.team-count-5 .compact-team-card:last-child {
+  grid-column: 1 / -1;
+}
+
+.coop-team-summary-item.compact-team-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    "chef workload"
+    "meta workload";
+  align-items: center;
+  column-gap: 12px;
+  row-gap: 2px;
+  min-height: 54px;
+  overflow: visible;
+}
+
+.compact-chef-name {
+  grid-area: chef;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  line-height: 1.12;
+}
+
+.compact-chef-meta {
+  grid-area: meta;
+  min-width: 0;
+  white-space: normal !important;
+  line-height: 1.15;
+}
+
+.compact-chef-workload {
+  grid-area: workload;
+  justify-self: end;
+  min-width: 0;
+}
+
+.mini-select-label {
+  max-width: 150px;
+}
+
+.mini-select-label select {
+  min-width: 104px;
+  max-width: 112px;
+}
+
+.assignment-heading-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.copy-assignment-button {
+  border: 2px solid var(--border);
+  border-radius: 999px;
+  background: var(--brown);
+  color: #fff8ef;
+  padding: 8px 14px;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+}
+
+.copy-assignment-button:hover,
+.copy-assignment-button.copied {
+  background: var(--brown-dark);
+}
+
+@media (max-width: 980px) {
+  .final-plan-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .coop-team-summary-list.compact-card-grid.team-count-4,
+  .coop-team-summary-list.compact-card-grid.team-count-5 {
+    grid-template-columns: 1fr;
+  }
+
+  .coop-team-summary-item.compact-team-card {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "chef"
+      "meta"
+      "workload";
+    justify-items: start;
+  }
+
+  .compact-chef-workload {
+    justify-self: start;
+    width: 100%;
+  }
+
+  .mini-select-label {
+    max-width: none;
+    width: 100%;
+    justify-content: space-between;
+  }
+}

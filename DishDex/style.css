@@ -2110,3 +2110,162 @@ body.dark-theme .reset-workloads-button {
     width: 100%;
   }
 }
+
+
+/* Co-Op Planner v6 polish */
+.welcome-hero .title-block {
+  width: fit-content;
+  max-width: min(720px, 100%);
+  padding: 16px 20px;
+  border-radius: 22px;
+  background: rgba(43, 27, 15, 0.34);
+  border: 1px solid rgba(255, 224, 164, 0.38);
+  backdrop-filter: blur(4px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.22);
+}
+
+.welcome-hero .title-block h1,
+.welcome-hero .title-block .eyebrow,
+.welcome-hero .title-block .subtitle {
+  text-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.65),
+    1px 0 0 rgba(60, 34, 17, 0.55),
+    -1px 0 0 rgba(60, 34, 17, 0.55),
+    0 1px 0 rgba(60, 34, 17, 0.55),
+    0 -1px 0 rgba(60, 34, 17, 0.55);
+}
+
+.coop-masteries-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin: 8px 0 14px;
+  color: var(--text);
+  font-weight: 800;
+}
+
+.coop-masteries-toggle input {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--gold);
+}
+
+.gold-mastery-button,
+.close-editor-button {
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  background: var(--plain-cell);
+  color: var(--text);
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.gold-mastery-button {
+  min-width: 42px;
+  min-height: 38px;
+  color: #8a6900;
+}
+
+.gold-mastery-editor.hidden { display: none; }
+
+.gold-mastery-editor-card {
+  margin-top: 14px;
+  border: 2px solid var(--border);
+  border-radius: 18px;
+  background: var(--plain-cell);
+  color: var(--text);
+  padding: 14px;
+}
+
+.gold-mastery-editor-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.gold-mastery-editor-heading h3 {
+  margin: 0 0 4px;
+  color: var(--brown-dark);
+}
+
+.gold-mastery-editor-heading p,
+.gold-mastery-count,
+.gold-mastery-profile-note {
+  margin: 0 0 10px;
+  color: var(--muted);
+  font-weight: 800;
+}
+
+.gold-mastery-search-label {
+  display: grid;
+  gap: 6px;
+  margin: 10px 0;
+  font-weight: 800;
+}
+
+.gold-mastery-search-label input {
+  width: 100%;
+}
+
+.gold-mastery-dish-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 8px;
+  max-height: 300px;
+  overflow: auto;
+  padding-right: 4px;
+}
+
+.gold-mastery-dish-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 2px solid var(--border);
+  border-radius: 999px;
+  background: var(--cream);
+  color: var(--text);
+  padding: 8px 12px;
+  font-weight: 900;
+  cursor: pointer;
+  text-align: left;
+}
+
+.gold-mastery-dish-button.active {
+  border-color: var(--gold);
+  background: #fff4be;
+  color: #3b2618;
+}
+
+.workload-control-stack {
+  display: grid;
+  gap: 8px;
+}
+
+.manual-workload-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 0.88rem;
+  color: var(--text);
+  font-weight: 800;
+}
+
+.manual-workload-label input {
+  width: 92px;
+  padding: 8px 10px;
+  text-align: center;
+}
+
+.compact-chef-name .mastery-star,
+.assignment-pills .mastery-star {
+  color: var(--gold);
+}
+
+body.dark-theme .gold-mastery-editor-card,
+body.dark-theme .gold-mastery-dish-button,
+body.dark-theme .gold-mastery-button,
+body.dark-theme .manual-workload-label {
+  color: var(--text);
+}

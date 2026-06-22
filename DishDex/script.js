@@ -20,7 +20,7 @@ const PATHS = {
     ]
   },
   imageBase: '../dishimages/',
-  coopIconBase: 'coopicons/'
+  coopIconBase: './coopicons/'
 };
 
 const STORAGE_KEY = 'dishDexUserDataV1';
@@ -33,7 +33,8 @@ const COOP_WORKLOAD_WEIGHTS = {
   low: 0.65,
   equal: 1,
   high: 1.45,
-  veryHigh: 2
+  veryHigh: 2,
+  manual: 1
 };
 const MASTERY_PAGE_SIZE = 4;
 const MASTERY_DAYS_LV1 = 1;
@@ -44,6 +45,8 @@ const MASTERY_SERVING_BONUS = 1.05;
 const MASTERY_XP_BONUS = 1.05;
 const MASTERY_TIME_BONUS = 0.70;
 const MIN_COOKING_TIME = 0.5;
+let activeCoopGoldMasteryMemberIndex = null;
+let coopGoldMasterySearchTerm = '';
 
 const SPECIAL_DISH_KEYS = [
   'Duckalorange',
@@ -144,6 +147,17 @@ const I18N = {
     workloadEqual: 'Equal',
     workloadHigh: 'High',
     workloadVeryHigh: 'Very high',
+    workloadManual: 'Manual',
+    manualDishes: 'Manual dishes',
+    manualDishesShort: 'dishes',
+    useMyMasteriesForChef1: 'Use my gold masteries for Chef 1',
+    goldMasteries: 'Gold masteries',
+    editGoldMasteries: 'Edit gold masteries',
+    goldMasteriesNote: 'Only Gold mastery matters here because it reduces cooking time.',
+    searchDishes: 'Search dishes',
+    noGoldMasteriesSelected: 'No Gold masteries selected yet.',
+    myMasteriesActive: 'Using My Masteries for Chef 1',
+    manualCountWarning: 'One or more manual workloads could not be filled completely.',
     estimatedWithTeam: 'Estimated with this team',
     predictedStatus: 'Predicted Status',
     assignedDishes: 'Assigned dishes',
@@ -395,6 +409,17 @@ const I18N = {
     workloadEqual: 'Igual',
     workloadHigh: 'Alta',
     workloadVeryHigh: 'Muito alta',
+    workloadManual: 'Manual',
+    manualDishes: 'Pratos manuais',
+    manualDishesShort: 'pratos',
+    useMyMasteriesForChef1: 'Usar minhas estrelas douradas no Chef 1',
+    goldMasteries: 'Estrelas douradas',
+    editGoldMasteries: 'Editar estrelas douradas',
+    goldMasteriesNote: 'Aqui só a estrela de Ouro importa, porque ela reduz o tempo de preparo.',
+    searchDishes: 'Procurar pratos',
+    noGoldMasteriesSelected: 'Nenhuma estrela dourada selecionada ainda.',
+    myMasteriesActive: 'Usando Minhas Estrelas no Chef 1',
+    manualCountWarning: 'Uma ou mais cargas manuais não puderam ser preenchidas completamente.',
     estimatedWithTeam: 'Estimado com esta equipe',
     predictedStatus: 'Status previsto',
     assignedDishes: 'Pratos atribuídos',
@@ -871,8 +896,18 @@ function setupDataActions() {
   if (coopPlanPreview) {
     coopPlanPreview.addEventListener('change', event => {
       const select = event.target.closest('[data-plan-workload]');
-      if (!select) return;
-      updateCoopMemberWorkload(select);
+      if (select) {
+        updateCoopMemberWorkload(select);
+        return;
+      }
+
+      const manualInput = event.target.closest('[data-plan-manual-count]');
+      if (manualInput) updateCoopMemberManualCount(manualInput);
+    });
+
+    coopPlanPreview.addEventListener('input', event => {
+      const manualInput = event.target.closest('[data-plan-manual-count]');
+      if (manualInput) updateCoopMemberManualCount(manualInput);
     });
 
     coopPlanPreview.addEventListener('click', event => {
@@ -1547,11 +1582,14 @@ function bindCoopTeamControls() {
   const saveButton = document.getElementById('saveCoopTeamButton');
   const deleteButton = document.getElementById('deleteCoopTeamButton');
   const profileButton = document.getElementById('useProfileForLeaderButton');
+  const useMyMasteriesToggle = document.getElementById('useMyMasteriesChef1Toggle');
+  const goldMasteryEditor = document.getElementById('coopGoldMasteryEditor');
 
   if (teamSelect) {
     teamSelect.addEventListener('change', () => {
       userData.selectedCoopTeamId = teamSelect.value;
       saveUserData();
+      activeCoopGoldMasteryMemberIndex = null;
       renderCoopTeamEditor();
       renderCoopPlanner();
       clearCoopPlanPreview();
@@ -1564,6 +1602,7 @@ function bindCoopTeamControls() {
       team.name = teamName.value.trim() || team.name;
       saveUserData();
       renderCoopTeamSelectOnly();
+      refreshCurrentCoopPlanPreview();
       setCoopTeamStatus(t('teamSaved'));
     });
   }
@@ -1584,6 +1623,14 @@ function bindCoopTeamControls() {
     });
 
     membersBody.addEventListener('click', event => {
+      const masteryButton = event.target.closest('[data-edit-member-masteries-index]');
+      if (masteryButton) {
+        activeCoopGoldMasteryMemberIndex = Number(masteryButton.getAttribute('data-edit-member-masteries-index'));
+        coopGoldMasterySearchTerm = '';
+        renderCoopGoldMasteryEditor();
+        return;
+      }
+
       const button = event.target.closest('[data-clear-member-index]');
       if (!button) return;
       clearCoopTeamMember(Number(button.getAttribute('data-clear-member-index')));
@@ -1597,6 +1644,49 @@ function bindCoopTeamControls() {
   });
   if (deleteButton) deleteButton.addEventListener('click', deleteSelectedCoopTeam);
   if (profileButton) profileButton.addEventListener('click', fillTeamLeaderFromProfile);
+
+  if (useMyMasteriesToggle) {
+    useMyMasteriesToggle.addEventListener('change', () => {
+      const team = getSelectedCoopTeam();
+      team.useMyMasteriesForChef1 = Boolean(useMyMasteriesToggle.checked);
+      saveUserData();
+      renderCoopGoldMasteryEditor();
+      refreshCurrentCoopPlanPreview();
+      setCoopTeamStatus(t('teamSaved'));
+    });
+  }
+
+  if (goldMasteryEditor) {
+    goldMasteryEditor.addEventListener('input', event => {
+      const input = event.target.closest('[data-coop-gold-mastery-search]');
+      if (!input) return;
+      coopGoldMasterySearchTerm = input.value;
+      const cursorPosition = input.selectionStart;
+      renderCoopGoldMasteryEditor();
+      const nextInput = document.querySelector('[data-coop-gold-mastery-search]');
+      if (nextInput) {
+        nextInput.focus();
+        if (Number.isFinite(cursorPosition)) nextInput.setSelectionRange(cursorPosition, cursorPosition);
+      }
+    });
+
+    goldMasteryEditor.addEventListener('click', event => {
+      const toggleButton = event.target.closest('[data-toggle-coop-gold-mastery]');
+      if (toggleButton) {
+        toggleCoopGoldMastery(
+          Number(toggleButton.getAttribute('data-member-index')),
+          String(toggleButton.getAttribute('data-dish-id'))
+        );
+        return;
+      }
+
+      const closeButton = event.target.closest('[data-close-gold-mastery-editor]');
+      if (closeButton) {
+        activeCoopGoldMasteryMemberIndex = null;
+        renderCoopGoldMasteryEditor();
+      }
+    });
+  }
 }
 
 function renderCoopTeamEditor() {
@@ -1611,7 +1701,10 @@ function renderCoopTeamEditor() {
 
   renderCoopTeamSelectOnly();
   teamName.value = selectedTeam?.name || '';
+  const useMyMasteriesToggle = document.getElementById('useMyMasteriesChef1Toggle');
+  if (useMyMasteriesToggle) useMyMasteriesToggle.checked = Boolean(selectedTeam.useMyMasteriesForChef1);
   membersBody.innerHTML = selectedTeam.members.map((member, index) => coopTeamMemberRowHtml(member, index)).join('');
+  renderCoopGoldMasteryEditor();
   if (newButton) newButton.disabled = userData.coopTeams.length >= MAX_COOP_TEAMS;
 }
 
@@ -1637,7 +1730,10 @@ function coopTeamMemberRowHtml(member, index) {
       <td><input data-team-field="name" data-member-index="${index}" type="text" maxlength="40" value="${escapeHtml(member.name || '')}" placeholder="${escapeHtml(`${t('chefFallback')} ${slot}`)}"></td>
       <td><input data-team-field="level" data-member-index="${index}" type="number" min="0" max="999" value="${escapeHtml(levelValue)}"></td>
       <td><input data-team-field="stoves" data-member-index="${index}" type="number" min="0" value="${escapeHtml(stovesValue)}"></td>
-      <td class="coop-member-action-cell"><button type="button" class="clear-chef-button" data-clear-member-index="${index}" title="${escapeHtml(t('clearChef'))}" aria-label="${escapeHtml(t('clearChef'))}">🗑️</button></td>
+      <td class="coop-member-action-cell">
+        <button type="button" class="gold-mastery-button" data-edit-member-masteries-index="${index}" title="${escapeHtml(t('editGoldMasteries'))}" aria-label="${escapeHtml(t('editGoldMasteries'))}">⭐</button>
+        <button type="button" class="clear-chef-button" data-clear-member-index="${index}" title="${escapeHtml(t('clearChef'))}" aria-label="${escapeHtml(t('clearChef'))}">🗑️</button>
+      </td>
     </tr>
   `;
 }
@@ -1650,13 +1746,16 @@ function clearCoopTeamMember(index) {
     name: '',
     level: '',
     stoves: '',
-    workload: 'equal'
+    workload: 'equal',
+    manualCount: '',
+    goldMasteries: {}
   };
 
   saveUserData();
+  activeCoopGoldMasteryMemberIndex = null;
   renderCoopTeamEditor();
   renderCoopPlanner();
-  clearCoopPlanPreview();
+  refreshCurrentCoopPlanPreview();
   setCoopTeamStatus(t('teamSaved'));
 }
 
@@ -1683,6 +1782,7 @@ function updateSelectedTeamFromMemberInput(input, allowAutoStove = false) {
 
   saveUserData();
   renderCoopPlanner();
+  refreshCurrentCoopPlanPreview();
 }
 
 function saveSelectedTeamFromInputs() {
@@ -1698,6 +1798,7 @@ function saveSelectedTeamFromInputs() {
   saveUserData();
   renderCoopTeamSelectOnly();
   renderCoopPlanner();
+  refreshCurrentCoopPlanPreview();
 }
 
 function createNewCoopTeam() {
@@ -1741,6 +1842,7 @@ function fillTeamLeaderFromProfile() {
   saveUserData();
   renderCoopTeamEditor();
   renderCoopPlanner();
+  refreshCurrentCoopPlanPreview();
   setCoopTeamStatus(t('teamSaved'));
 }
 
@@ -1761,45 +1863,74 @@ function coopWorkloadLabel(value) {
     low: 'workloadLow',
     equal: 'workloadEqual',
     high: 'workloadHigh',
-    veryHigh: 'workloadVeryHigh'
+    veryHigh: 'workloadVeryHigh',
+    manual: 'workloadManual'
   };
   return t(keyByValue[normalized] || 'workloadEqual');
 }
 
 function workloadSelectHtml(member) {
   const current = normalizeCoopWorkload(member.workload);
-  const options = ['minimum', 'low', 'equal', 'high', 'veryHigh'];
+  const options = ['minimum', 'low', 'equal', 'high', 'veryHigh', 'manual'];
+  const manualCount = member.manualCount === '' || member.manualCount === null || member.manualCount === undefined ? '' : number(member.manualCount);
   return `
-    <label class="mini-select-label">
-      <span>${escapeHtml(t('workload'))}</span>
-      <select data-plan-workload data-member-slot="${number(member.slot)}">
-        ${options.map(option => `<option value="${escapeHtml(option)}" ${option === current ? 'selected' : ''}>${escapeHtml(coopWorkloadLabel(option))}</option>`).join('')}
-      </select>
-    </label>
+    <div class="workload-control-stack">
+      <label class="mini-select-label">
+        <span>${escapeHtml(t('workload'))}</span>
+        <select data-plan-workload data-member-slot="${number(member.slot)}">
+          ${options.map(option => `<option value="${escapeHtml(option)}" ${option === current ? 'selected' : ''}>${escapeHtml(coopWorkloadLabel(option))}</option>`).join('')}
+        </select>
+      </label>
+      ${current === 'manual' ? `
+        <label class="manual-workload-label">
+          <span>${escapeHtml(t('manualDishesShort'))}</span>
+          <input data-plan-manual-count data-member-slot="${number(member.slot)}" type="number" min="0" step="1" value="${escapeHtml(manualCount)}">
+        </label>
+      ` : ''}
+    </div>
   `;
+}
+
+function refreshCurrentCoopPlanPreview() {
+  const preview = document.getElementById('coopPlanPreview');
+  const coopNumber = Number(preview?.getAttribute('data-current-coop-number') || 0);
+  if (coopNumber) renderCoopPlanPreview(coopNumber, false);
 }
 
 function updateCoopMemberWorkload(select) {
   const team = getSelectedCoopTeam();
   const slot = Number(select.getAttribute('data-member-slot'));
   if (!team || !Number.isFinite(slot) || !team.members[slot - 1]) return;
-  team.members[slot - 1].workload = normalizeCoopWorkload(select.value);
+  const member = team.members[slot - 1];
+  member.workload = normalizeCoopWorkload(select.value);
+  if (member.workload !== 'manual') member.manualCount = '';
+  if (member.workload === 'manual' && (member.manualCount === '' || member.manualCount === undefined || member.manualCount === null)) {
+    member.manualCount = 1;
+  }
   saveUserData();
-  const preview = document.getElementById('coopPlanPreview');
-  const coopNumber = Number(preview?.getAttribute('data-current-coop-number') || 0);
-  if (coopNumber) renderCoopPlanPreview(coopNumber, false);
+  refreshCurrentCoopPlanPreview();
+}
+
+function updateCoopMemberManualCount(input) {
+  const team = getSelectedCoopTeam();
+  const slot = Number(input.getAttribute('data-member-slot'));
+  if (!team || !Number.isFinite(slot) || !team.members[slot - 1]) return;
+  team.members[slot - 1].manualCount = input.value === '' ? '' : Math.max(0, Math.floor(Number(input.value || 0)));
+  saveUserData();
+  refreshCurrentCoopPlanPreview();
 }
 
 function resetCoopWorkloads() {
   const team = getSelectedCoopTeam();
   if (!team || !Array.isArray(team.members)) return;
   team.members.forEach(member => {
-    if (member) member.workload = 'equal';
+    if (member) {
+      member.workload = 'equal';
+      member.manualCount = '';
+    }
   });
   saveUserData();
-  const preview = document.getElementById('coopPlanPreview');
-  const coopNumber = Number(preview?.getAttribute('data-current-coop-number') || 0);
-  if (coopNumber) renderCoopPlanPreview(coopNumber, false);
+  refreshCurrentCoopPlanPreview();
 }
 
 function getStatusMultiplier(status) {
@@ -1826,7 +1957,7 @@ function estimateMemberCookMinutes(member) {
   if (!member || Number(member.stoves || 0) <= 0) return Infinity;
   const durations = [];
   Array.from(member.assignments?.values?.() || []).forEach(item => {
-    const duration = Number(item.req?.duration || 0);
+    const duration = Number(item.duration ?? item.req?.duration ?? 0);
     const amount = Number(item.amount || 0);
     for (let index = 0; index < amount; index += 1) {
       durations.push(duration);
@@ -1849,9 +1980,14 @@ function estimateMemberCookMinutes(member) {
 }
 
 function buildCoopAssignmentPlan(coop, team = getSelectedCoopTeam()) {
+  const useMyMasteriesForChef1 = Boolean(team?.useMyMasteriesForChef1);
   const members = getValidCoopTeamMembers(team).map(member => ({
     ...member,
     weight: COOP_WORKLOAD_WEIGHTS[normalizeCoopWorkload(member.workload)] || 1,
+    manualLimit: normalizeCoopWorkload(member.workload) === 'manual'
+      ? Math.max(0, Math.floor(Number(member.manualCount || 0)))
+      : null,
+    useMyMasteries: member.slot === 1 && useMyMasteriesForChef1,
     assignments: new Map(),
     assignedCount: 0,
     stoveMinutes: 0
@@ -1888,18 +2024,38 @@ function buildCoopAssignmentPlan(coop, team = getSelectedCoopTeam()) {
   });
 
   if (!impossible) {
-    // Give every eligible chef at least one dish where possible so they qualify for rewards.
-    members.forEach(member => {
-      const eligibleReq = requirements
-        .filter(req => req.remaining > 0 && member.level >= req.level)
-        .sort((a, b) => {
-          const aEligible = members.filter(candidate => candidate.level >= a.level).length;
-          const bEligible = members.filter(candidate => candidate.level >= b.level).length;
-          if (aEligible !== bEligible) return aEligible - bEligible;
-          return b.duration - a.duration;
-        })[0];
-      if (eligibleReq) assignCoopDishUnit(member, eligibleReq);
-    });
+    const manualWarnings = [];
+
+    members
+      .filter(member => normalizeCoopWorkload(member.workload) === 'manual' && member.manualLimit > 0)
+      .forEach(member => {
+        let assigned = 0;
+        while (assigned < member.manualLimit) {
+          const req = getShortestEligibleRequirement(member, requirements);
+          if (!req) break;
+          assignCoopDishUnit(member, req);
+          assigned += 1;
+        }
+        if (assigned < member.manualLimit) manualWarnings.push(member.name);
+      });
+
+    members
+      .filter(member => normalizeCoopWorkload(member.workload) === 'minimum')
+      .forEach(member => {
+        if (member.assignedCount > 0) return;
+        const req = getShortestEligibleRequirement(member, requirements);
+        if (req) assignCoopDishUnit(member, req);
+      });
+
+    members
+      .filter(member => normalizeCoopWorkload(member.workload) !== 'minimum' && normalizeCoopWorkload(member.workload) !== 'manual')
+      .forEach(member => {
+        if (member.assignedCount > 0) return;
+        const req = getShortestEligibleRequirement(member, requirements);
+        if (req) assignCoopDishUnit(member, req);
+      });
+
+    if (manualWarnings.length) warnings.push(t('manualCountWarning'));
 
     const orderedRequirements = [...requirements].sort((a, b) => {
       const aEligible = members.filter(member => member.level >= a.level).length;
@@ -1910,12 +2066,7 @@ function buildCoopAssignmentPlan(coop, team = getSelectedCoopTeam()) {
 
     orderedRequirements.forEach(req => {
       while (req.remaining > 0) {
-        const eligibleMembers = members.filter(member => {
-          if (member.level < req.level) return false;
-          if (member.stoves <= 0) return false;
-          if (normalizeCoopWorkload(member.workload) === 'minimum' && member.assignedCount > 0) return false;
-          return true;
-        });
+        const eligibleMembers = members.filter(member => canAssignRequirementToMember(member, req));
 
         if (!eligibleMembers.length) {
           unassigned.push({ ...req, amount: req.remaining });
@@ -1925,8 +2076,10 @@ function buildCoopAssignmentPlan(coop, team = getSelectedCoopTeam()) {
         }
 
         const chosen = eligibleMembers.sort((a, b) => {
-          const scoreA = ((a.stoveMinutes + req.duration) / Math.max(1, a.stoves)) / Math.max(0.05, a.weight);
-          const scoreB = ((b.stoveMinutes + req.duration) / Math.max(1, b.stoves)) / Math.max(0.05, b.weight);
+          const durationA = getMemberDishDuration(a, req);
+          const durationB = getMemberDishDuration(b, req);
+          const scoreA = ((a.stoveMinutes + durationA) / Math.max(1, a.stoves)) / Math.max(0.05, a.weight);
+          const scoreB = ((b.stoveMinutes + durationB) / Math.max(1, b.stoves)) / Math.max(0.05, b.weight);
           if (scoreA !== scoreB) return scoreA - scoreB;
           return b.level - a.level;
         })[0];
@@ -1962,20 +2115,61 @@ function buildCoopAssignmentPlan(coop, team = getSelectedCoopTeam()) {
   return { status, estimatedMinutes, members, requirements, unassigned, warnings };
 }
 
+function canAssignRequirementToMember(member, req) {
+  if (!member || !req) return false;
+  if (member.level < req.level) return false;
+  if (member.stoves <= 0) return false;
+  const workload = normalizeCoopWorkload(member.workload);
+  if (workload === 'minimum' && member.assignedCount > 0) return false;
+  if (workload === 'manual') return Number(member.manualLimit || 0) > member.assignedCount;
+  return true;
+}
+
+function getShortestEligibleRequirement(member, requirements) {
+  return requirements
+    .filter(req => req.remaining > 0 && member.level >= req.level && member.stoves > 0)
+    .sort((a, b) => {
+      const durationA = getMemberDishDuration(member, a);
+      const durationB = getMemberDishDuration(member, b);
+      if (durationA !== durationB) return durationA - durationB;
+      const eligibleA = requirements.length ? 0 : 0;
+      return String(a.dishName || '').localeCompare(String(b.dishName || '')) || eligibleA;
+    })[0] || null;
+}
+
+function getMemberDishDuration(member, req) {
+  const baseDuration = Number(req?.dish?.duration ?? req?.duration ?? 0);
+  if (baseDuration <= 0) return 0;
+  if (memberHasGoldMastery(member, req?.dishId || req?.dish?.dishId)) {
+    return getMasteredDuration(baseDuration, 3);
+  }
+  return baseDuration;
+}
+
+function memberHasGoldMastery(member, dishId) {
+  const key = String(dishId || '');
+  if (!key) return false;
+  if (member?.useMyMasteries && getMasteryLevel(key) >= 3) return true;
+  return Boolean(member?.goldMasteries?.[key]);
+}
+
 function assignCoopDishUnit(member, req) {
   req.remaining = Math.max(0, Number(req.remaining || 0) - 1);
   member.assignedCount += 1;
-  member.stoveMinutes += Number(req.duration || 0);
+  const duration = getMemberDishDuration(member, req);
+  member.stoveMinutes += duration;
   const key = String(req.dishId || req.dishName);
-  const current = member.assignments.get(key) || { req, amount: 0 };
+  const current = member.assignments.get(key) || { req, amount: 0, duration };
   current.amount += 1;
+  current.duration = duration;
+  current.goldMastered = memberHasGoldMastery(member, req.dishId || req.dish?.dishId);
   member.assignments.set(key, current);
 }
 
 function memberAssignmentsHtml(member) {
   const assignments = Array.from(member.assignments.values());
   if (!assignments.length) return `<span class="muted-small">${escapeHtml(t('noAssignedDishes'))}</span>`;
-  return assignments.map(item => `<span class="requirement-pill">${number(item.amount)}× ${escapeHtml(item.req.dishName)}</span>`).join(' ');
+  return assignments.map(item => `<span class="requirement-pill">${number(item.amount)}× ${escapeHtml(item.req.dishName)}${item.goldMastered ? ' ★' : ''}</span>`).join(' ');
 }
 
 function unassignedDishesHtml(plan) {
@@ -2050,7 +2244,7 @@ function assignmentMarkdownLine(member) {
   const assignments = Array.from(member.assignments.values());
   if (!assignments.length) return `- **${member.name}**: ${t('noAssignedDishes')}`;
   const assignmentText = assignments
-    .map(item => `${number(item.amount)}× ${item.req.dishName}`)
+    .map(item => `${number(item.amount)}× ${item.req.dishName}${item.goldMastered ? ' ★' : ''}`)
     .join(', ');
   const cookTime = formatDuration(member.estimatedMinutes || 0);
   return `- **${member.name}** (${cookTime}): ${assignmentText}`;
@@ -2229,7 +2423,7 @@ function coopTeamPreviewHtml(coop) {
 
   const memberRows = plan.members.map(member => `
     <div class="coop-team-summary-item compact-team-card">
-      <strong class="compact-chef-name">${escapeHtml(member.name)}</strong>
+      <strong class="compact-chef-name">${escapeHtml(member.name)}${member.useMyMasteries ? ' ★' : ''}</strong>
       <span class="compact-chef-meta">${escapeHtml(t('level'))} ${number(member.level)} · ${number(member.stoves)} ${escapeHtml(t('stoves'))}</span>
       <div class="compact-chef-workload">${workloadSelectHtml(member)}</div>
     </div>
@@ -2332,10 +2526,10 @@ function renderCoopPlanPreview(coopNumber, shouldScroll = true) {
 function coopIconHtml(coop, size = 'normal') {
   const className = size === 'large' ? 'coop-icon coop-icon-large' : 'coop-icon';
   const coopNumber = Number(coop.coopNumber || 0);
-  const primarySrc = `${PATHS.coopIconBase}${coopNumber}.png`;
-  const fallbackSrc = `../coopicons/${coopNumber}.png`;
+  const primarySrc = `./coopicons/${coopNumber}.png`;
+  const fallbackSrc = `${PATHS.coopIconBase}${coopNumber}.png`;
   const fallbackMarkup = '&lt;span class=&quot;missing-img coop-missing-icon&quot;&gt;Co-Op&lt;/span&gt;';
-  return `<img src="${escapeHtml(primarySrc)}" data-fallback-src="${escapeHtml(fallbackSrc)}" alt="${escapeHtml(coop.title)}" class="${className}" onerror="if(!this.dataset.triedFallback && this.dataset.fallbackSrc){this.dataset.triedFallback='1';this.src=this.dataset.fallbackSrc;}else{this.outerHTML='${fallbackMarkup}';}">`;
+  return `<img src="${escapeHtml(primarySrc)}" data-fallback-src="${escapeHtml(fallbackSrc)}" alt="${escapeHtml(coop.title)}" class="${className}" loading="lazy" onerror="if(!this.dataset.triedFallback && this.dataset.fallbackSrc && this.dataset.fallbackSrc !== this.src){this.dataset.triedFallback='1';this.src=this.dataset.fallbackSrc;}else{this.outerHTML='${fallbackMarkup}';}">`;
 }
 
 function coopRequirementPillsHtml(requirements) {
@@ -2790,7 +2984,7 @@ function normalizeCoopTeam(rawTeam, fallbackNumber = 1) {
   const rawMembers = Array.isArray(team.members) ? team.members : [];
   const members = Array.from({ length: MAX_COOP_MEMBERS }, (_, index) => normalizeCoopMember(rawMembers[index], index));
 
-  return { id, name, members };
+  return { id, name, members, useMyMasteriesForChef1: Boolean(team.useMyMasteriesForChef1) };
 }
 
 function normalizeCoopMember(rawMember, index = 0) {
@@ -2798,18 +2992,104 @@ function normalizeCoopMember(rawMember, index = 0) {
   const levelRaw = member.level === '' || member.level === null || member.level === undefined ? '' : clampNumber(Number(member.level), 0, 999);
   const stovesRaw = member.stoves === '' || member.stoves === null || member.stoves === undefined ? '' : Math.max(0, Number(member.stoves));
   const workload = normalizeCoopWorkload(member.workload);
+  const manualCount = member.manualCount === '' || member.manualCount === null || member.manualCount === undefined
+    ? ''
+    : Math.max(0, Math.floor(Number(member.manualCount || 0)));
+  const goldMasteries = normalizeCoopGoldMasteries(member.goldMasteries);
 
   return {
     name: typeof member.name === 'string' ? member.name : '',
     level: levelRaw,
     stoves: stovesRaw,
     workload,
+    manualCount,
+    goldMasteries,
     slot: index + 1
   };
 }
 
 function createTeamId() {
   return `team_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+}
+
+function normalizeCoopGoldMasteries(rawMasteries) {
+  const out = {};
+  if (!rawMasteries || typeof rawMasteries !== 'object') return out;
+  Object.entries(rawMasteries).forEach(([dishId, value]) => {
+    if (value) out[String(dishId)] = true;
+  });
+  return out;
+}
+
+function renderCoopGoldMasteryEditor() {
+  const editor = document.getElementById('coopGoldMasteryEditor');
+  if (!editor) return;
+
+  const team = getSelectedCoopTeam();
+  const index = Number(activeCoopGoldMasteryMemberIndex);
+  if (!team || !Number.isFinite(index) || !team.members[index]) {
+    editor.classList.add('hidden');
+    editor.innerHTML = '';
+    return;
+  }
+
+  const member = team.members[index];
+  const memberName = String(member.name || '').trim() || `${t('chefFallback')} ${index + 1}`;
+  const selected = normalizeCoopGoldMasteries(member.goldMasteries);
+  const searchTerm = normalizeSearch(coopGoldMasterySearchTerm || '');
+  const selectedCount = Object.keys(selected).length;
+
+  const dishRows = allDishRecords
+    .filter(record => {
+      if (!searchTerm) return true;
+      return normalizeSearch(record.dishName).includes(searchTerm) || normalizeSearch(record.internalName).includes(searchTerm);
+    })
+    .sort(standardDishSort)
+    .map(record => {
+      const dishId = String(record.dishId);
+      const active = Boolean(selected[dishId]);
+      return `
+        <button type="button" class="gold-mastery-dish-button ${active ? 'active' : ''}" data-toggle-coop-gold-mastery data-member-index="${index}" data-dish-id="${escapeHtml(dishId)}">
+          <span>${active ? '★' : '☆'}</span>
+          ${escapeHtml(record.dishName)}
+        </button>
+      `;
+    }).join('') || `<p class="hint">${escapeHtml(t('noDishesAvailable'))}</p>`;
+
+  editor.classList.remove('hidden');
+  editor.innerHTML = `
+    <div class="gold-mastery-editor-card">
+      <div class="gold-mastery-editor-heading">
+        <div>
+          <h3>${escapeHtml(t('goldMasteries'))}: ${escapeHtml(memberName)}</h3>
+          <p>${escapeHtml(t('goldMasteriesNote'))}</p>
+        </div>
+        <button type="button" class="close-editor-button" data-close-gold-mastery-editor>×</button>
+      </div>
+      <label class="gold-mastery-search-label">
+        <span>${escapeHtml(t('searchDishes'))}</span>
+        <input data-coop-gold-mastery-search type="search" value="${escapeHtml(coopGoldMasterySearchTerm || '')}" autocomplete="off">
+      </label>
+      ${index === 0 && team.useMyMasteriesForChef1 ? `<p class="gold-mastery-profile-note">★ ${escapeHtml(t('myMasteriesActive'))}</p>` : ''}
+      ${selectedCount ? `<p class="gold-mastery-count">${number(selectedCount)} ${escapeHtml(t('goldMasteries'))}</p>` : `<p class="gold-mastery-count">${escapeHtml(t('noGoldMasteriesSelected'))}</p>`}
+      <div class="gold-mastery-dish-grid">${dishRows}</div>
+    </div>
+  `;
+}
+
+function toggleCoopGoldMastery(index, dishId) {
+  const team = getSelectedCoopTeam();
+  if (!team || !Number.isFinite(index) || !team.members[index]) return;
+  const member = team.members[index];
+  if (!member.goldMasteries || typeof member.goldMasteries !== 'object') member.goldMasteries = {};
+  const key = String(dishId || '');
+  if (!key) return;
+  if (member.goldMasteries[key]) delete member.goldMasteries[key];
+  else member.goldMasteries[key] = true;
+  saveUserData();
+  renderCoopGoldMasteryEditor();
+  refreshCurrentCoopPlanPreview();
+  setCoopTeamStatus(t('teamSaved'));
 }
 
 function normalizeMasteries(rawMasteries) {
@@ -2860,13 +3140,16 @@ function createDefaultCoopTeam() {
     level: index === 0 ? profileLevel : '',
     stoves: index === 0 ? profileStoves : '',
     workload: 'equal',
+    manualCount: '',
+    goldMasteries: {},
     slot: index + 1
   }));
 
   return {
     id: createTeamId(),
     name: currentLanguage === 'pt' ? `Equipe ${numberSuffix}` : `Team ${numberSuffix}`,
-    members
+    members,
+    useMyMasteriesForChef1: false
   };
 }
 
@@ -2894,7 +3177,9 @@ function getValidCoopTeamMembers(team = getSelectedCoopTeam()) {
       name: String(member.name || '').trim() || `${t('chefFallback')} ${index + 1}`,
       level: member.level === '' ? 0 : clampNumber(Number(member.level || 0), 0, 999),
       stoves: member.stoves === '' ? 0 : Math.max(0, Number(member.stoves || 0)),
-      workload: normalizeCoopWorkload(member.workload)
+      workload: normalizeCoopWorkload(member.workload),
+      manualCount: member.manualCount === '' ? '' : Math.max(0, Math.floor(Number(member.manualCount || 0))),
+      goldMasteries: normalizeCoopGoldMasteries(member.goldMasteries)
     }))
     .filter(member => member.level > 0 && member.stoves > 0);
 }

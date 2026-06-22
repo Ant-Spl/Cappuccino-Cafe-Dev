@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=20260622-coop-final-v5">
+  <link rel="stylesheet" href="style.css?v=20260622-coop-final-v6">
 </head>
 <body class="dark-theme">
   <main class="page">
@@ -356,6 +356,11 @@
           <button id="useProfileForLeaderButton" type="button" class="action-button profile-fill-button" data-i18n="useProfileForChef1">Use My Profile for Chef 1</button>
         </div>
 
+        <label class="coop-masteries-toggle">
+          <input id="useMyMasteriesChef1Toggle" type="checkbox">
+          <span data-i18n="useMyMasteriesForChef1">Use my gold masteries for Chef 1</span>
+        </label>
+
         <div class="coop-member-table-wrap">
           <table class="coop-member-table">
             <thead>
@@ -370,6 +375,7 @@
             <tbody id="coopTeamMembersBody"></tbody>
           </table>
         </div>
+        <div id="coopGoldMasteryEditor" class="gold-mastery-editor hidden"></div>
         <p id="coopTeamStatus" class="hint"></p>
       </section>
 
@@ -502,6 +508,6 @@
     </section>
   </main>
 
-  <script src="script.js?v=20260622-coop-final-v5" defer></script>
+  <script src="script.js?v=20260622-coop-final-v6" defer></script>
 </body>
 </html>

@@ -795,6 +795,7 @@ body.dark-theme .recommended-masteries-table .effect-check {
   color: #17883a;
 }
 
+
 /* Dynamic time-of-day game background */
 
 body {
@@ -829,15 +830,12 @@ body:not(.dark-theme)::after {
   background: rgba(255, 245, 220, 0.18);
 }
 
-.page {
+body > * {
   position: relative;
   z-index: 1;
 }
 
-/* Put these files in the DishDex folder:
-   Morning.jpg, Day.jpg, Sunset.jpg, Night.jpg
-   Adjust background-position below if one image needs manual centering. */
-
+/* You can adjust background-position later if one image is badly centered. */
 body.bg-morning {
   --time-bg-image: url("Morning.jpg");
   --time-bg-position: center center;
@@ -857,4 +855,3 @@ body.bg-night {
   --time-bg-image: url("Night.jpg");
   --time-bg-position: center center;
 }
-

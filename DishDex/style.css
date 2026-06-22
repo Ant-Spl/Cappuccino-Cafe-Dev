@@ -1033,6 +1033,24 @@ body.bg-night {
   min-width: 980px;
 }
 
+
+.coop-list-scroll {
+  max-height: min(650px, 72vh);
+  overflow: auto;
+  overscroll-behavior: contain;
+  border-radius: 14px;
+}
+
+.coop-list-scroll table {
+  margin-bottom: 0;
+}
+
+.coop-list-scroll thead th {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+}
+
 .coop-title-cell {
   min-width: 260px;
   text-align: left;
@@ -1428,6 +1446,62 @@ body.dark-theme .reward-amount {
   grid-column: 1 / -1;
 }
 
+.coop-team-compact-section {
+  display: grid;
+  gap: 10px;
+}
+
+.coop-team-compact-section h4 {
+  margin: 0;
+}
+
+.coop-team-compact-grid {
+  display: grid;
+  grid-template-columns: minmax(240px, 0.9fr) minmax(320px, 1.1fr);
+  gap: 12px;
+  align-items: start;
+}
+
+.coop-team-compact-column {
+  display: grid;
+  gap: 8px;
+}
+
+.coop-team-compact-column h5 {
+  margin: 0;
+  color: var(--brown-dark);
+  font-size: 0.98rem;
+}
+
+.compact-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 8px;
+}
+
+.compact-team-card,
+.compact-reward-card {
+  align-items: flex-start;
+  justify-content: flex-start;
+  min-height: 0;
+}
+
+.compact-team-card {
+  display: grid;
+  gap: 2px;
+}
+
+.compact-reward-card {
+  display: grid;
+  gap: 5px;
+}
+
+.compact-reward-amounts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
 .coop-team-summary-list,
 .coop-team-reward-list {
   display: grid;
@@ -1481,7 +1555,8 @@ body.dark-theme .full-table .dish-type-tag {
 
 @media (max-width: 900px) {
   .section-heading-row,
-  .coop-team-top-grid {
+  .coop-team-top-grid,
+  .coop-team-compact-grid {
     grid-template-columns: 1fr;
   }
 

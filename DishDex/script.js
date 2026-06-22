@@ -1726,7 +1726,7 @@ function coopTeamPreviewHtml(coop) {
 
   if (!members.length) {
     return `
-      <section class="coop-team-preview-section">
+      <section class="coop-team-preview-section coop-team-compact-section">
         <h4>${escapeHtml(t('selectedTeam'))}</h4>
         <p>${escapeHtml(t('noTeamMembers'))}</p>
       </section>
@@ -1734,28 +1734,35 @@ function coopTeamPreviewHtml(coop) {
   }
 
   const memberRows = members.map(member => `
-    <div class="coop-team-summary-item">
+    <div class="coop-team-summary-item compact-team-card">
       <strong>${escapeHtml(member.name)}</strong>
-      <span>${escapeHtml(t('level'))} ${number(member.level)} · ${number(member.stoves)} ${escapeHtml(t('stoves'))}</span>
+      <span>${escapeHtml(t('level'))} ${number(member.level)}</span>
+      <span>${number(member.stoves)} ${escapeHtml(t('stoves'))}</span>
     </div>
   `).join('');
 
   const rewardRows = members.map(member => {
     const reward = getCoopRewardAtLevel(coop, 4, member.level);
     return `
-      <div class="coop-member-reward-item">
+      <div class="coop-member-reward-item compact-reward-card">
         <strong>${escapeHtml(member.name)}</strong>
-        <span>${rewardAmountHtml('cash', reward.cash)} ${rewardAmountHtml('xp', reward.xp)} ${rewardAmountHtml('gold', reward.gold)}</span>
+        <span class="compact-reward-amounts">${rewardAmountHtml('cash', reward.cash)} ${rewardAmountHtml('xp', reward.xp)} ${rewardAmountHtml('gold', reward.gold)}</span>
       </div>
     `;
   }).join('');
 
   return `
-    <section class="coop-team-preview-section">
+    <section class="coop-team-preview-section coop-team-compact-section">
       <h4>${escapeHtml(t('selectedTeam'))}: ${escapeHtml(team.name)}</h4>
-      <div class="coop-team-summary-list">${memberRows}</div>
-      <h4>${escapeHtml(t('teamRewardsGold'))}</h4>
-      <div class="coop-team-reward-list">${rewardRows}</div>
+      <div class="coop-team-compact-grid">
+        <div class="coop-team-compact-column">
+          <div class="coop-team-summary-list compact-card-grid">${memberRows}</div>
+        </div>
+        <div class="coop-team-compact-column">
+          <h5>${escapeHtml(t('teamRewardsGold'))}</h5>
+          <div class="coop-team-reward-list compact-card-grid">${rewardRows}</div>
+        </div>
+      </div>
       <small>${escapeHtml(t('assignmentComingSoon'))}</small>
     </section>
   `;

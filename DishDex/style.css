@@ -2493,3 +2493,30 @@ body.dark-theme .gold-mastery-dish-button.active strong,
 body.dark-theme .gold-mastery-dish-button.active span {
   color: #3b2618;
 }
+
+/* Final phase v10: assignment pill contrast fix */
+.assignment-card .assignment-pills .requirement-pill,
+.assignment-card .assignment-pills .requirement-pill strong,
+.assignment-card .assignment-pills .requirement-pill span {
+  color: #3b2618 !important;
+  text-shadow: none;
+}
+
+.assignment-card .assignment-pills .requirement-pill .mastery-star {
+  color: #8a6900 !important;
+  text-shadow: none;
+}
+
+body.dark-theme .assignment-card .assignment-pills .requirement-pill,
+body.dark-theme .assignment-card .assignment-pills .requirement-pill strong,
+body.dark-theme .assignment-card .assignment-pills .requirement-pill span,
+body:not(.dark-theme) .assignment-card .assignment-pills .requirement-pill,
+body:not(.dark-theme) .assignment-card .assignment-pills .requirement-pill strong,
+body:not(.dark-theme) .assignment-card .assignment-pills .requirement-pill span {
+  color: #3b2618 !important;
+}
+
+body.dark-theme .assignment-card .assignment-pills .requirement-pill .mastery-star,
+body:not(.dark-theme) .assignment-card .assignment-pills .requirement-pill .mastery-star {
+  color: #8a6900 !important;
+}

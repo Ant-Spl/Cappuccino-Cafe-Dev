@@ -2406,3 +2406,90 @@ body:not(.dark-theme) .manual-assignment-row {
     grid-template-columns: 1fr;
   }
 }
+
+/* Final phase v9: contrast and compact single-assignment cards */
+body.dark-theme .coop-team-summary-item.compact-team-card,
+body.dark-theme .coop-member-reward-item.compact-reward-row,
+body.dark-theme .compact-team-card,
+body.dark-theme .compact-reward-card {
+  color: #3b2618;
+}
+
+body.dark-theme .coop-team-summary-item.compact-team-card strong,
+body.dark-theme .coop-team-summary-item.compact-team-card span,
+body.dark-theme .coop-team-summary-item.compact-team-card label,
+body.dark-theme .coop-team-summary-item.compact-team-card .mini-select-label,
+body.dark-theme .coop-team-summary-item.compact-team-card .manual-workload-actions small,
+body.dark-theme .coop-member-reward-item.compact-reward-row strong,
+body.dark-theme .coop-member-reward-item.compact-reward-row span {
+  color: #3b2618;
+}
+
+body.dark-theme .coop-team-summary-item.compact-team-card .manual-workload-actions small {
+  color: #6f5530;
+}
+
+.assignment-list {
+  align-items: start;
+}
+
+.assignment-card {
+  align-self: start;
+  height: auto;
+}
+
+.assignment-card:has(.requirement-pill:only-child) {
+  min-height: 0;
+}
+
+.assignment-pills {
+  align-items: flex-start;
+}
+
+.assignment-pills .requirement-pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 0;
+  line-height: 1.15;
+  padding: 5px 10px;
+}
+
+body:not(.dark-theme) .assignment-card,
+body:not(.dark-theme) .assignment-card strong,
+body:not(.dark-theme) .assignment-card span,
+body:not(.dark-theme) .assignment-card .requirement-pill,
+body:not(.dark-theme) .manual-assignment-card,
+body:not(.dark-theme) .manual-assignment-card strong,
+body:not(.dark-theme) .manual-assignment-card span,
+body:not(.dark-theme) .gold-mastery-editor-card,
+body:not(.dark-theme) .gold-mastery-editor-card strong,
+body:not(.dark-theme) .gold-mastery-editor-card span {
+  color: #3b2618;
+}
+
+body.dark-theme .assignment-card,
+body.dark-theme .assignment-card-heading strong,
+body.dark-theme .assignment-card-heading span,
+body.dark-theme .manual-assignment-card,
+body.dark-theme .manual-assignment-card strong,
+body.dark-theme .gold-mastery-editor-card,
+body.dark-theme .gold-mastery-editor-card strong {
+  color: #fff4e8;
+}
+
+body.dark-theme .assignment-pills .requirement-pill,
+body.dark-theme .manual-assignment-row,
+body.dark-theme .manual-assignment-row strong,
+body.dark-theme .manual-assignment-row span {
+  color: #fff4e8;
+}
+
+body.dark-theme .manual-assignment-row .manual-assignment-dish-info span {
+  color: #d9bd9e;
+}
+
+body.dark-theme .gold-mastery-dish-button.active,
+body.dark-theme .gold-mastery-dish-button.active strong,
+body.dark-theme .gold-mastery-dish-button.active span {
+  color: #3b2618;
+}

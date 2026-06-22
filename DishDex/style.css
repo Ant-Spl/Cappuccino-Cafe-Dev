@@ -1652,3 +1652,187 @@ body.dark-theme .full-table .dish-type-tag {
     white-space: normal;
   }
 }
+
+/* Co-Op Planner final phase: workload controls and assignment plan */
+.coop-team-summary-list.team-count-5 .compact-team-card:last-child {
+  grid-column: 1 / -1;
+}
+
+.coop-team-summary-item.compact-team-card {
+  grid-template-columns: minmax(110px, 1fr) auto auto minmax(140px, auto);
+  align-items: center;
+}
+
+.mini-select-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  white-space: nowrap;
+  font-size: 0.86rem;
+  font-weight: 800;
+  color: var(--row-text, var(--text));
+}
+
+.mini-select-label span {
+  white-space: nowrap;
+}
+
+.mini-select-label select {
+  min-width: 104px;
+  padding: 5px 8px;
+  border-radius: 10px;
+  font-size: 0.86rem;
+}
+
+.final-plan-grid {
+  grid-template-columns: minmax(340px, 1.05fr) minmax(300px, 0.95fr);
+}
+
+.plan-summary-column {
+  align-content: start;
+}
+
+.plan-status-card {
+  border: 2px solid var(--border);
+  background: var(--plain-cell);
+  border-radius: 16px;
+  padding: 12px 14px;
+  display: grid;
+  gap: 4px;
+  color: var(--row-text, var(--text));
+}
+
+.plan-status-card span,
+.plan-status-card small {
+  color: var(--row-text, var(--text));
+  font-weight: 800;
+}
+
+.plan-status-card strong {
+  font-size: 1.35rem;
+  color: var(--brown-dark);
+}
+
+.plan-status-card.status-gold {
+  border-color: #d6a600;
+  background: rgba(255, 230, 128, 0.20);
+}
+
+.plan-status-card.status-silver {
+  border-color: #9fa6ad;
+  background: rgba(210, 220, 230, 0.18);
+}
+
+.plan-status-card.status-bronze {
+  border-color: #cd7f32;
+  background: rgba(205, 127, 50, 0.14);
+}
+
+.plan-status-card.status-impossible,
+.plan-status-card.status-not-doable {
+  border-color: #c46b5d;
+  background: rgba(196, 107, 93, 0.14);
+}
+
+.predicted-reward-list {
+  max-width: 100%;
+}
+
+.coop-assignment-section {
+  display: grid;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.coop-assignment-section h4 {
+  margin: 0;
+  color: var(--brown-dark);
+}
+
+.assignment-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 10px;
+}
+
+.assignment-card {
+  border: 2px solid var(--border);
+  background: var(--plain-cell);
+  border-radius: 16px;
+  padding: 10px;
+  display: grid;
+  gap: 8px;
+  color: var(--row-text, var(--text));
+}
+
+.assignment-card-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.assignment-card-heading strong {
+  overflow-wrap: anywhere;
+}
+
+.assignment-card-heading span {
+  white-space: nowrap;
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.assignment-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.assignment-warning {
+  border: 2px solid rgba(196, 107, 93, 0.6);
+  background: rgba(196, 107, 93, 0.12);
+  color: var(--row-text, var(--text));
+  border-radius: 14px;
+  padding: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.assignment-warning p {
+  margin: 0;
+  width: 100%;
+  font-weight: 800;
+}
+
+.muted-small,
+.muted-reward-row {
+  color: var(--muted);
+  font-weight: 800;
+}
+
+body.dark-theme .assignment-card,
+body.dark-theme .plan-status-card,
+body.dark-theme .mini-select-label,
+body.dark-theme .assignment-warning {
+  color: var(--text);
+}
+
+@media (max-width: 980px) {
+  .final-plan-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .coop-team-summary-item.compact-team-card {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+
+  .mini-select-label {
+    width: 100%;
+    justify-content: space-between;
+  }
+}

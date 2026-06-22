@@ -922,6 +922,12 @@ function setupDataActions() {
     });
 
     coopPlanPreview.addEventListener('click', event => {
+      const manualButton = event.target.closest('[data-open-manual-assignment]');
+      if (manualButton) {
+        openManualAssignmentEditor(Number(manualButton.getAttribute('data-member-slot')));
+        return;
+      }
+
       const resetButton = event.target.closest('[data-reset-workloads]');
       if (resetButton) {
         resetCoopWorkloads();

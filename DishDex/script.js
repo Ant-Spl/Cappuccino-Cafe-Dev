@@ -1684,6 +1684,12 @@ function bindCoopTeamControls() {
     });
 
     goldMasteryEditor.addEventListener('click', event => {
+      if (event.target === goldMasteryEditor) {
+        activeCoopGoldMasteryMemberIndex = null;
+        renderCoopGoldMasteryEditor();
+        return;
+      }
+
       const toggleButton = event.target.closest('[data-toggle-coop-gold-mastery]');
       if (toggleButton) {
         toggleCoopGoldMastery(
@@ -1710,6 +1716,12 @@ function bindCoopTeamControls() {
     });
 
     manualAssignmentEditor.addEventListener('click', event => {
+      if (event.target === manualAssignmentEditor) {
+        activeCoopManualAssignmentMemberSlot = null;
+        renderCoopManualAssignmentEditor();
+        return;
+      }
+
       const closeButton = event.target.closest('[data-close-manual-assignment-editor]');
       if (closeButton) {
         activeCoopManualAssignmentMemberSlot = null;
@@ -1717,6 +1729,20 @@ function bindCoopTeamControls() {
       }
     });
   }
+
+  document.addEventListener('keydown', event => {
+    if (event.key !== 'Escape') return;
+    let shouldRender = false;
+    if (activeCoopGoldMasteryMemberIndex !== null && activeCoopGoldMasteryMemberIndex !== undefined) {
+      activeCoopGoldMasteryMemberIndex = null;
+      shouldRender = true;
+    }
+    if (activeCoopManualAssignmentMemberSlot !== null && activeCoopManualAssignmentMemberSlot !== undefined) {
+      activeCoopManualAssignmentMemberSlot = null;
+      renderCoopManualAssignmentEditor();
+    }
+    if (shouldRender) renderCoopGoldMasteryEditor();
+  });
 }
 
 function renderCoopTeamEditor() {
@@ -3089,8 +3115,14 @@ function renderCoopGoldMasteryEditor() {
   if (!editor) return;
 
   const team = getSelectedCoopTeam();
+  if (activeCoopGoldMasteryMemberIndex === null || activeCoopGoldMasteryMemberIndex === undefined || activeCoopGoldMasteryMemberIndex === '') {
+    editor.classList.add('hidden');
+    editor.innerHTML = '';
+    return;
+  }
+
   const index = Number(activeCoopGoldMasteryMemberIndex);
-  if (!team || !Number.isFinite(index) || !team.members[index]) {
+  if (!team || !Number.isFinite(index) || index < 0 || !team.members[index]) {
     editor.classList.add('hidden');
     editor.innerHTML = '';
     return;

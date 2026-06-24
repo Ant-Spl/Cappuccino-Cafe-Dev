@@ -2586,9 +2586,11 @@ body:not(.dark-theme) .compact-clear-button {
 
 .my-time-grid {
   display: grid;
-  grid-template-columns: minmax(170px, 0.65fr) minmax(220px, 0.85fr) minmax(340px, 1.45fr) minmax(220px, 0.9fr);
-  gap: 14px;
+  grid-template-columns: minmax(160px, 190px) minmax(220px, 250px) minmax(300px, 360px) minmax(220px, 280px);
+  gap: 12px;
   align-items: stretch;
+  justify-content: start;
+  max-width: 1100px;
 }
 
 .time-input-card {
@@ -2636,6 +2638,15 @@ body:not(.dark-theme) .compact-clear-button {
 .my-time-toggle {
   align-self: stretch;
   justify-content: center;
+  max-width: 280px;
+}
+
+.player-level-card {
+  max-width: 190px;
+}
+
+.margin-card {
+  max-width: 360px;
 }
 
 .my-time-window-summary {
@@ -2647,6 +2658,7 @@ body:not(.dark-theme) .compact-clear-button {
   color: var(--text);
   padding: 10px 12px;
   font-weight: 900;
+  max-width: 1100px;
 }
 
 body.dark-theme .time-input-card,
@@ -2678,7 +2690,7 @@ body:not(.dark-theme) .my-time-toggle span {
 
 @media (max-width: 1180px) {
   .six-mode-grid { grid-template-columns: repeat(3, minmax(190px, 1fr)); }
-  .my-time-grid { grid-template-columns: repeat(2, minmax(220px, 1fr)); }
+  .my-time-grid { grid-template-columns: repeat(2, minmax(220px, 1fr)); max-width: none; }
   .margin-groups { grid-template-columns: 1fr; }
 }
 

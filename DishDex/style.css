@@ -3126,3 +3126,52 @@ body:not(.dark-theme) .compact-margin-row strong {
     flex-wrap: wrap;
   }
 }
+
+
+/* My Time target card final fix: keep the clear button inside the card. */
+#myTimeScreen .target-card .compact-control-row,
+#myTimeScreen .my-time-grid > .time-input-card:nth-child(2) .compact-control-row {
+  display: grid !important;
+  grid-template-columns: max-content 88px 88px !important;
+  grid-template-areas:
+    "target-title target-hours target-mins"
+    "target-clear target-clear target-clear" !important;
+  align-items: end !important;
+  justify-content: start !important;
+  gap: 8px 10px !important;
+  max-width: 100% !important;
+  overflow: visible !important;
+}
+
+#myTimeScreen .target-card .compact-control-row > .time-input-title,
+#myTimeScreen .my-time-grid > .time-input-card:nth-child(2) .compact-control-row > .time-input-title {
+  grid-area: target-title !important;
+  align-self: center !important;
+  min-width: max-content !important;
+}
+
+#myTimeScreen .target-card .compact-control-row .mini-number-field:nth-of-type(1),
+#myTimeScreen .my-time-grid > .time-input-card:nth-child(2) .compact-control-row .mini-number-field:nth-of-type(1) {
+  grid-area: target-hours !important;
+}
+
+#myTimeScreen .target-card .compact-control-row .mini-number-field:nth-of-type(2),
+#myTimeScreen .my-time-grid > .time-input-card:nth-child(2) .compact-control-row .mini-number-field:nth-of-type(2) {
+  grid-area: target-mins !important;
+}
+
+#myTimeScreen .target-card .compact-clear-button,
+#myTimeScreen .my-time-grid > .time-input-card:nth-child(2) .compact-clear-button {
+  grid-area: target-clear !important;
+  width: fit-content !important;
+  max-width: 100% !important;
+  justify-self: start !important;
+  white-space: nowrap !important;
+}
+
+@media (max-width: 420px) {
+  #myTimeScreen .target-card .compact-control-row,
+  #myTimeScreen .my-time-grid > .time-input-card:nth-child(2) .compact-control-row {
+    grid-template-columns: max-content 1fr 1fr !important;
+  }
+}

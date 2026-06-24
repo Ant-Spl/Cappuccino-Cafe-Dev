@@ -2743,3 +2743,127 @@ body.dark-theme .full-table .dish-type-tag {
     justify-self: stretch;
   }
 }
+
+
+/* My Time compact layout v6 */
+.my-time-compact-grid {
+  grid-template-columns: minmax(160px, 0.75fr) minmax(330px, 1.25fr) minmax(430px, 1.65fr) minmax(240px, 1fr);
+  align-items: start;
+  max-width: none;
+}
+
+.my-time-compact-grid .time-input-card,
+.my-time-compact-grid .my-time-toggle {
+  min-height: 0;
+  height: auto;
+}
+
+.compact-time-card {
+  padding: 10px 12px;
+  gap: 8px;
+  align-content: start;
+}
+
+.compact-control-row {
+  display: flex;
+  align-items: end;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.single-input-row {
+  align-items: center;
+}
+
+.compact-control-row > .time-input-title,
+.margin-card > .time-input-title {
+  min-width: max-content;
+  align-self: center;
+  line-height: 1.2;
+}
+
+.mini-number-field {
+  display: grid;
+  gap: 4px;
+  min-width: 86px;
+}
+
+.mini-number-field input,
+.single-input-row input {
+  min-height: 42px;
+  padding: 8px 10px;
+}
+
+.single-input-row input {
+  width: min(120px, 100%);
+}
+
+.compact-margin-rows {
+  display: grid;
+  gap: 8px;
+}
+
+.compact-margin-row {
+  display: flex;
+  align-items: end;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.compact-margin-row strong {
+  color: var(--brown-dark);
+  font-weight: 900;
+  min-width: 14px;
+  padding-bottom: 10px;
+}
+
+.compact-clear-button {
+  min-height: 42px;
+  align-self: end;
+  margin-top: 0;
+}
+
+.compact-masteries-toggle {
+  min-height: 64px;
+  padding: 10px 12px;
+  justify-content: flex-start;
+  max-width: none;
+}
+
+.my-time-window-summary {
+  max-width: none;
+}
+
+body.dark-theme .compact-margin-row strong {
+  color: #ffd5a2;
+}
+
+body:not(.dark-theme) .compact-margin-row strong {
+  color: #5f351d;
+}
+
+@media (max-width: 1180px) {
+  .my-time-compact-grid {
+    grid-template-columns: repeat(2, minmax(260px, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  .my-time-compact-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .compact-control-row,
+  .compact-margin-row {
+    align-items: end;
+  }
+
+  .mini-number-field {
+    min-width: min(120px, calc(50% - 22px));
+    flex: 1 1 110px;
+  }
+
+  .compact-clear-button {
+    width: fit-content;
+  }
+}

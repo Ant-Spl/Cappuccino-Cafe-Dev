@@ -2560,6 +2560,30 @@ body:not(.dark-theme) .assignment-card .assignment-pills .requirement-pill .mast
 
 
 /* My Time */
+.my-time-panel {
+  position: static;
+}
+
+.compact-clear-button {
+  width: fit-content;
+  max-width: 100%;
+  justify-self: start;
+  padding: 8px 14px;
+  border-radius: 999px;
+}
+
+body.dark-theme .compact-clear-button {
+  background: #4b2f1b;
+  color: #fff4e8;
+  border-color: #a87338;
+}
+
+body:not(.dark-theme) .compact-clear-button {
+  background: #fff2cc;
+  color: #3b2618;
+  border-color: #c89452;
+}
+
 .my-time-grid {
   display: grid;
   grid-template-columns: minmax(220px, 0.85fr) minmax(360px, 1.5fr) minmax(220px, 0.9fr);
@@ -2658,3 +2682,13 @@ body:not(.dark-theme) .my-time-toggle span {
   .margin-line { grid-template-columns: 1fr 1fr; }
   .margin-line strong { padding-bottom: 0; }
 }
+
+.secondary-button {
+  border: 2px solid var(--border);
+  background: var(--plain-cell);
+  color: var(--text);
+  font: inherit;
+  font-weight: 900;
+  cursor: pointer;
+}
+.secondary-button:hover { border-color: var(--brown); }

@@ -296,13 +296,14 @@
             <div class="compact-number-grid">
               <label>
                 <span data-i18n="hoursShort">h</span>
-                <input id="myTimeHours" type="number" min="0" max="999" value="1">
+                <input id="myTimeHours" type="number" min="0" max="999" value="0">
               </label>
               <label>
                 <span data-i18n="minutesShort">min</span>
                 <input id="myTimeMinutes" type="number" min="0" max="59" value="0">
               </label>
             </div>
+            <button id="clearMyTimeTarget" class="secondary-button compact-clear-button" type="button" data-i18n="clearCookTime">Clear cook time</button>
           </div>
 
           <div class="time-input-card margin-card">
@@ -315,7 +316,7 @@
               </label>
               <label>
                 <span data-i18n="minutesShort">min</span>
-                <input id="myTimeMarginPlusMinutes" type="number" min="0" max="59" value="10">
+                <input id="myTimeMarginPlusMinutes" type="number" min="0" max="59" value="0">
               </label>
               <strong>/ -</strong>
               <label>
@@ -324,9 +325,10 @@
               </label>
               <label>
                 <span data-i18n="minutesShort">min</span>
-                <input id="myTimeMarginMinusMinutes" type="number" min="0" max="59" value="10">
+                <input id="myTimeMarginMinusMinutes" type="number" min="0" max="59" value="0">
               </label>
             </div>
+            <button id="clearMyTimeMargin" class="secondary-button compact-clear-button" type="button" data-i18n="clearMargin">Clear margin</button>
           </div>
 
           <label class="inline-toggle setting-toggle my-time-toggle">

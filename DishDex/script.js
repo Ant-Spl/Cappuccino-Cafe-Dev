@@ -105,6 +105,8 @@ const I18N = {
     myTimeAllMatchesNote: 'All available dishes in this time window, sorted by level.',
     myTimeWindowLabel: 'Showing dishes from {0} to {1}.',
     myTimeNoWindow: 'Set a target time above 0.',
+    clearCookTime: 'Clear cook time',
+    clearMargin: 'Clear margin',
     noTimeMatches: 'No dishes match this time window. Try increasing the margin.',
     myProfileTitle: 'My Profile',
     myProfileDescription: 'Save your chef name, level and default stove count.',
@@ -393,6 +395,8 @@ const I18N = {
     myTimeAllMatchesNote: 'Todos os pratos disponíveis nesse intervalo, ordenados por nível.',
     myTimeWindowLabel: 'Mostrando pratos de {0} até {1}.',
     myTimeNoWindow: 'Defina um tempo alvo acima de 0.',
+    clearCookTime: 'Limpar tempo',
+    clearMargin: 'Limpar margem',
     noTimeMatches: 'Nenhum prato combina com esse intervalo. Tente aumentar a margem.',
     myProfileTitle: 'Meu Perfil',
     myProfileDescription: 'Salve o nome do chef, nível e quantidade padrão de fogões.',
@@ -1249,6 +1253,12 @@ function bindInputs() {
     element.addEventListener('input', handleMyTimeInputChange);
     element.addEventListener('change', handleMyTimeInputChange);
   });
+
+  const clearMyTimeTargetButton = document.getElementById('clearMyTimeTarget');
+  if (clearMyTimeTargetButton) clearMyTimeTargetButton.addEventListener('click', clearMyTimeTarget);
+
+  const clearMyTimeMarginButton = document.getElementById('clearMyTimeMargin');
+  if (clearMyTimeMarginButton) clearMyTimeMarginButton.addEventListener('click', clearMyTimeMargin);
 
   document.getElementById('profileChefName').addEventListener('input', handleProfileInputChange);
   document.getElementById('profileLevel').addEventListener('input', handleProfileLevelChange);
@@ -3206,12 +3216,12 @@ function normalizeUserData(raw) {
 function normalizeMyTimeSettings(rawSettings) {
   const data = rawSettings && typeof rawSettings === 'object' ? rawSettings : {};
   return {
-    hours: clampNumber(Number(data.hours ?? 1), 0, 999),
+    hours: clampNumber(Number(data.hours ?? 0), 0, 999),
     minutes: clampNumber(Number(data.minutes ?? 0), 0, 59),
     marginPlusHours: clampNumber(Number(data.marginPlusHours ?? 0), 0, 999),
-    marginPlusMinutes: clampNumber(Number(data.marginPlusMinutes ?? 10), 0, 59),
+    marginPlusMinutes: clampNumber(Number(data.marginPlusMinutes ?? 0), 0, 59),
     marginMinusHours: clampNumber(Number(data.marginMinusHours ?? 0), 0, 999),
-    marginMinusMinutes: clampNumber(Number(data.marginMinusMinutes ?? 10), 0, 59),
+    marginMinusMinutes: clampNumber(Number(data.marginMinusMinutes ?? 0), 0, 59),
     useMasteries: data.useMasteries === undefined ? true : Boolean(data.useMasteries)
   };
 }
@@ -3638,6 +3648,22 @@ function handleMyTimeInputChange() {
   saveUserData();
   updateMyTimeWindowSummary();
   renderMyTime();
+}
+
+function clearMyTimeTarget() {
+  ['myTimeHours', 'myTimeMinutes'].forEach(id => {
+    const input = document.getElementById(id);
+    if (input) input.value = 0;
+  });
+  handleMyTimeInputChange();
+}
+
+function clearMyTimeMargin() {
+  ['myTimeMarginPlusHours', 'myTimeMarginPlusMinutes', 'myTimeMarginMinusHours', 'myTimeMarginMinusMinutes'].forEach(id => {
+    const input = document.getElementById(id);
+    if (input) input.value = 0;
+  });
+  handleMyTimeInputChange();
 }
 
 function myTimeSettingsToWindow(settings = readMyTimeSettingsFromInputs()) {

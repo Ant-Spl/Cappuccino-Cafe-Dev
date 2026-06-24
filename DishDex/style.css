@@ -2614,14 +2614,14 @@ body:not(.dark-theme) .compact-clear-button {
 
 .margin-groups {
   display: grid;
-  grid-template-columns: repeat(2, minmax(150px, 1fr));
+  grid-template-columns: 1fr;
   gap: 12px;
   align-items: stretch;
 }
 
 .margin-group {
   display: grid;
-  grid-template-columns: auto 1fr;
+  grid-template-columns: 42px 1fr;
   gap: 8px;
   align-items: end;
 }
@@ -2687,7 +2687,7 @@ body:not(.dark-theme) .my-time-toggle span {
   .my-time-grid { grid-template-columns: 1fr; }
   .compact-number-grid { grid-template-columns: 1fr 1fr; }
   .margin-groups { grid-template-columns: 1fr; }
-  .margin-group { grid-template-columns: 36px 1fr; }
+  .margin-group { grid-template-columns: 42px 1fr; }
   .margin-group strong { padding-bottom: 11px; }
 }
 

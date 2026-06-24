@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=20260622-coop-final-v14">
+  <link rel="stylesheet" href="style.css?v=20260622-mytime-v3">
 </head>
 <body class="dark-theme">
   <main class="page">
@@ -291,6 +291,14 @@
         <h2 data-i18n="myTimeSettings">My Time Settings</h2>
         <p class="section-note" data-i18n="myTimeQuestion">How long do you want to cook for?</p>
         <div class="my-time-grid">
+          <div class="time-input-card player-level-card">
+            <span class="time-input-title" data-i18n="playerLevel">Player Level</span>
+            <label>
+              <span data-i18n="level">Level</span>
+              <input id="myTimePlayerLevel" type="number" min="0" max="999" value="1">
+            </label>
+          </div>
+
           <div class="time-input-card">
             <span class="time-input-title" data-i18n="targetTime">Target time</span>
             <div class="compact-number-grid">
@@ -308,25 +316,33 @@
 
           <div class="time-input-card margin-card">
             <span class="time-input-title" data-i18n="myTimeMargin">Margin</span>
-            <div class="margin-line">
-              <strong>+</strong>
-              <label>
-                <span data-i18n="hoursShort">h</span>
-                <input id="myTimeMarginPlusHours" type="number" min="0" max="999" value="0">
-              </label>
-              <label>
-                <span data-i18n="minutesShort">min</span>
-                <input id="myTimeMarginPlusMinutes" type="number" min="0" max="59" value="0">
-              </label>
-              <strong>/ -</strong>
-              <label>
-                <span data-i18n="hoursShort">h</span>
-                <input id="myTimeMarginMinusHours" type="number" min="0" max="999" value="0">
-              </label>
-              <label>
-                <span data-i18n="minutesShort">min</span>
-                <input id="myTimeMarginMinusMinutes" type="number" min="0" max="59" value="0">
-              </label>
+            <div class="margin-groups">
+              <div class="margin-group">
+                <strong>+</strong>
+                <div class="compact-number-grid">
+                  <label>
+                    <span data-i18n="hoursShort">h</span>
+                    <input id="myTimeMarginPlusHours" type="number" min="0" max="999" value="0">
+                  </label>
+                  <label>
+                    <span data-i18n="minutesShort">min</span>
+                    <input id="myTimeMarginPlusMinutes" type="number" min="0" max="59" value="0">
+                  </label>
+                </div>
+              </div>
+              <div class="margin-group">
+                <strong>/ -</strong>
+                <div class="compact-number-grid">
+                  <label>
+                    <span data-i18n="hoursShort">h</span>
+                    <input id="myTimeMarginMinusHours" type="number" min="0" max="999" value="0">
+                  </label>
+                  <label>
+                    <span data-i18n="minutesShort">min</span>
+                    <input id="myTimeMarginMinusMinutes" type="number" min="0" max="59" value="0">
+                  </label>
+                </div>
+              </div>
             </div>
             <button id="clearMyTimeMargin" class="secondary-button compact-clear-button" type="button" data-i18n="clearMargin">Clear margin</button>
           </div>
@@ -625,6 +641,6 @@
     </section>
   </main>
 
-  <script src="script.js?v=20260622-coop-final-v14" defer></script>
+  <script src="script.js?v=20260622-mytime-v3" defer></script>
 </body>
 </html>

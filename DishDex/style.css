@@ -383,7 +383,7 @@ td.dish-name { font-weight: 900; }
 }
 
 body.dark-theme .dish-type-tag {
-  color: #f0d0a8;
+  color: #5f351d;
 }
 
 
@@ -2586,7 +2586,7 @@ body:not(.dark-theme) .compact-clear-button {
 
 .my-time-grid {
   display: grid;
-  grid-template-columns: minmax(220px, 0.85fr) minmax(360px, 1.5fr) minmax(220px, 0.9fr);
+  grid-template-columns: minmax(170px, 0.65fr) minmax(220px, 0.85fr) minmax(340px, 1.45fr) minmax(220px, 0.9fr);
   gap: 14px;
   align-items: stretch;
 }
@@ -2612,14 +2612,21 @@ body:not(.dark-theme) .compact-clear-button {
   gap: 10px;
 }
 
-.margin-line {
+.margin-groups {
   display: grid;
-  grid-template-columns: auto minmax(70px, 1fr) minmax(80px, 1fr) auto minmax(70px, 1fr) minmax(80px, 1fr);
+  grid-template-columns: repeat(2, minmax(150px, 1fr));
+  gap: 12px;
+  align-items: stretch;
+}
+
+.margin-group {
+  display: grid;
+  grid-template-columns: auto 1fr;
   gap: 8px;
   align-items: end;
 }
 
-.margin-line strong {
+.margin-group strong {
   color: var(--brown-dark);
   font-weight: 900;
   padding-bottom: 11px;
@@ -2650,7 +2657,7 @@ body.dark-theme .my-time-toggle {
 }
 
 body.dark-theme .time-input-title,
-body.dark-theme .margin-line strong,
+body.dark-theme .margin-group strong,
 body.dark-theme .my-time-toggle span {
   color: #ffd5a2;
 }
@@ -2663,7 +2670,7 @@ body:not(.dark-theme) .my-time-toggle {
 }
 
 body:not(.dark-theme) .time-input-title,
-body:not(.dark-theme) .margin-line strong,
+body:not(.dark-theme) .margin-group strong,
 body:not(.dark-theme) .my-time-toggle span {
   color: #5f351d;
 }
@@ -2671,16 +2678,17 @@ body:not(.dark-theme) .my-time-toggle span {
 
 @media (max-width: 1180px) {
   .six-mode-grid { grid-template-columns: repeat(3, minmax(190px, 1fr)); }
-  .my-time-grid { grid-template-columns: 1fr; }
-  .margin-line { grid-template-columns: auto 1fr 1fr; }
-  .margin-line strong:nth-of-type(2) { grid-column: 1; }
+  .my-time-grid { grid-template-columns: repeat(2, minmax(220px, 1fr)); }
+  .margin-groups { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 720px) {
   .six-mode-grid { grid-template-columns: 1fr; }
-  .compact-number-grid,
-  .margin-line { grid-template-columns: 1fr 1fr; }
-  .margin-line strong { padding-bottom: 0; }
+  .my-time-grid { grid-template-columns: 1fr; }
+  .compact-number-grid { grid-template-columns: 1fr 1fr; }
+  .margin-groups { grid-template-columns: 1fr; }
+  .margin-group { grid-template-columns: 36px 1fr; }
+  .margin-group strong { padding-bottom: 11px; }
 }
 
 .secondary-button {
@@ -2692,3 +2700,34 @@ body:not(.dark-theme) .my-time-toggle span {
   cursor: pointer;
 }
 .secondary-button:hover { border-color: var(--brown); }
+
+
+/* Keep dish labels readable on light category rows in every theme. */
+td.dish-name .dish-type-tag,
+#myTimeScreen .dish-type-tag,
+.full-table .dish-type-tag {
+  color: #5f351d;
+  text-shadow: none;
+}
+
+body.dark-theme td.dish-name .dish-type-tag,
+body.dark-theme #myTimeScreen .dish-type-tag,
+body.dark-theme .full-table .dish-type-tag {
+  color: #5f351d;
+  text-shadow: none;
+}
+
+@media (max-width: 520px) {
+  .my-time-panel {
+    padding: 14px;
+  }
+
+  .time-input-card {
+    padding: 10px;
+  }
+
+  .compact-clear-button {
+    width: 100%;
+    justify-self: stretch;
+  }
+}

@@ -1247,7 +1247,7 @@ function bindInputs() {
     element.addEventListener('change', handleMyDexInputChange);
   });
 
-  ['myTimeHours', 'myTimeMinutes', 'myTimeMarginPlusHours', 'myTimeMarginPlusMinutes', 'myTimeMarginMinusHours', 'myTimeMarginMinusMinutes', 'myTimeUseMasteriesToggle'].forEach(id => {
+  ['myTimePlayerLevel', 'myTimeHours', 'myTimeMinutes', 'myTimeMarginPlusHours', 'myTimeMarginPlusMinutes', 'myTimeMarginMinusHours', 'myTimeMarginMinusMinutes', 'myTimeUseMasteriesToggle'].forEach(id => {
     const element = document.getElementById(id);
     if (!element) return;
     element.addEventListener('input', handleMyTimeInputChange);
@@ -2729,7 +2729,7 @@ function getMyTimeMatchingRecords() {
   const windowInfo = myTimeSettingsToWindow(settings);
   if (windowInfo.target <= 0 || windowInfo.max <= 0) return { matches: [], bestCandidates: [], windowInfo };
 
-  const playerLevel = clampNumber(Number(userData.level || 1), 0, 999);
+  const playerLevel = clampNumber(Number(settings.playerLevel || userData.level || 1), 0, 999);
   const records = settings.useMasteries
     ? allDishRecords.map(applyMasteryToRecord)
     : allDishRecords.map(record => ({ ...record }));
@@ -3204,7 +3204,7 @@ function normalizeUserData(raw) {
     xpNeeded: Math.max(0, Number(data.xpNeeded ?? 1000)),
     availableStoves: Number(data.availableStoves || 0),
     showIngredients: Boolean(data.showIngredients),
-    myTime: normalizeMyTimeSettings(data.myTime),
+    myTime: normalizeMyTimeSettings(data.myTime, clampNumber(Number(data.level || 1), 0, 999)),
     masteries: normalizeMasteries(data.masteries),
     coopTeams: normalizeCoopTeams(data.coopTeams),
     selectedCoopTeamId: typeof data.selectedCoopTeamId === 'string' ? data.selectedCoopTeamId : '',
@@ -3213,9 +3213,10 @@ function normalizeUserData(raw) {
 }
 
 
-function normalizeMyTimeSettings(rawSettings) {
+function normalizeMyTimeSettings(rawSettings, fallbackLevel = 1) {
   const data = rawSettings && typeof rawSettings === 'object' ? rawSettings : {};
   return {
+    playerLevel: clampNumber(Number(data.playerLevel ?? fallbackLevel), 0, 999),
     hours: clampNumber(Number(data.hours ?? 0), 0, 999),
     minutes: clampNumber(Number(data.minutes ?? 0), 0, 59),
     marginPlusHours: clampNumber(Number(data.marginPlusHours ?? 0), 0, 999),
@@ -3613,6 +3614,7 @@ function syncMyTimeInputs(clearSummary = true) {
   userData.myTime = normalizeMyTimeSettings(userData.myTime);
   const settings = userData.myTime;
   const pairs = {
+    myTimePlayerLevel: settings.playerLevel || userData.level || 1,
     myTimeHours: settings.hours,
     myTimeMinutes: settings.minutes,
     myTimeMarginPlusHours: settings.marginPlusHours,
@@ -3633,6 +3635,7 @@ function syncMyTimeInputs(clearSummary = true) {
 
 function readMyTimeSettingsFromInputs() {
   return normalizeMyTimeSettings({
+    playerLevel: Number(document.getElementById('myTimePlayerLevel')?.value || userData.level || 1),
     hours: Number(document.getElementById('myTimeHours')?.value || 0),
     minutes: Number(document.getElementById('myTimeMinutes')?.value || 0),
     marginPlusHours: Number(document.getElementById('myTimeMarginPlusHours')?.value || 0),

@@ -20,7 +20,12 @@ const PATHS = {
     ]
   },
   imageBase: '../dishimages/',
-  coopIconBase: './coopicons/'
+  coopIconBase: './coopicons/',
+  uiLanguageFiles: {
+    en: ['./dishdexlangs/dishdex_en.xml'],
+    pt: ['./dishdexlangs/dishdex_pt.xml'],
+    it: ['./dishdexlangs/dishdex_it.xml']
+  }
 };
 
 const STORAGE_KEY = 'dishDexUserDataV1';
@@ -701,6 +706,7 @@ let allDishRecords = [];
 let allCoopRecords = [];
 let levelLimitsByLevel = new Map();
 let currentLanguage = 'en';
+let uiTranslations = {};
 let userData = loadUserData();
 let masteryCookbookPage = 0;
 
@@ -711,6 +717,7 @@ async function main() {
     setupTimeBackground();
     setupTheme();
     setupLanguage();
+    await loadDishDexUiLanguage(currentLanguage);
     setupNavigation();
     setupDataActions();
     applyUiLanguage();
@@ -725,8 +732,8 @@ async function main() {
     syncMyTimeInputs();
     renderCoopTeamEditor();
 
-    allDishRecords = await loadDishRecords(currentLanguage);
-    allCoopRecords = await loadCoopRecords(currentLanguage);
+    allDishRecords = await loadDishRecords(getCafeLanguageCode(currentLanguage));
+    allCoopRecords = await loadCoopRecords(getCafeLanguageCode(currentLanguage));
 
     setStatus(t('dataLoaded'), 'ok');
     updateDataSummary();
@@ -812,22 +819,23 @@ function setupLanguage() {
   const select = document.getElementById('languageSelect');
   const savedLanguage = localStorage.getItem('dishDexLanguage');
 
-  currentLanguage = savedLanguage || detectBrowserLanguage();
+  currentLanguage = normalizeUiLanguage(savedLanguage || detectBrowserLanguage());
   select.value = currentLanguage;
-  document.documentElement.lang = currentLanguage === 'pt' ? 'pt-BR' : 'en';
+  document.documentElement.lang = getHtmlLanguageCode(currentLanguage);
 
   select.addEventListener('change', async () => {
-    currentLanguage = select.value;
+    currentLanguage = normalizeUiLanguage(select.value);
     localStorage.setItem('dishDexLanguage', currentLanguage);
-    document.documentElement.lang = currentLanguage === 'pt' ? 'pt-BR' : 'en';
+    document.documentElement.lang = getHtmlLanguageCode(currentLanguage);
+    await loadDishDexUiLanguage(currentLanguage);
     applyUiLanguage();
     syncSearchPlaceholder();
 
     try {
       setStatus(t('loadingXml'), 'ok');
       document.getElementById('dataSummary').textContent = '';
-      allDishRecords = await loadDishRecords(currentLanguage);
-      allCoopRecords = await loadCoopRecords(currentLanguage);
+      allDishRecords = await loadDishRecords(getCafeLanguageCode(currentLanguage));
+      allCoopRecords = await loadCoopRecords(getCafeLanguageCode(currentLanguage));
       setStatus(t('dataLoaded'), 'ok');
       updateDataSummary();
       syncProfileInputs();
@@ -850,7 +858,23 @@ function setupLanguage() {
 
 function detectBrowserLanguage() {
   const language = String(navigator.language || navigator.userLanguage || '').toLowerCase();
-  return language.startsWith('pt') ? 'pt' : 'en';
+  if (language.startsWith('pt')) return 'pt';
+  if (language.startsWith('it')) return 'it';
+  return 'en';
+}
+
+function normalizeUiLanguage(languageCode) {
+  return ['en', 'pt', 'it'].includes(languageCode) ? languageCode : 'en';
+}
+
+function getCafeLanguageCode(languageCode = currentLanguage) {
+  return languageCode === 'pt' ? 'pt' : 'en';
+}
+
+function getHtmlLanguageCode(languageCode = currentLanguage) {
+  if (languageCode === 'pt') return 'pt-BR';
+  if (languageCode === 'it') return 'it';
+  return 'en';
 }
 
 const SCREEN_HASHES = {
@@ -1050,6 +1074,27 @@ function setupDataActions() {
   document.getElementById('masteriesCookbook').addEventListener('click', handleMasteryClick);
 }
 
+
+async function loadDishDexUiLanguage(languageCode = currentLanguage) {
+  const normalizedLanguage = normalizeUiLanguage(languageCode);
+  const paths = PATHS.uiLanguageFiles?.[normalizedLanguage] || PATHS.uiLanguageFiles.en;
+
+  try {
+    const text = await fetchFirstWorkingText(paths);
+    const xml = parseNormalOrLooseXml(text, `DishDex ${normalizedLanguage} language XML`);
+    const translations = {};
+    Array.from(xml.getElementsByTagName('text')).forEach(node => {
+      const id = getAttr(node, 'id');
+      const name = getAttr(node, 'name');
+      if (id) translations[id] = name;
+    });
+    uiTranslations[normalizedLanguage] = translations;
+  } catch (error) {
+    console.warn(`Could not load DishDex UI language file for ${normalizedLanguage}. Using embedded fallback.`, error);
+    uiTranslations[normalizedLanguage] = I18N[normalizedLanguage] || I18N.en || {};
+  }
+}
+
 function applyUiLanguage() {
   document.querySelectorAll('[data-i18n]').forEach(element => {
     const key = element.getAttribute('data-i18n');
@@ -1079,7 +1124,11 @@ function populateSortSelect() {
 }
 
 function t(key) {
-  return I18N[currentLanguage]?.[key] || I18N.en[key] || key;
+  return uiTranslations[currentLanguage]?.[key]
+    || I18N[currentLanguage]?.[key]
+    || uiTranslations.en?.[key]
+    || I18N.en[key]
+    || key;
 }
 
 function updateDataSummary() {
@@ -3660,9 +3709,21 @@ function readMyTimeSettingsFromInputs() {
 
 function handleMyTimeInputChange() {
   userData.myTime = readMyTimeSettingsFromInputs();
+
+  const myTimeLevel = clampNumber(Number(userData.myTime.playerLevel || 1), 0, 999);
+  if (myTimeLevel !== Number(userData.level || 1)) {
+    userData.level = myTimeLevel;
+    userData.availableStoves = getDefaultStovesForLevel(myTimeLevel);
+    syncProfileInputs(false);
+    syncMyDexInputs(false);
+    renderCoopTeamEditor();
+    renderCoopPlanner();
+  }
+
   saveUserData();
   updateMyTimeWindowSummary();
   renderMyTime();
+  renderMyDex();
 }
 
 function clearMyTimeTarget() {

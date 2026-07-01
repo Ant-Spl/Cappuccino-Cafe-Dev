@@ -64,10 +64,10 @@ let activeCoopGoldMasteryMemberIndex = null;
 let coopGoldMasterySearchTerm = '';
 let activeCoopManualAssignmentMemberSlot = null;
 
-const SPECIAL_DISH_KEYS = [
-  'Duckalorange',
-  'Orangejuice',
-  'Blackforestcherrycake'
+const SPECIAL_DISH_KEYS = [];
+const SPECIAL_INGREDIENT_KEYS = [
+  'Orange',
+  'Cocktailcherry'
 ];
 
 const HOLIDAY_DISH_KEYS = [
@@ -110,6 +110,8 @@ const I18N = {
     languageLabel: '🌐 Language',
     darkTheme: 'Dark Theme',
     myDexDescription: 'Access your personal DishDex based on your level, XP and available time.',
+    toFashionDex: 'To FashionDex',
+    fashionDexDescription: 'Open Cappuccino Fashion FashionDex.',
     fullDishDexTitle: 'Full DishDex',
     fullDishDexDescription: 'Access the complete DishDex with all information.',
     myTimeTitle: 'My Time',
@@ -369,7 +371,12 @@ const I18N = {
     sortServingsPerMinAsc: 'Portions/min: low to high',
     sortServingsPerMinDesc: 'Portions/min: high to low',
     profileSettingsTitle: 'Chef Profile',
-    profileSettingsNote: 'Your level helps the tool set your current available number of stoves. You can change this in MyDex later.',
+    profileSettingsNote: 'Your profile is saved locally in this browser only.',
+    profileLevelUnlocksTitle: 'Level {0} unlocks:',
+    fridges: 'Fridges',
+    counters: 'Counters',
+    waiters: 'Waiters',
+    instantCookings: 'Instant cookings',
     chefName: 'Chef name',
     profileSaved: 'Profile saved locally.',
     masteriesEyebrow: 'Dish perks',
@@ -394,10 +401,11 @@ const I18N = {
     masteryView: 'View',
     masteryListVertical: 'List (vertical reader)',
     masteryListHorizontal: 'List (horizontal reader)',
-    masteryCookbook: 'Cook book',
+    masteryCookbook: 'Cook Book (Legacy)',
     previousPage: '← Previous',
     nextPage: 'Next →',
-    masteryBookPage: 'Page'
+    masteryBookPage: 'Page',
+    masteryCompletionProgress: 'Mastery completion progress:'
   },
 
   pt: {
@@ -407,6 +415,8 @@ const I18N = {
     languageLabel: '🌐 Idioma',
     darkTheme: 'Tema escuro',
     myDexDescription: 'Acesse seu DishDex pessoal com base no seu nível, XP e tempo disponível.',
+    toFashionDex: 'Ir para o FashionDex',
+    fashionDexDescription: 'Abrir o FashionDex do Cappuccino Fashion.',
     fullDishDexTitle: 'DishDex completo',
     fullDishDexDescription: 'Acesse o DishDex completo com todas as informações.',
     myTimeTitle: 'Meu Tempo',
@@ -666,7 +676,12 @@ const I18N = {
     sortServingsPerMinAsc: 'Porções/min: menor para maior',
     sortServingsPerMinDesc: 'Porções/min: maior para menor',
     profileSettingsTitle: 'Perfil do Chef',
-    profileSettingsNote: 'Seu nível ajuda a ferramenta a definir sua quantidade atual de fogões disponíveis. Você pode alterar isso no MyDex depois.',
+    profileSettingsNote: 'Seu perfil é salvo localmente apenas neste navegador.',
+    profileLevelUnlocksTitle: 'Nível {0} desbloqueia:',
+    fridges: 'Geladeiras',
+    counters: 'Balcões',
+    waiters: 'Garçons',
+    instantCookings: 'Preparos instantâneos',
     chefName: 'Nome do chef',
     profileSaved: 'Perfil salvo localmente.',
     masteriesEyebrow: 'Bônus dos pratos',
@@ -691,10 +706,11 @@ const I18N = {
     masteryView: 'Visualização',
     masteryListVertical: 'Lista (leitura vertical)',
     masteryListHorizontal: 'Lista (leitura horizontal)',
-    masteryCookbook: 'Livro de receitas',
+    masteryCookbook: 'Livro de receitas (legado)',
     previousPage: '← Anterior',
     nextPage: 'Próxima →',
-    masteryBookPage: 'Página'
+    masteryBookPage: 'Página',
+    masteryCompletionProgress: 'Progresso de conclusão das estrelas:'
   }
 };
 
@@ -848,6 +864,7 @@ function setupLanguage() {
     document.documentElement.lang = getHtmlLanguageCode(currentLanguage);
     await loadDishDexUiLanguage(currentLanguage);
     applyUiLanguage();
+    renderProfileUnlocks();
     syncSearchPlaceholder();
 
     try {
@@ -1191,10 +1208,15 @@ async function loadLevelLimits() {
 
     Array.from(xml.getElementsByTagName('limit')).forEach(node => {
       const level = Number(getAttr(node, 'l'));
-      const stoves = Number(getAttr(node, 's'));
-      if (Number.isFinite(level) && Number.isFinite(stoves)) {
-        map.set(level, { stoves });
-      }
+      if (!Number.isFinite(level)) return;
+
+      map.set(level, {
+        stoves: toFiniteNumber(getAttr(node, 's'), 3),
+        fridges: toFiniteNumber(getAttr(node, 'f'), 1),
+        counters: toFiniteNumber(getAttr(node, 'c'), 3),
+        waiters: toFiniteNumber(getAttr(node, 'w'), 1),
+        instantCookings: toFiniteNumber(getAttr(node, 'i'), 12)
+      });
     });
 
     return map;
@@ -1219,12 +1241,14 @@ async function loadDishRecords(languageCode) {
   const ingredientNameByKey = buildIngredientNameMap(textNodes);
   const costById = {};
   const ingredientNameById = {};
+  const ingredientKeyById = {};
 
   ingredientNodes.forEach(node => {
     const id = getAttr(node, 'id');
     const ingredientKey = getAttr(node, 't');
     if (!id) return;
     costById[id] = Number(getAttr(node, 'cash') || 0);
+    ingredientKeyById[id] = ingredientKey;
     ingredientNameById[id] = ingredientNameByKey[ingredientKey.toLowerCase()] || prettyName(ingredientKey);
   });
 
@@ -1262,7 +1286,7 @@ async function loadDishRecords(languageCode) {
       categoryId,
       categoryName: getCategoryName(categoryId),
       requirements: formatRequirements(requirements, ingredientNameById),
-      dishType: getDishType(dishKey),
+      dishType: getDishType(dishKey, requirements, ingredientKeyById),
       imageUrl: PATHS.imageBase + dishKey + '.png'
     };
   });
@@ -2929,6 +2953,7 @@ function renderFullDishDex() {
 }
 
 function renderMasteries() {
+  renderMasteryCompletionProgress();
   const body = document.getElementById('masteriesBody');
   if (!body || !allDishRecords.length) return;
 
@@ -2975,6 +3000,20 @@ function renderMasteries() {
       </tr>
     `;
   }).join('');
+}
+
+function renderMasteryCompletionProgress() {
+  const text = document.getElementById('masteryCompletionText');
+  const fill = document.getElementById('masteryCompletionFill');
+  if (!text || !fill) return;
+
+  const totalStars = allDishRecords.length * 3;
+  const earnedStars = allDishRecords.reduce((sum, record) => sum + getMasteryLevel(record.dishId), 0);
+  const percentValue = totalStars > 0 ? (earnedStars / totalStars) * 100 : 0;
+  const roundedPercent = Math.round(percentValue);
+
+  text.textContent = `${number(earnedStars)} / ${number(totalStars)} (${number(roundedPercent)}%)`;
+  fill.style.width = `${Math.max(0, Math.min(100, percentValue))}%`;
 }
 
 function renderMasteriesCookbook(records) {
@@ -3689,22 +3728,62 @@ function saveUserData() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(userData));
 }
 
-function getDefaultStovesForLevel(level) {
+const FALLBACK_LEVEL_LIMITS = {
+  stoves: 3,
+  fridges: 1,
+  counters: 3,
+  waiters: 1,
+  instantCookings: 12
+};
+
+function getLevelLimitsForLevel(level) {
   const numericLevel = clampNumber(Number(level || 1), 0, 999);
-  if (levelLimitsByLevel.has(numericLevel)) return Number(levelLimitsByLevel.get(numericLevel).stoves || 3);
+  if (levelLimitsByLevel.has(numericLevel)) {
+    return { ...FALLBACK_LEVEL_LIMITS, ...levelLimitsByLevel.get(numericLevel) };
+  }
 
   const levels = Array.from(levelLimitsByLevel.keys()).sort((a, b) => a - b);
   let best = null;
   for (const candidate of levels) {
     if (candidate <= numericLevel) best = candidate;
   }
-  return best === null ? 3 : Number(levelLimitsByLevel.get(best).stoves || 3);
+
+  return best === null
+    ? { ...FALLBACK_LEVEL_LIMITS }
+    : { ...FALLBACK_LEVEL_LIMITS, ...levelLimitsByLevel.get(best) };
+}
+
+function getDefaultStovesForLevel(level) {
+  return Number(getLevelLimitsForLevel(level).stoves || FALLBACK_LEVEL_LIMITS.stoves);
+}
+
+function renderProfileUnlocks() {
+  const levelInput = document.getElementById('profileLevel');
+  const level = clampNumber(Number(levelInput?.value || userData.level || 1), 0, 999);
+  const limits = getLevelLimitsForLevel(level);
+
+  const title = document.getElementById('profileUnlocksTitle');
+  if (title) title.textContent = t('profileLevelUnlocksTitle').replace('{0}', number(level));
+
+  const pairs = {
+    profileUnlockStoves: limits.stoves,
+    profileUnlockFridges: limits.fridges,
+    profileUnlockCounters: limits.counters,
+    profileUnlockWaiters: limits.waiters,
+    profileUnlockInstantCookings: limits.instantCookings
+  };
+
+  Object.entries(pairs).forEach(([id, value]) => {
+    const element = document.getElementById(id);
+    if (element) element.textContent = number(value || 0);
+  });
 }
 
 function syncProfileInputs(clearStatus = true) {
   document.getElementById('profileChefName').value = userData.chefName || '';
   document.getElementById('profileLevel').value = Number(userData.level || 1);
   document.getElementById('profileStoves').value = Number(userData.availableStoves || getDefaultStovesForLevel(userData.level));
+  renderProfileUnlocks();
   if (clearStatus) setProfileStatus('');
 }
 
@@ -4098,10 +4177,30 @@ function formatRequirements(requirements, ingredientNameById) {
   }).join(', ');
 }
 
-function getDishType(dishKey) {
+function normalizeItemKey(value) {
+  return String(value || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+}
+
+function getRequirementItemIds(requirements) {
+  if (!requirements) return [];
+  return String(requirements).split('#')
+    .map(part => String(part || '').split('+')[0])
+    .filter(Boolean);
+}
+
+function hasSpecialIngredient(requirements, ingredientKeyById) {
+  const specialKeys = SPECIAL_INGREDIENT_KEYS.map(normalizeItemKey);
+  return getRequirementItemIds(requirements).some(itemId => {
+    const ingredientKey = ingredientKeyById[String(itemId)] || '';
+    return specialKeys.includes(normalizeItemKey(ingredientKey));
+  });
+}
+
+function getDishType(dishKey, requirements, ingredientKeyById) {
   const key = String(dishKey || '').toLowerCase();
-  if (SPECIAL_DISH_KEYS.map(item => item.toLowerCase()).includes(key)) return 'Special';
   if (HOLIDAY_DISH_KEYS.map(item => item.toLowerCase()).includes(key)) return 'Holiday';
+  if (SPECIAL_DISH_KEYS.map(item => item.toLowerCase()).includes(key)) return 'Special';
+  if (hasSpecialIngredient(requirements, ingredientKeyById)) return 'Special';
   return 'Regular';
 }
 
@@ -4120,7 +4219,7 @@ function fullDishNameHtml(record) {
 
 function fullDishTypeTag(record) {
   const key = String(record?.dishKey || '').toLowerCase();
-  if (SPECIAL_DISH_KEYS.map(item => item.toLowerCase()).includes(key)) return t('fullTagSpecial');
+  if (record?.dishType === 'Special') return t('fullTagSpecial');
   if (key === 'christmasturkey') return t('fullTagChristmas');
   if (key === 'easterdish' || key === 'fruitpudding') return t('fullTagEaster');
   return '';
@@ -4232,6 +4331,11 @@ function decimal(value) {
 function clampNumber(value, min, max) {
   if (!Number.isFinite(value)) return min;
   return Math.min(max, Math.max(min, value));
+}
+
+function toFiniteNumber(value, fallback = 0) {
+  const numberValue = Number(value);
+  return Number.isFinite(numberValue) ? numberValue : fallback;
 }
 
 function escapeHtml(value) {

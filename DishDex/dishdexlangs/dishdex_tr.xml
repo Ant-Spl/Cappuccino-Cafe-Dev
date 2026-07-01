@@ -138,7 +138,7 @@
   <text id="masteriesEyebrow" name="Dish perks" />
   <text id="mastery" name="Mastery" />
   <text id="masteryBookPage" name="Page" />
-  <text id="masteryCookbook" name="Cook book" />
+  <text id="masteryCookbook" name="Cook Book (Legacy)" />
   <text id="masteryListHorizontal" name="List (horizontal reader)" />
   <text id="masteryListVertical" name="List (vertical reader)" />
   <text id="masteryView" name="View" />
@@ -207,7 +207,7 @@
   <text id="predictedStatus" name="Predicted Status" />
   <text id="previousPage" name="← Previous" />
   <text id="profileSaved" name="Profile saved locally." />
-  <text id="profileSettingsNote" name="Your level helps the tool set your current available number of stoves. You can change this in MyDex later." />
+  <text id="profileSettingsNote" name="Your profile is saved locally in this browser only." />
   <text id="profileSettingsTitle" name="Chef Profile" />
   <text id="profit" name="Profit" />
   <text id="profitLower" name="profit" />
@@ -291,4 +291,12 @@
   <text id="xpPlansNote" name="Best level up plans to base your needs and availability." />
   <text id="xpPlansTitle" name="XP Needed Plans" />
   <text id="xpUpper" name="XP" />
+  <text id="fashionDexDescription" name="Open Cappuccino Fashion FashionDex." />
+  <text id="profileLevelUnlocksTitle" name="Level {0} unlocks:" />
+  <text id="fridges" name="Fridges" />
+  <text id="counters" name="Counters" />
+  <text id="waiters" name="Waiters" />
+  <text id="instantCookings" name="Instant cookings" />
+  <text id="masteryCompletionProgress" name="Mastery completion progress:" />
+  <text id="toFashionDex" name="To FashionDex" />
 </dishdex>

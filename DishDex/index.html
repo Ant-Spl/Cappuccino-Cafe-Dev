@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=20260701-profile-fashiondex-v1">
+  <link rel="stylesheet" href="style.css?v=20260701-profile-fashiondex-v2">
 </head>
 <body class="dark-theme">
   <main class="page">
@@ -27,6 +27,10 @@
         <div class="status-card">
           <span id="loadStatus">Loading Café data...</span>
           <small id="dataSummary"></small>
+          <a id="openFashionDexShortcut" class="data-shortcut fashiondex-shortcut" href="https://ant-spl.github.io/Cappuccino-Fashion/fashiondex/#home" target="_blank" rel="noopener noreferrer">
+            <img src="fashiondex.png" alt="" onerror="this.style.display='none'">
+            <span data-i18n="toFashionDex">To FashionDex</span>
+          </a>
         </div>
       </header>
 
@@ -69,18 +73,13 @@
           </div>
         </div>
 
-        <div class="mode-grid seven-mode-grid">
+        <div class="mode-grid six-mode-grid">
           <button id="openMyDex" class="mode-card" type="button">
             <img src="MyDex.png" alt="" class="mode-icon" onerror="this.style.display='none'">
             <span class="mode-title">MyDex</span>
             <span class="mode-description" data-i18n="myDexDescription">Access your personal DishDex based on your level, XP and available time.</span>
           </button>
 
-          <a id="openFashionDex" class="mode-card external-mode-card" href="https://ant-spl.github.io/Cappuccino-Fashion/fashiondex/#home" target="_blank" rel="noopener noreferrer">
-            <img src="fashiondex.png" alt="" class="mode-icon" onerror="this.style.display='none'">
-            <span class="mode-title" data-i18n="toFashionDex">To FashionDex</span>
-            <span class="mode-description" data-i18n="fashionDexDescription">Open Cappuccino Fashion FashionDex.</span>
-          </a>
 
           <button id="openFullDishDex" class="mode-card" type="button">
             <img src="DishDex.png" alt="" class="mode-icon" onerror="this.style.display='none'">
@@ -695,6 +694,6 @@
     </section>
   </main>
 
-  <script src="script.js?v=20260701-profile-fashiondex-v1" defer></script>
+  <script src="script.js?v=20260701-profile-fashiondex-v2" defer></script>
 </body>
 </html>

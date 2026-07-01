@@ -129,6 +129,35 @@ h1 {
   font-weight: 600;
 }
 
+.data-shortcut {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 12px;
+  padding: 10px 12px;
+  border: 2px solid var(--border);
+  border-radius: 14px;
+  background: var(--plain-cell);
+  color: var(--text);
+  text-decoration: none;
+  font-weight: 900;
+  white-space: nowrap;
+  transition: transform 150ms ease, border-color 150ms ease, box-shadow 150ms ease;
+}
+
+.data-shortcut:hover {
+  transform: translateY(-2px);
+  border-color: var(--border-strong);
+  box-shadow: 0 10px 20px rgba(123, 78, 28, 0.18);
+}
+
+.data-shortcut img {
+  width: 38px;
+  height: 38px;
+  object-fit: contain;
+  flex: 0 0 auto;
+}
+
 .panel {
   background: var(--card);
   border: 2px solid var(--border);
